@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Calendrier du Village</title>
 
-  <!-- Les deux balises correctes -->
+  <!-- Ces DEUX balises doivent rester EXACTEMENT ainsi -->
   ./assets/favicon.ico
   ./style.css
 </head>
@@ -50,14 +50,11 @@
   <!-- Script APRES le DOM -->
   <script type="module">
     import {bootstrap} from './ui.js';
-
     // Injecte 1..12 dans le select Mois
     const monthSel = document.getElementById('month');
     monthSel.innerHTML = Array.from({length:12}, (_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
-
     // Lance l'application
     bootstrap();
   </script>
-
 </body>
 </html>
