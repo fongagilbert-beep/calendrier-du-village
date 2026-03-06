@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Calendrier du Village</title>
+  <meta name="description" content="Calendrier traditionnel — application web installable (PWA) pour Android et iPhone." />
+  <meta name="theme-color" content="#0A4D3C" />
+
+  <!-- iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Calendrier du Village" />
+
+  manifest.webmanifest
+  <link rel="apple-touch-icon" href=""icon" type="image/png" sizes="32x32" href="icons/icon-192; --muted:#f4f6f5; --text:#1b1b1b; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+    header{padding:1rem;background:var(--accent);color:#fff;position:sticky;top:0}
+    main{padding:1rem;max-width:960px;margin:auto}
+    .install-hint{background:var(--muted);border-left:4px solid var(--accent);padding:.75rem;margin:.75rem 0}
+    .info-box{background:#FFF8E1;border-left:4px solid #D39B23;padding:.75rem;margin:.75rem 0}
+    .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .day, .dow{padding:.5rem;border:1px solid #e3e7e5;border-radius:6px;min-height:70px;background:#fff}
+    .dow{background:#f7faf9;font-weight:600;text-align:center}
+    .muted{color:#8a8f8c}
+    .event{display:block;margin:.25rem 0;padding:.25rem .35rem;border-radius:4px;background:#E7F4EF;color:#134E4A;font-size:.85rem;line-height:1.2}
+    .legend{font-size:.9rem;color:#5b615e;margin-top:.5rem}
+    .toolbar{display:flex;gap:.5rem;align-items:center;margin:1rem 0}
+    .toolbar button{padding:.5rem .75rem;border:1px solid #cfd6d2;background:#fff;border-radius:6px;cursor:pointer}
+    .toolbar h2{margin:0 0 0 .5rem}
+    footer{margin:2rem 0 1rem 0;color:#5b615e;font-size:.9rem;text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calendrier du Village</h1>
+  </header>
+  <main>
+    <div class="info-box">
+      <strong>Note :</strong> Le Calendrier du Village est un calendrier vivant. Il est régulièrement
+      enrichi et complété avec de nouvelles informations traditionnelles, culturelles et communautaires.
+    </div>
+
+    <div class="install-hint">
+      <strong>Installer :</strong> Android (Chrome) → menu ⋮ → « Ajouter à l’écran d’accueil ». iPhone (Safari) → Partager → « Sur l’écran d’accueil ».
+    </div>
+
+    <div class="toolbar">
+      <button id="prev">◀</button>
+      <button id="today">Aujourd’hui</button>
+      <button id="next">▶</button>
+      <h2 id="title"></h2>
+    </div>
+
+    <div class="grid" id="calendar"></div>
+    <div class="legend">
+      Les événements proviennent de <code>/data/events.json</code> (généré depuis votre feuille Excel).
+      Le fichier <code>data/calendrier.ics</code> est disponible pour l’import dans Android/iPhone.
+    </div>
+
+    <footer>Proposé par <strong>Gilbert FONGA</strong></footer>
+  </main>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+
+    const calEl = document.getElementById('calendar');
+    const titleEl = document.getElementById('title');
+    const locale = 'fr-FR';
+    let current = new Date();
+
+    const startOfMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+    const sameDay = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+
+    const render = async () => {
+      titleEl.textContent = current.toLocaleDateString(locale, {month:'long', year:'numeric'});
+      calEl.innerHTML = '';
+
+      const first = startOfMonth(current);
+      const startGrid = new Date(first);
+      startGrid.setDate(first.getDate() - ((first.getDay()+6)%7)); // Lundi = 0
+
+      const days = [];
+      for (let i=0;i<42;i++){ const d = new Date(startGrid); d.setDate(startGrid.getDate()+i); days.push(d); }
+
+      ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].forEach(x=>{
+        const el=document.createElement('div'); el.className='dow'; el.textContent=x; calEl.appendChild(el);
+      });
+
+      let events=[];
+      try{
+        const res = await fetch('./data/events.json',{cache:'no-store'});
+        if(res.ok) events = await res.json();
+      }catch(e){}
+
+      const map = {};
+      for(const ev of events){ const key = ev.start; (map[key] = map[key] || []).push(ev); }
+
+      const today = new Date();
+      days.forEach(d=>{
+        const el = document.createElement('div'); el.className = 'day';
+        if (d.getMonth() !== current.getMonth()) el.classList.add('muted');
+
+        const dayNum = document.createElement('div');
+        dayNum.textContent = d.getDate();
+        dayNum.style.fontWeight = (sameDay(d,today)?'700':'600');
+        el.appendChild(dayNum);
+
+        const key = d.toISOString().slice(0,10);
+        (map[key]||[]).forEach(ev=>{
+          const tag = document.createElement('span');
+          tag.className='event'; tag.textContent = ev.title;
+          if(ev.color) tag.style.background = ev.color;
+          tag.title = (ev.description || ev.title);
+          el.appendChild(tag);
+        });
+
+        calEl.appendChild(el);
+      });
+    };
+
+    document.getElementById('prev').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()-1, 1); render(); };
+    document.getElementById('today').onclick = ()=>{ current = new Date(); render(); };
+    document.getElementById('next').onclick = ()=>{ current = new Date(current.getFullYear(), current.getMonth()+1, 1); render(); };
+
+    render();
+  </script>
+</body>
+</html>
