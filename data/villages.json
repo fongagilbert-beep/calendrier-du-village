@@ -12,12 +12,3 @@
     }
   }
 }
-"MON_VILLAGE": {
-  "dayNames": ["J1","J2","J3","J4","J5","J6","J7","J8"],
-  "monthNames": ["M1","M2","M3","M4","M5","M6","M7","M8","M9","M10","M11","M12"],
-  "forbidden": [8,2,3],
-  "market": [8,2,3],
-  "king": "Nom du Roi / Chef",
-  "marketLabels": ["J… = Lieu A", "J… = Lieu B", "J… = Lieu C"],
-  "info": "Texte historique / culturel…"
-}
