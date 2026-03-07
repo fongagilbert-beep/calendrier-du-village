@@ -1,0 +1,14 @@
+{
+  "globalAnchor": { "date": "2026-02-28", "index": 7 },
+  "villages": {
+    "BANGOU": {
+      "dayNames": ["Dinkon","Dintouo","Guendjou","Ntassak","Nzeuleug","Ntambeté","Guefack","Nduh"],
+      "monthNames": ["Akon","Bisa","Kete","Fufu","Dede","Hunu","Mensa","Kwaku","Yaa","Kofi","Kwame","Adwoa"],
+      "forbidden": [8,2,3],
+      "market": [8,2,3],
+      "king": "Sa Majesté FONGA",
+      "marketLabels": ["Nduh = Chefferie","Dintouo = Carrefour","Guendjou = Kamna"],
+      "info": "Dynastie vieille d’environ 300 ans, ancien site d’esclaves, 28 quartiers. Site touristique moderne."
+    }
+  }
+}
