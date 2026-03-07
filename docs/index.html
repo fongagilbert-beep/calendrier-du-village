@@ -4,6 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Calendrier du Village</title>
+
   ./assets/favicon.ico
   ./style.css
 </head>
@@ -11,6 +12,7 @@
   <div class="container">
     <header>
       <div class="title">Calendrier traditionnel Afro‑Vibrant</div>
+
       <div class="controls">
         <label for="year">Année</label>
         <input id="year" type="number" min="1900" max="9999"/>
@@ -19,6 +21,7 @@
         <label for="village">Village</label>
         <select id="village"></select>
       </div>
+
       <div class="btnrow">
         <button id="prev3" class="btn">&laquo;&laquo;&laquo; 3 mois</button>
         <button id="next3" class="btn">3 mois &raquo;&raquo;&raquo;</button>
@@ -43,6 +46,7 @@
     </main>
   </div>
 
+  <!-- Script APRES le DOM -->
   <script type="module">
     import {bootstrap} from './ui.js';
     const monthSel = document.getElementById('month');
