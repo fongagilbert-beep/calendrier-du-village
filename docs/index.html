@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Calendrier du Village</title>
+
+  ./assets/favicon.ico
+  ./style.css
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title">Calendrier traditionnel Afro‑Vibrant</div>
+
+      <div class="controls">
+        <label for="year">Année</label>
+        <input id="year" type="number" min="1900" max="9999"/>
+        <label for="month">Mois</label>
+        <select id="month"></select>
+        <label for="village">Village</label>
+        <select id="village"></select>
+      </div>
+
+      <div class="btnrow">
+        <button id="prev3" class="btn">&laquo;&laquo;&laquo; 3 mois</button>
+        <button id="next3" class="btn">3 mois &raquo;&raquo;&raquo;</button>
+        <button id="prevY" class="btn green">&laquo;&laquo; 1 an</button>
+        <button id="nextY" class="btn green">1 an &raquo;&raquo;</button>
+        <button id="today" class="btn cyan">Aujourd'hui</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="grid" class="grid">
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+      </div>
+
+      <section id="village-panel" aria-label="Infos village" class="mt"></section>
+
+      <footer class="footer">
+        <div id="watermark" class="small"></div>
+      </footer>
+    </main>
+  </div>
+
+  <script type="module">
+    import {bootstrap} from './ui.js';
+    const monthSel = document.getElementById('month');
+    monthSel.innerHTML = Array.from({length:12}, (_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+    bootstrap();
+  </script>
+
+</body>
+</html>
