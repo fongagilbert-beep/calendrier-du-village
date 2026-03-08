@@ -88,6 +88,82 @@
     }
   }
 
+
+// ====== CHARGEMENT DYNAMIQUE DE LA CONFIG ======
+
+// (1) Déclarations "vivantes" pilotables par le JSON
+let TRAD8 = ['T1','T2','T3','T4','T5','T6','T7','T8'];  // sera remplacé si _meta.tradNames est fourni
+let VILLAGE_RULES = {};                                  // sera rempli depuis le JSON
+
+// (2) Petites aides de parsing
+const WEEKDAY_FR_TO_IDX = {
+  'dimanche': 0, 'lundi': 1, 'mardi': 2, 'mercredi': 3,
+  'jeudi': 4, 'vendredi': 5, 'samedi': 6
+};
+function toWeekdayIndex(v) {
+  if (v === null || v === undefined) return undefined;
+  if (typeof v === 'number' && v >= 0 && v <= 6) return v;
+  const s = String(v).trim().toLowerCase();
+  return WEEKDAY_FR_TO_IDX.hasOwnProperty(s) ? WEEKDAY_FR_TO_IDX[s] : undefined;
+}
+function toIntArray(val){
+  // "1,4,6"  ou  [1,4,6]  -> [1,4,6]
+  if (Array.isArray(val)) return val.map(n => Number(n)).filter(n => Number.isFinite(n));
+  if (val === null || val === undefined) return [];
+  return String(val).split(',').map(x => Number(x.trim())).filter(n => Number.isFinite(n));
+}
+
+// (3) Appliquer le JSON dans nos structures JS
+function hydrateFromConfig(cfg){
+  if (!cfg || typeof cfg !== 'object') return;
+
+  // Option globale des noms du cycle 8 (dans une clé spéciale _meta.tradNames)
+  if (cfg._meta && Array.isArray(cfg._meta.tradNames) && cfg._meta.tradNames.length === 8) {
+    TRAD8 = cfg._meta.tradNames.map(s => String(s));
+  }
+
+  // Règles par village (clés = noms de villages)
+  // Format attendu pour chaque village (ce que ta macro JSON produit déjà) :
+  // {
+  //   "BALENGOU": {
+  //      "chief":"...", "marketDay":6 ou "samedi",
+  //      "forbiddenTradIdx":[1,4,6], "marketTradIdx":[2], "moreInfos":"..."
+  //   },
+  //   "BANDA": {...}
+  // }
+  const out = {};
+  Object.keys(cfg).forEach(key => {
+    if (key === '_meta') return; // ignore la section meta
+    const entry = cfg[key] || {};
+    const villageName = String(key).toUpperCase();
+
+    const forbidden = toIntArray(entry.forbiddenTradIdx);
+    const marketIdx = toIntArray(entry.marketTradIdx);      // facultatif dans ton JSON exporté
+    const weekday   = toWeekdayIndex(entry.marketDay);      // accepte 0..6 ou "samedi"
+
+    out[villageName] = {
+      forbiddenTradIdx: forbidden,
+      marketTradIdx: marketIdx,          // si vide -> ignoré
+      marketWeekday: weekday             // si undefined -> ignoré
+    };
+  });
+
+  VILLAGE_RULES = out;
+}
+
+// (4) Charger le JSON (avec anti-cache)
+async function loadVillageConfig(){
+  const url = './data/village-config.json?ts=' + Date.now();
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.warn('Config villages non trouvée :', res.status);
+    return;
+  }
+  const cfg = await res.json();
+  hydrateFromConfig(cfg);
+}
+
+  
   // =======================
   // Rendu 3 mois : m-1 | m | m+1
   //  -> vue "Excel" : une ligne = un jour (Date | Jour | Trad.)
@@ -273,14 +349,19 @@ $table.appendChild(colgroup);
   // =======================
   // Démarrage
   // =======================
-  document.addEventListener('DOMContentLoaded', () => {
-    if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
-    if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
-    state.village = ($villageSel?.value || state.village);
+  document.addEventListener('DOMContentLoaded', async () => {
+  if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
+  if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
+  state.village = ($villageSel?.value || state.village);
 
-    initMonthSelect();
-    initTradSelect();
-    bindEvents();
-    render();
-  });
-})();
+  // 1) Charger la configuration JSON AVANT d'initialiser/rendre
+  try { await loadVillageConfig(); } catch(e){ console.warn(e); }
+
+  // 2) Init UI + événements
+  initMonthSelect();
+  initTradSelect();
+  bindEvents();
+
+  // 3) Premier rendu (utilisera TRAD8 + VILLAGE_RULES issus du JSON)
+  render();
+});
