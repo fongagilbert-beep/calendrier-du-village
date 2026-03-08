@@ -174,3 +174,9 @@ footer{
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* Repère léger pour la carte centrale (m) */
+.month--center{
+  outline: 2px solid #e6eaff;         /* liseré bleu très léger */
+  outline-offset: 2px;
+}
