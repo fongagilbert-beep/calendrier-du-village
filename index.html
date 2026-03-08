@@ -102,55 +102,102 @@
       mix-blend-mode: multiply;
     }
 
-    .months-wrap{
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    @media (max-width: 900px){
-      .months-wrap{ grid-template-columns: 1fr; }
-    }
-
-   /* Grille des 3 mois – en colonne (comme Excel) */
+   /* ===== 3 mois en colonne (une seule colonne) ===== */
 .months-wrap{
   display: grid;
-  grid-template-columns: 1fr;  /* <= UNE SEULE COLONNE */
-  gap: 12px;
-  align-content: start;        /* colle en haut de la zone */
+  grid-template-columns: 1fr;   /* une seule colonne */
+  gap: 16px;                    /* espace entre les mois */
+  align-content: start;
 }
 
-/* (Optionnel) un peu plus “carte Excel” en pleine largeur */
+/* ===== Carte d’un mois (plein-largeur, style Excel) ===== */
 .month{
-  border: 1px solid #e6e6e6;
-  border-radius: 8px;
-  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
   background: #fff;
-  width: 100%;                 /* <= plein container */
+  width: 100%;
+  overflow: hidden;             /* pour arrondis propres */
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
 }
 
-.month h3{
-  margin: 0 0 8px 0;
+/* Bande d’en-tête du mois */
+.month__header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #f7f9fc;          /* légère teinte */
+  border-bottom: 1px solid #e6eaf0;
+}
+.month__title{
+  margin: 0;
   font-size: 1rem;
-  text-transform: capitalize;
+  font-weight: 600;
+}
+.month__badge{
+  font-size: .8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #dfe3ea;
+  background: #fff;
+  color: #5f6368;
 }
 
-    .legend{
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .badge{
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      border: 1px solid #ddd;
-      background:#fafafa;
-    }
-    .badge.forbidden{ border-color:#c62828; color:#c62828; }
-    .badge.today{ border-color:#1a73e8; color:#1a73e8; }
+/* ===== Tableau type Excel ===== */
+.month__table{
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;          /* colonnes stables */
+  font-size: .95rem;
+}
+.month__table thead th{
+  text-align: left;
+  font-weight: 700;
+  color: #3c4043;
+  background: #fafbfe;
+  border-bottom: 1px solid #eceff4;
+  padding: 8px 10px;
+}
+.month__table tbody td{
+  border-top: 1px dashed #eef1f6;
+  padding: 8px 10px;
+  color: #202124;
+}
 
+/* Zébrage doux */
+.month__table tbody tr:nth-child(odd)  { background: #fff; }
+.month__table tbody tr:nth-child(even) { background: #fcfdff; }
+
+/* Week-ends légèrement grisés (samedi: col 6, dimanche: col 7) */
+.month__table tbody td.is-sat,
+.month__table thead th.is-sat { color: #5f6368; }
+.month__table tbody td.is-sun,
+.month__table thead th.is-sun { color: #5f6368; }
+
+/* Aujourd’hui en surbrillance légère */
+.month__table td.is-today{
+  font-weight: 700;
+  color: #1a73e8;
+}
+
+/* ===== Légende (conserve) ===== */
+.legend{
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.badge{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  border: 1px solid #ddd;
+  background:#fafafa;
+}
+.badge.forbidden{ border-color:#c62828; color:#c62828; }
+.badge.today{ border-color:#1a73e8; color:#1a73e8; }
+``
     .village-info{
       margin-top: 16px;
       border: 1px solid #eee;
