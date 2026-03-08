@@ -4,15 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calendrier du Village – Cycle de 8 jours</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <!-- Manifest & icônes -->
+  manifest.webmanifest
+  icons/icon-192.png
+  icons/apple-touch-icon.png
   <meta name="theme-color" content="#C89B3C" />
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- Styles -->
+  styles.css
 </head>
 <body>
   <header>
-    <img src="icons/icon-192.png" alt="Logo Calendrier du Village" class="logo">
+    icons/icon-192.png
     <h1>Calendrier du Village</h1>
     <p>Cycle traditionnel de 8 jours</p>
   </header>
@@ -59,6 +63,7 @@
       </div>
     </section>
 
+    <!-- Infos village -->
     <section class="village-info">
       <div class="info-row"><div class="info-label">Roi du village :</div><div class="info-value" id="chief">—</div></div>
       <div class="info-row"><div class="info-label">Jour de marché :</div><div class="info-value" id="market">—</div></div>
@@ -72,16 +77,16 @@
     <small>© <span id="year"></span> Calendrier du Village</small>
   </footer>
 
-  <script src="app.js"></script>
-app.js</script>
+  <!-- JS principal -->
+  <pp.js</script>
 
+  <!-- Enregistrement du Service Worker (installabilité PWA) -->
   <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js');
-    });
-  }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(console.warn);
+      });
+    }
   </script>
-
 </body>
 </html>
