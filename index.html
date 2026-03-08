@@ -4,40 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calendrier du Village – Cycle de 8 jours</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="theme-color" content="#C89B3C" />
-  <style>:root{
-  --gap:10px; --btn-h:36px; --btn-radius:8px; --btn-bg:#f6f7f9;
-  --btn-border:#d5d7dd; --btn-fg:#21242a; --focus:#1a73e8;
-  --wm-color: rgba(80,80,80,.24);
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#202124}
-header{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid #eee}
-header .logo{width:48px;height:48px;border-radius:10px}
-header h1{margin:0;font-size:1.4rem} header p{margin:0;color:#5f6368}
-main{padding:12px 16px}
-/* Toolbar : NAV au-dessus PARAMS */
-.toolbar{display:grid;grid-template-areas:"nav" "params";grid-auto-rows:auto;gap:10px;margin-block:8px 12px}
-.toolbar__nav{grid-area:nav;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
-.toolbar__params{grid-area:params;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
-.strong{font-weight:600}.wide{min-width:180px}
-.toolbar button{height:var(--btn-h);min-width:var(--btn-h);padding:0 12px;border:1px solid var(--btn-border);border-radius:var(--btn-radius);background:var(--btn-bg);color:var(--btn-fg);display:inline-flex;align-items:center;justify-content:center;font:inherit;line-height:1;cursor:pointer;user-select:none;transition:background .15s,border-color .15s}
-.toolbar button:hover{background:#eef0f3}.toolbar button:active{background:#e6e9ee}.toolbar button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.status{margin-left:auto;color:#5f6368;font-size:.9rem}
-.three-months{position:relative;overflow:hidden;border:1px solid #eee;border-radius:10px;padding:10px;background:#fff;min-height:240px}
-#watermark.watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;transform:rotate(-35deg);transform-origin:center;font-weight:800;letter-spacing:.25em;font-size:clamp(28px,8vw,84px);color:var(--wm-color);mix-blend-mode:multiply}
-.months-wrap{display:grid;grid-template-columns:repeat(3, minmax(260px, 1fr));gap:12px}
-@media (max-width:900px){.months-wrap{grid-template-columns:1fr}}
-.month{border:1px solid #e6e6e6;border-radius:8px;padding:10px;background:#fff}
-.month h3{margin:0 0 8px 0;font-size:1rem;text-transform:capitalize}
-.legend{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.85rem;border:1px solid #ddd;background:#fafafa}
-.badge.forbidden{border-color:#c62828;color:#c62828}.badge.today{border-color:#1a73e8;color:#1a73e8}
-.village-info{margin-top:16px;border:1px solid #eee;border-radius:10px;padding:12px;background:#fff}
-.info-row{display:grid;grid-template-columns:180px 1fr;gap:10px;padding:4px 0;border-bottom:1px dashed #f0f0f0}
-.info-row:last-child{border-bottom:none}.info-label{color:#5f6368}.info-value{font-weight:500}
-footer{padding:14px 16px;border-top:1px solid #eee;color:#5f6368;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-</style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
@@ -45,16 +16,19 @@ footer{padding:14px 16px;border-top:1px solid #eee;color:#5f6368;display:flex;ju
     <h1>Calendrier du Village</h1>
     <p>Cycle traditionnel de 8 jours</p>
   </header>
+
   <main>
+    <!-- Toolbar : NAV au-dessus des paramètres -->
     <section class="toolbar">
       <div class="toolbar__nav" role="group" aria-label="Navigation">
         <button id="prevYearBtn" aria-label="Année précédente">« 1 an</button>
-        <button id="prev3Btn" aria-label="Reculer de 3 mois">‹‹ 3 mois</button>
-        <button id="todayBtn" aria-label="Aller à aujourd’hui">Aujourd’hui</button>
-        <button id="next3Btn" aria-label="Avancer de 3 mois">3 mois ››</button>
+        <button id="prev3Btn"   aria-label="Reculer de 3 mois">‹‹ 3 mois</button>
+        <button id="todayBtn"   aria-label="Aller à aujourd’hui">Aujourd’hui</button>
+        <button id="next3Btn"   aria-label="Avancer de 3 mois">3 mois ››</button>
         <button id="nextYearBtn" aria-label="Année suivante">1 an »</button>
         <div id="dataStatus" class="status" aria-live="polite"></div>
       </div>
+
       <div class="toolbar__params">
         <label for="villageSelect" class="strong">Village :</label>
         <select id="villageSelect" class="wide">
@@ -63,15 +37,19 @@ footer{padding:14px 16px;border-top:1px solid #eee;color:#5f6368;display:flex;ju
           <option value="N’DJAM">N’DJAM</option>
           <option value="KOLO">KOLO</option>
         </select>
+
         <label for="yearInput" class="strong">Année :</label>
         <input id="yearInput" type="number" step="1" min="1800" max="2400" style="width:100px" />
+
         <label for="monthSelect" class="strong">Mois :</label>
         <select id="monthSelect"></select>
+
         <label for="tradSelect" class="strong">MTrad :</label>
         <select id="tradSelect"></select>
       </div>
     </section>
 
+    <!-- Zone des 3 mois avec watermark interne -->
     <section class="three-months">
       <div id="watermark" class="watermark" aria-hidden="true"></div>
       <div id="monthsWrap" class="months-wrap"></div>
@@ -94,78 +72,6 @@ footer{padding:14px 16px;border-top:1px solid #eee;color:#5f6368;display:flex;ju
     <small>© <span id="year"></span> Calendrier du Village</small>
   </footer>
 
-  <script>(function(){
-  const $watermark=document.getElementById('watermark');
-  const $monthsWrap=document.getElementById('monthsWrap');
-  const $villageSel=document.getElementById('villageSelect');
-  const $yearInput=document.getElementById('yearInput');
-  const $monthSelect=document.getElementById('monthSelect');
-  const $tradSelect=document.getElementById('tradSelect');
-  const $prevYearBtn=document.getElementById('prevYearBtn');
-  const $prev3Btn=document.getElementById('prev3Btn');
-  const $todayBtn=document.getElementById('todayBtn');
-  const $next3Btn=document.getElementById('next3Btn');
-  const $nextYearBtn=document.getElementById('nextYearBtn');
-  const $footerYear=document.getElementById('year');
-
-  const now=new Date();
-  const state={year:now.getFullYear(),month:now.getMonth(),village:($villageSel?.value||'BALENGOU')};
-
-  const MONTHS_FR=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-
-  function formatWatermark(v){return String(v||'').toUpperCase()}
-  function updateWatermark(){if(!$watermark)return;const v=(state.village||'').trim();$watermark.textContent=v?formatWatermark(v):''}
-
-  function renderThreeMonths(){
-    if(!$monthsWrap)return; $monthsWrap.innerHTML='';
-    const start=new Date(state.year,state.month-1,1);
-    for(let k=0;k<3;k++){
-      const d=new Date(start.getFullYear(),start.getMonth()+k,1);
-      const y=d.getFullYear(); const m=d.getMonth();
-      const $m=document.createElement('div'); $m.className='month';
-      const $h=document.createElement('h3'); $h.textContent=`${MONTHS_FR[m]} ${y}`; $m.appendChild($h);
-      const $table=document.createElement('table'); $table.style.width='100%'; $table.style.borderCollapse='collapse'; $table.style.fontSize='0.9rem';
-      const $thead=document.createElement('thead'); const $trh=document.createElement('tr');
-      ['lu','ma','me','je','ve','sa','di'].forEach(lbl=>{const th=document.createElement('th'); th.textContent=lbl; th.style.textAlign='center'; th.style.fontWeight='600'; th.style.padding='4px 0'; $trh.appendChild(th)});
-      $thead.appendChild($trh); $table.appendChild($thead);
-      const $tbody=document.createElement('tbody');
-      const firstDay=new Date(y,m,1); const startDow=(firstDay.getDay()+6)%7; const daysInMonth=new Date(y,m+1,0).getDate();
-      let day=1; for(let r=0;r<6;r++){ const tr=document.createElement('tr');
-        for(let c=0;c<7;c++){ const td=document.createElement('td'); td.style.textAlign='center'; td.style.padding='4px'; td.style.borderTop='1px dashed #eee';
-          const cellIndex=r*7+c; if(cellIndex>=startDow && day<=daysInMonth){ const isToday=(y===now.getFullYear()&&m===now.getMonth()&&day===now.getDate()); td.textContent=day; if(isToday){ td.style.fontWeight='700'; td.style.color='#1a73e8'; } day++; } else { td.textContent=''; }
-          tr.appendChild(td); }
-        $tbody.appendChild(tr); }
-      $table.appendChild($tbody); $m.appendChild($table); $monthsWrap.appendChild($m);
-    }
-  }
-
-  function render(){ if($yearInput)$yearInput.value=state.year; if($monthSelect)$monthSelect.value=String(state.month); renderThreeMonths(); updateWatermark(); }
-  function shiftMonths(d){ const dd=new Date(state.year,state.month+d,1); state.year=dd.getFullYear(); state.month=dd.getMonth(); render(); }
-  function shiftYears(d){ state.year+=d; render(); }
-  function goToday(){ const t=new Date(); state.year=t.getFullYear(); state.month=t.getMonth(); render(); }
-
-  function initMonthSelect(){ if(!$monthSelect)return; $monthSelect.innerHTML=''; MONTHS_FR.forEach((name,i)=>{const opt=document.createElement('option'); opt.value=String(i); opt.textContent=name[0].toUpperCase()+name.slice(1); $monthSelect.appendChild(opt);}); $monthSelect.value=String(state.month); }
-  function initTradSelect(){ if(!$tradSelect)return; $tradSelect.innerHTML=''; for(let i=0;i<12;i++){ const opt=document.createElement('option'); opt.value=String(i); opt.textContent='M'+(i+1); $tradSelect.appendChild(opt);} }
-
-  function bindEvents(){
-    $prevYearBtn&&$prevYearBtn.addEventListener('click',()=>shiftYears(-1));
-    $nextYearBtn&&$nextYearBtn.addEventListener('click',()=>shiftYears(+1));
-    $prev3Btn&&$prev3Btn.addEventListener('click',()=>shiftMonths(-3));
-    $next3Btn&&$next3Btn.addEventListener('click',()=>shiftMonths(+3));
-    $todayBtn&&$todayBtn.addEventListener('click',goToday);
-    $villageSel&&$villageSel.addEventListener('change',e=>{state.village=(e.target.value||'').trim(); updateWatermark();});
-    $yearInput&&$yearInput.addEventListener('change',e=>{const v=parseInt(e.target.value,10); if(!isNaN(v)){state.year=v; render();}});
-    $monthSelect&&$monthSelect.addEventListener('change',e=>{const n=Number(e.target.value); if(Number.isFinite(n)){ state.month=n; render(); }});
-    $tradSelect&&$tradSelect.addEventListener('change',()=>{/* baseline: ne change pas le mois */});
-  }
-
-  document.addEventListener('DOMContentLoaded',()=>{
-    if($footerYear)$footerYear.textContent=String(new Date().getFullYear());
-    if($villageSel&&!$villageSel.value)$villageSel.value=state.village; state.village=($villageSel?.value||state.village);
-    if($yearInput)$yearInput.value=state.year;
-    initMonthSelect(); initTradSelect(); bindEvents(); render();
-  });
-})();
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
