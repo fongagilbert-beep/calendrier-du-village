@@ -461,6 +461,34 @@
         });
       }
 
+    // ========= MTrad → centre sur le mois choisi =========
+// Par défaut on mappe MTrad M1..M12 sur Jan..Déc (0..11).
+// 👉 Modifie cette table si tes mois traditionnels ne coïncident pas
+const MTRAD_TO_GREG = {
+  0: 0,  1: 1,  2: 2,  3: 3,  4: 4,  5: 5,
+  6: 6,  7: 7,  8: 8,  9: 9, 10:10, 11:11
+};
+
+function onTradChange(idx){
+  const n = Number(idx);
+  if (!Number.isFinite(n)) return;
+  // Convertit MTrad → mois grégorien cible (au centre)
+  const greg = MTRAD_TO_GREG[n] ?? state.month;
+  state.month = greg;
+  render(); // centre se met à jour (m-1 | m | m+1)
+}
+
+// ========= Grégorien → centre sur le mois choisi =========
+function onMonthChange(idx){
+  const n = Number(idx);
+  if (!Number.isFinite(n)) return;
+  state.month = n; // le centre devient ce mois
+  render();
+}
+
+// Listeners (assure-toi que ces IDs existent)
+$tradSelect  && $tradSelect.addEventListener('change', e => onTradChange(e.target.value));
+$monthSelect && $monthSelect.addEventListener('change', e => onMonthChange(e.target.value));
       document.addEventListener('DOMContentLoaded', ()=>{
         if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
         if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
