@@ -5,269 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calendrier du Village – Cycle de 8 jours</title>
   <meta name="theme-color" content="#C89B3C" />
-
-  <!-- ==== CSS INLINE (pas de <link>) ==== -->
-  <style>
-    :root{
-      --gap: 10px;
-      --btn-h: 36px;
-      --btn-radius: 8px;
-      --btn-bg: #f6f7f9;
-      --btn-border: #d5d7dd;
-      --btn-fg: #21242a;
-      --focus: #1a73e8;
-      --wm-color: rgba(80, 80, 80, 0.24);
-    }
-    *{ box-sizing: border-box; }
-    html, body{ margin:0; padding:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#202124; }
-
-    header{
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      border-bottom: 1px solid #eee;
-    }
-    header .logo{ width:48px; height:48px; border-radius:10px; }
-    header h1{ margin:0; font-size: 1.4rem; }
-    header p{ margin:0; color:#5f6368; }
-
-    main{ padding: 12px 16px; }
-
-    .toolbar{
-      display: grid;
-      grid-template-rows: auto auto; /* L1 : nav — L2 : paramètres */
-      gap: 10px;
-      margin-block: 8px 12px;
-    }
-    /* ===== Toolbar : nav en 1ère ligne, paramètres en 2ème ===== */
-.toolbar{
-  display: grid;
-  grid-template-areas:
-    "nav"
-    "params";
-  grid-auto-rows: auto;
-  gap: 10px;
-  margin-block: 8px 12px;
+  <style>:root{
+  --gap:10px; --btn-h:36px; --btn-radius:8px; --btn-bg:#f6f7f9;
+  --btn-border:#d5d7dd; --btn-fg:#21242a; --focus:#1a73e8;
+  --wm-color: rgba(80,80,80,.24);
 }
-.toolbar__nav   { grid-area: nav; }
-.toolbar__params{ grid-area: params; }
-
-@media (min-width: 1200px){
-  /* Si tu veux, on peut passer en 2 colonnes sur très large écran :
-     nav à gauche, paramètres à droite (décommenter si souhaité) */
-  /* .toolbar{
-       grid-template-areas: "nav params";
-       grid-template-columns: 1fr 1fr;
-     } */
-}
-    .strong{ font-weight: 600; }
-    .wide{ min-width: 180px; }
-
-    .toolbar button{
-      height: var(--btn-h);
-      min-width: var(--btn-h);
-      padding: 0 12px;
-      border: 1px solid var(--btn-border);
-      border-radius: var(--btn-radius);
-      background: var(--btn-bg);
-      color: var(--btn-fg);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font: inherit;
-      line-height: 1;
-      cursor: pointer;
-      user-select: none;
-      transition: background .15s ease, border-color .15s ease;
-    }
-    .toolbar button:hover{ background: #eef0f3; }
-    .toolbar button:active{ background: #e6e9ee; }
-    .toolbar button:focus-visible{
-      outline: 2px solid var(--focus);
-      outline-offset: 2px;
-    }
-
-    .status{ margin-left:auto; color:#5f6368; font-size: 0.9rem; }
-
-    .three-months{
-      position: relative;
-      overflow: hidden; /* confine le watermark */
-      border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 10px;
-      background: #fff;
-      min-height: 240px; /* pour que tu voies le watermark même avant rendu */
-    }
-
-    #watermark.watermark{
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      transform: rotate(-35deg);
-      transform-origin: center;
-      font-weight: 800;
-      letter-spacing: 0.25em;
-      font-size: clamp(28px, 8vw, 84px);
-      color: var(--wm-color);
-      mix-blend-mode: multiply;
-    }
-
-/* ===== 3 colonnes : m-1 | m | m+1 ===== */
-.months-wrap{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(260px, 1fr)); /* 3 colonnes flexibles */
-  gap: 16px;                                           /* espace entre mois */
-  align-content: start;
-}
-
-/* Sur mobile/étroit, on empile proprement en 1 colonne */
-@media (max-width: 900px){
-  .months-wrap{ grid-template-columns: 1fr; }
-}
-
-/* ===== Carte d’un mois (plein-largeur, style Excel) ===== */
-.month{
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  background: #fff;
-  width: 100%;
-  overflow: hidden;             /* pour arrondis propres */
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-}
-
-/* Bande d’en-tête du mois */
-.month__header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  background: #f7f9fc;          /* légère teinte */
-  border-bottom: 1px solid #e6eaf0;
-}
-.month__title{
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-.month__badge{
-  font-size: .8rem;
-  padding: 2px 8px;
-  border-radius: 12px;
-  border: 1px solid #dfe3ea;
-  background: #fff;
-  color: #5f6368;
-}
-
-/* ===== Tableau type Excel ===== */
-.month__table{
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;          /* colonnes stables */
-  font-size: .95rem;
-}
-.month__table thead th{
-  text-align: left;
-  font-weight: 700;
-  color: #3c4043;
-  background: #fafbfe;
-  border-bottom: 1px solid #eceff4;
-  padding: 8px 10px;
-}
-.month__table tbody td{
-  border-top: 1px dashed #eef1f6;
-  padding: 8px 10px;
-  color: #202124;
-}
-
-/* Zébrage doux */
-.month__table tbody tr:nth-child(odd)  { background: #fff; }
-.month__table tbody tr:nth-child(even) { background: #fcfdff; }
-
-/* Week-ends légèrement grisés (samedi: col 6, dimanche: col 7) */
-.month__table tbody td.is-sat,
-.month__table thead th.is-sat { color: #5f6368; }
-.month__table tbody td.is-sun,
-.month__table thead th.is-sun { color: #5f6368; }
-
-/* Aujourd’hui en surbrillance légère */
-.month__table td.is-today{
-  font-weight: 700;
-  color: #1a73e8;
-}
-
-/* ===== Légende (conserve) ===== */
-.legend{
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.badge{
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  border: 1px solid #ddd;
-  background:#fafafa;
-}
-.badge.forbidden{ border-color:#c62828; color:#c62828; }
-.badge.today{ border-color:#1a73e8; color:#1a73e8; }
-``
-    .village-info{
-      margin-top: 16px;
-      border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 12px;
-      background: #fff;
-    }
-    .info-row{
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 10px;
-      padding: 4px 0;
-      border-bottom: 1px dashed #f0f0f0;
-    }
-    .info-row:last-child{ border-bottom: none; }
-    .info-label{ color:#5f6368; }
-    .info-value{ font-weight: 500; }
-
-    footer{
-      padding: 14px 16px;
-      border-top: 1px solid #eee;
-      color:#5f6368;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-  </style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#202124}
+header{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid #eee}
+header .logo{width:48px;height:48px;border-radius:10px}
+header h1{margin:0;font-size:1.4rem} header p{margin:0;color:#5f6368}
+main{padding:12px 16px}
+/* Toolbar : NAV au-dessus PARAMS */
+.toolbar{display:grid;grid-template-areas:"nav" "params";grid-auto-rows:auto;gap:10px;margin-block:8px 12px}
+.toolbar__nav{grid-area:nav;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.toolbar__params{grid-area:params;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.strong{font-weight:600}.wide{min-width:180px}
+.toolbar button{height:var(--btn-h);min-width:var(--btn-h);padding:0 12px;border:1px solid var(--btn-border);border-radius:var(--btn-radius);background:var(--btn-bg);color:var(--btn-fg);display:inline-flex;align-items:center;justify-content:center;font:inherit;line-height:1;cursor:pointer;user-select:none;transition:background .15s,border-color .15s}
+.toolbar button:hover{background:#eef0f3}.toolbar button:active{background:#e6e9ee}.toolbar button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.status{margin-left:auto;color:#5f6368;font-size:.9rem}
+.three-months{position:relative;overflow:hidden;border:1px solid #eee;border-radius:10px;padding:10px;background:#fff;min-height:240px}
+#watermark.watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;transform:rotate(-35deg);transform-origin:center;font-weight:800;letter-spacing:.25em;font-size:clamp(28px,8vw,84px);color:var(--wm-color);mix-blend-mode:multiply}
+.months-wrap{display:grid;grid-template-columns:repeat(3, minmax(260px, 1fr));gap:12px}
+@media (max-width:900px){.months-wrap{grid-template-columns:1fr}}
+.month{border:1px solid #e6e6e6;border-radius:8px;padding:10px;background:#fff}
+.month h3{margin:0 0 8px 0;font-size:1rem;text-transform:capitalize}
+.legend{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.85rem;border:1px solid #ddd;background:#fafafa}
+.badge.forbidden{border-color:#c62828;color:#c62828}.badge.today{border-color:#1a73e8;color:#1a73e8}
+.village-info{margin-top:16px;border:1px solid #eee;border-radius:10px;padding:12px;background:#fff}
+.info-row{display:grid;grid-template-columns:180px 1fr;gap:10px;padding:4px 0;border-bottom:1px dashed #f0f0f0}
+.info-row:last-child{border-bottom:none}.info-label{color:#5f6368}.info-value{font-weight:500}
+footer{padding:14px 16px;border-top:1px solid #eee;color:#5f6368;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+</style>
 </head>
 <body>
   <header>
-    <!-- Icône locale : si elle n’existe pas, pas grave -->
-    <img src="icons/icon-192.png" alt="Logo Calendrier du Village" class="ditionnel de 8 jours</p>
+    <img src="icons/icon-192.png" alt="Logo Calendrier du Village" class="logo">
+    <h1>Calendrier du Village</h1>
+    <p>Cycle traditionnel de 8 jours</p>
   </header>
-
   <main>
-    <!-- Toolbar en 2 lignes : L1 = Navigation / L2 = Paramètres -->
     <section class="toolbar">
-      <!-- L1 : Navigation -->
-      <div class="toolbar__row toolbar__nav" role="group" aria-label="Navigation">
+      <div class="toolbar__nav" role="group" aria-label="Navigation">
         <button id="prevYearBtn" aria-label="Année précédente">« 1 an</button>
-        <button id="prev3Btn"   aria-label="Reculer de 3 mois">‹‹ 3 mois</button>
-        <button id="todayBtn"   aria-label="Aller à aujourd’hui">Aujourd’hui</button>
-        <button id="next3Btn"   aria-label="Avancer de 3 mois">3 mois ››</button>
+        <button id="prev3Btn" aria-label="Reculer de 3 mois">‹‹ 3 mois</button>
+        <button id="todayBtn" aria-label="Aller à aujourd’hui">Aujourd’hui</button>
+        <button id="next3Btn" aria-label="Avancer de 3 mois">3 mois ››</button>
         <button id="nextYearBtn" aria-label="Année suivante">1 an »</button>
+        <div id="dataStatus" class="status" aria-live="polite"></div>
       </div>
-
-      <!-- L2 : Paramètres -->
-      <div class="toolbar__row toolbar__params">
+      <div class="toolbar__params">
         <label for="villageSelect" class="strong">Village :</label>
         <select id="villageSelect" class="wide">
           <option value="BALENGOU" selected>BALENGOU</option>
@@ -275,48 +63,29 @@
           <option value="N’DJAM">N’DJAM</option>
           <option value="KOLO">KOLO</option>
         </select>
-
         <label for="yearInput" class="strong">Année :</label>
         <input id="yearInput" type="number" step="1" min="1800" max="2400" style="width:100px" />
-
         <label for="monthSelect" class="strong">Mois :</label>
         <select id="monthSelect"></select>
-
         <label for="tradSelect" class="strong">MTrad :</label>
         <select id="tradSelect"></select>
       </div>
-
-      <div id="dataStatus" class="status" aria-live="polite"></div>
     </section>
 
-    <!-- Zone des 3 mois : watermark interne -->
     <section class="three-months">
       <div id="watermark" class="watermark" aria-hidden="true"></div>
-      <div id="monthsWrap" class="months-wrap"><!-- Rendu JS --></div>
+      <div id="monthsWrap" class="months-wrap"></div>
       <div class="legend">
         <span class="badge forbidden">Jours interdits</span>
         <span class="badge today">Aujourd’hui</span>
       </div>
     </section>
 
-    <!-- Infos village -->
     <section class="village-info">
-      <div class="info-row">
-        <div class="info-label">Roi du village :</div>
-        <div class="info-value" id="chief">—</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Jour de marché :</div>
-        <div class="info-value" id="market">—</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">Informations :</div>
-        <div class="info-value" id="moreInfos">—</div>
-      </div>
-      <div class="info-row forbidden-row">
-        <div class="info-label">Jours interdits :</div>
-        <div class="info-value" id="forbidden">—</div>
-      </div>
+      <div class="info-row"><div class="info-label">Roi du village :</div><div class="info-value" id="chief">—</div></div>
+      <div class="info-row"><div class="info-label">Jour de marché :</div><div class="info-value" id="market">—</div></div>
+      <div class="info-row"><div class="info-label">Informations :</div><div class="info-value" id="moreInfos">—</div></div>
+      <div class="info-row forbidden-row"><div class="info-label">Jours interdits :</div><div class="info-value" id="forbidden">—</div></div>
     </section>
   </main>
 
@@ -325,290 +94,78 @@
     <small>© <span id="year"></span> Calendrier du Village</small>
   </footer>
 
-  <!-- ==== JS INLINE (pas de <script src>) ==== -->
- <script>
-  (function(){
-    // =======================
-    // Sélecteurs
-    // =======================
-    const $watermark   = document.getElementById('watermark');
-    const $monthsWrap  = document.getElementById('monthsWrap');
+  <script>(function(){
+  const $watermark=document.getElementById('watermark');
+  const $monthsWrap=document.getElementById('monthsWrap');
+  const $villageSel=document.getElementById('villageSelect');
+  const $yearInput=document.getElementById('yearInput');
+  const $monthSelect=document.getElementById('monthSelect');
+  const $tradSelect=document.getElementById('tradSelect');
+  const $prevYearBtn=document.getElementById('prevYearBtn');
+  const $prev3Btn=document.getElementById('prev3Btn');
+  const $todayBtn=document.getElementById('todayBtn');
+  const $next3Btn=document.getElementById('next3Btn');
+  const $nextYearBtn=document.getElementById('nextYearBtn');
+  const $footerYear=document.getElementById('year');
 
-    const $villageSel  = document.getElementById('villageSelect');
-    const $yearInput   = document.getElementById('yearInput');
-    const $monthSelect = document.getElementById('monthSelect');
-    const $tradSelect  = document.getElementById('tradSelect');
+  const now=new Date();
+  const state={year:now.getFullYear(),month:now.getMonth(),village:($villageSel?.value||'BALENGOU')};
 
-    const $prevYearBtn = document.getElementById('prevYearBtn');
-    const $prev3Btn    = document.getElementById('prev3Btn');
-    const $todayBtn    = document.getElementById('todayBtn');
-    const $next3Btn    = document.getElementById('next3Btn');
-    const $nextYearBtn = document.getElementById('nextYearBtn');
+  const MONTHS_FR=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 
-    // État
-    const now = new Date();
-    const state = {
-      year:  now.getFullYear(),
-      month: now.getMonth(),                // 0..11
-      village: ($villageSel?.value || 'BALENGOU')
-    };
+  function formatWatermark(v){return String(v||'').toUpperCase()}
+  function updateWatermark(){if(!$watermark)return;const v=(state.village||'').trim();$watermark.textContent=v?formatWatermark(v):''}
 
-    // =======================
-    // Constantes utilitaires
-    // =======================
-    const MONTHS_FR = [
-      'janvier','février','mars','avril','mai','juin',
-      'juillet','août','septembre','octobre','novembre','décembre'
-    ];
-    const WEEKDAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
-    const weekdayName = d => WEEKDAYS[(d.getDay() + 6) % 7]; // 0=Dim..6=Sam -> Lundi..Dimanche
-
-    // =======================
-    // Watermark
-    // =======================
-    function formatWatermark(village){ return String(village || '').toUpperCase(); }
-    function updateWatermark(){
-      if (!$watermark) return;
-      const v = (state.village || '').trim();
-      $watermark.textContent = v ? formatWatermark(v) : '';
+  function renderThreeMonths(){
+    if(!$monthsWrap)return; $monthsWrap.innerHTML='';
+    const start=new Date(state.year,state.month-1,1);
+    for(let k=0;k<3;k++){
+      const d=new Date(start.getFullYear(),start.getMonth()+k,1);
+      const y=d.getFullYear(); const m=d.getMonth();
+      const $m=document.createElement('div'); $m.className='month';
+      const $h=document.createElement('h3'); $h.textContent=`${MONTHS_FR[m]} ${y}`; $m.appendChild($h);
+      const $table=document.createElement('table'); $table.style.width='100%'; $table.style.borderCollapse='collapse'; $table.style.fontSize='0.9rem';
+      const $thead=document.createElement('thead'); const $trh=document.createElement('tr');
+      ['lu','ma','me','je','ve','sa','di'].forEach(lbl=>{const th=document.createElement('th'); th.textContent=lbl; th.style.textAlign='center'; th.style.fontWeight='600'; th.style.padding='4px 0'; $trh.appendChild(th)});
+      $thead.appendChild($trh); $table.appendChild($thead);
+      const $tbody=document.createElement('tbody');
+      const firstDay=new Date(y,m,1); const startDow=(firstDay.getDay()+6)%7; const daysInMonth=new Date(y,m+1,0).getDate();
+      let day=1; for(let r=0;r<6;r++){ const tr=document.createElement('tr');
+        for(let c=0;c<7;c++){ const td=document.createElement('td'); td.style.textAlign='center'; td.style.padding='4px'; td.style.borderTop='1px dashed #eee';
+          const cellIndex=r*7+c; if(cellIndex>=startDow && day<=daysInMonth){ const isToday=(y===now.getFullYear()&&m===now.getMonth()&&day===now.getDate()); td.textContent=day; if(isToday){ td.style.fontWeight='700'; td.style.color='#1a73e8'; } day++; } else { td.textContent=''; }
+          tr.appendChild(td); }
+        $tbody.appendChild(tr); }
+      $table.appendChild($tbody); $m.appendChild($table); $monthsWrap.appendChild($m);
     }
+  }
 
-    // =======================
-    // MTrad → Grégorien
-    // (adapter si les mois tradi ne coïncident pas 1:1)
-    // =======================
-    // M1..M12 → Jan..Déc (0..11) par défaut :
-    const MTRAD_TO_GREG = { 0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11 };
+  function render(){ if($yearInput)$yearInput.value=state.year; if($monthSelect)$monthSelect.value=String(state.month); renderThreeMonths(); updateWatermark(); }
+  function shiftMonths(d){ const dd=new Date(state.year,state.month+d,1); state.year=dd.getFullYear(); state.month=dd.getMonth(); render(); }
+  function shiftYears(d){ state.year+=d; render(); }
+  function goToday(){ const t=new Date(); state.year=t.getFullYear(); state.month=t.getMonth(); render(); }
 
-    // =======================
-    // Coloration par village (placeholders)
-    // =======================
-    // Remplace par tes vraies règles (indices du cycle 0..7)
-    const VILLAGE_RULES = {
-      'BALENGOU': {
-        forbiddenTradIdx: [1,4,6], // ex. T2, T5, T7
-        marketTradIdx:    [2],     // ex. T3
-        // marketWeekday: 6,       // (option) Samedi marché
-      },
-      // 'BANDA': {...}, 'N’DJAM': {...} etc.
-    };
+  function initMonthSelect(){ if(!$monthSelect)return; $monthSelect.innerHTML=''; MONTHS_FR.forEach((name,i)=>{const opt=document.createElement('option'); opt.value=String(i); opt.textContent=name[0].toUpperCase()+name.slice(1); $monthSelect.appendChild(opt);}); $monthSelect.value=String(state.month); }
+  function initTradSelect(){ if(!$tradSelect)return; $tradSelect.innerHTML=''; for(let i=0;i<12;i++){ const opt=document.createElement('option'); opt.value=String(i); opt.textContent='M'+(i+1); $tradSelect.appendChild(opt);} }
 
-    function applyRowColoring(tr, ctx){
-      const vName = String(state.village || '').toUpperCase();
-      const rules = VILLAGE_RULES[vName];
-      if (!rules) return;
+  function bindEvents(){
+    $prevYearBtn&&$prevYearBtn.addEventListener('click',()=>shiftYears(-1));
+    $nextYearBtn&&$nextYearBtn.addEventListener('click',()=>shiftYears(+1));
+    $prev3Btn&&$prev3Btn.addEventListener('click',()=>shiftMonths(-3));
+    $next3Btn&&$next3Btn.addEventListener('click',()=>shiftMonths(+3));
+    $todayBtn&&$todayBtn.addEventListener('click',goToday);
+    $villageSel&&$villageSel.addEventListener('change',e=>{state.village=(e.target.value||'').trim(); updateWatermark();});
+    $yearInput&&$yearInput.addEventListener('change',e=>{const v=parseInt(e.target.value,10); if(!isNaN(v)){state.year=v; render();}});
+    $monthSelect&&$monthSelect.addEventListener('change',e=>{const n=Number(e.target.value); if(Number.isFinite(n)){ state.month=n; render(); }});
+    $tradSelect&&$tradSelect.addEventListener('change',()=>{/* baseline: ne change pas le mois */});
+  }
 
-      const { tradIndex, dow } = ctx;
-
-      if (Array.isArray(rules.forbiddenTradIdx) && rules.forbiddenTradIdx.includes(tradIndex)){
-        tr.classList.add('row--forbidden');
-      }
-      if (Array.isArray(rules.marketTradIdx) && rules.marketTradIdx.includes(tradIndex)){
-        tr.classList.add('row--market');
-      }
-      if (typeof rules.marketWeekday === 'number' && rules.marketWeekday === dow){
-        tr.classList.add('row--market');
-      }
-    }
-
-    // =======================
-    // Rendu des 3 mois : m-1 | m | m+1
-    // =======================
-    function renderThreeMonths(){
-      if (!$monthsWrap) return;
-      $monthsWrap.innerHTML = '';
-
-      // Cycle de 8 (placeholder) — remplace par tes vrais noms quand tu me les donnes
-      const TRAD8 = ['T1','T2','T3','T4','T5','T6','T7','T8'];
-
-      // Point de départ = mois central - 1
-      const start = new Date(state.year, state.month - 1, 1);
-
-      for (let k=0; k<3; k++){
-        const d0 = new Date(start.getFullYear(), start.getMonth() + k, 1);
-        const y  = d0.getFullYear();
-        const m  = d0.getMonth();
-
-        // Carte mois
-        const $m = document.createElement('div');
-        $m.className = 'month';
-        if (k === 1) $m.classList.add('month--center'); // repère mois central
-
-        // En-tête
-        const $header = document.createElement('div');
-        $header.className = 'month__header';
-        const $title = document.createElement('h3');
-        $title.className = 'month__title';
-        $title.textContent = new Date(y, m, 1).toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
-        const $badge = document.createElement('span');
-        $badge.className = 'month__badge';
-        $badge.textContent = '—'; // (option) y mettre l’intitulé MTrad
-        $header.appendChild($title);
-        $header.appendChild($badge);
-        $m.appendChild($header);
-
-        // Tableau type Excel
-        const $table = document.createElement('table');
-        $table.className = 'month__table';
-
-        // THEAD
-        const $thead = document.createElement('thead');
-        const $trh = document.createElement('tr');
-        ['Date','Jour','Trad.'].forEach((lbl, idx) => {
-          const th = document.createElement('th');
-          th.textContent = lbl;
-          if (idx === 1) th.style.width = '35%';
-          if (idx === 2) th.style.width = '25%';
-          $trh.appendChild(th);
-        });
-        $thead.appendChild($trh);
-        $table.appendChild($thead);
-
-        // TBODY
-        const $tbody = document.createElement('tbody');
-        const daysInMonth = new Date(y, m+1, 0).getDate();
-
-        for (let day=1; day<=daysInMonth; day++){
-          const d = new Date(y, m, day);
-          const tr = document.createElement('tr');
-
-          // Date
-          const tdDate = document.createElement('td');
-          tdDate.textContent = String(day);
-          const isToday = (y===now.getFullYear() && m===now.getMonth() && day===now.getDate());
-          if (isToday) tdDate.classList.add('is-today');
-          tr.appendChild(tdDate);
-
-          // Jour
-          const tdJour = document.createElement('td');
-          tdJour.textContent = weekdayName(d);
-          const dow = d.getDay(); // 0=Dim..6=Sam
-          if (dow === 6) tdJour.classList.add('is-sat');
-          if (dow === 0) tdJour.classList.add('is-sun');
-          tr.appendChild(tdJour);
-
-          // Trad. (placeholder)
-          const tdTrad = document.createElement('td');
-          const tradIndex = (day - 1) % 8;
-          tdTrad.textContent = TRAD8[tradIndex];
-          tr.appendChild(tdTrad);
-
-          // Couleurs selon règles village
-          applyRowColoring(tr, { y, m, day, tradIndex, dow });
-
-          $tbody.appendChild(tr);
-        }
-
-        $table.appendChild($tbody);
-        $m.appendChild($table);
-        $monthsWrap.appendChild($m);
-      }
-    }
-
-    // =======================
-    // Rendu global & navigation
-    // =======================
-    function render(){
-      if ($yearInput)   $yearInput.value = state.year;
-      if ($monthSelect) $monthSelect.value = String(state.month);
-      renderThreeMonths();
-      updateWatermark();
-    }
-
-    function shiftMonths(delta){
-      const d = new Date(state.year, state.month + delta, 1);
-      state.year  = d.getFullYear();
-      state.month = d.getMonth();
-      render();
-    }
-    function shiftYears(delta){ state.year += delta; render(); }
-    function goToday(){
-      const t = new Date();
-      state.year  = t.getFullYear();
-      state.month = t.getMonth();
-      render();
-    }
-
-    // =======================
-    // Initialisation des selects
-    // =======================
-    function initMonthSelect(){
-      if (!$monthSelect) return;
-      $monthSelect.innerHTML = '';
-      MONTHS_FR.forEach((name, i) => {
-        const opt = document.createElement('option');
-        opt.value = String(i);
-        opt.textContent = name[0].toUpperCase() + name.slice(1);
-        $monthSelect.appendChild(opt);
-      });
-      $monthSelect.value = String(state.month);
-    }
-    function initTradSelect(){
-      if (!$tradSelect) return;
-      $tradSelect.innerHTML = '';
-      // Placeholder M1..M12
-      for (let i=0; i<12; i++){
-        const opt = document.createElement('option');
-        opt.value = String(i);
-        opt.textContent = 'M' + (i+1);
-        $tradSelect.appendChild(opt);
-      }
-    }
-
-    // =======================
-    // Changement MTrad / Mois → centrer sur m
-    // =======================
-    function onTradChange(idx){
-      const n = Number(idx);
-      if (!Number.isFinite(n)) return;
-      const greg = MTRAD_TO_GREG[n] ?? state.month;
-      state.month = greg;              // le centre devient ce mois
-      render();
-    }
-    function onMonthChange(idx){
-      const n = Number(idx);
-      if (!Number.isFinite(n)) return;
-      state.month = n;                 // le centre devient ce mois
-      render();
-    }
-
-    // =======================
-    // Bind des événements
-    // =======================
-    function bindEvents(){
-      // Nav
-      $prevYearBtn && $prevYearBtn.addEventListener('click', ()=> shiftYears(-1));
-      $nextYearBtn && $nextYearBtn.addEventListener('click', ()=> shiftYears(+1));
-      $prev3Btn    && $prev3Btn.addEventListener('click',   ()=> shiftMonths(-3));
-      $next3Btn    && $next3Btn.addEventListener('click',   ()=> shiftMonths(+3));
-      $todayBtn    && $todayBtn.addEventListener('click',   goToday);
-
-      // Paramètres
-      $villageSel  && $villageSel.addEventListener('change', e => { state.village = (e.target.value || '').trim(); updateWatermark(); });
-      $yearInput   && $yearInput.addEventListener('change', e => { const v = parseInt(e.target.value, 10); if (!isNaN(v)) { state.year = v; render(); } });
-      $monthSelect && $monthSelect.addEventListener('change', e => onMonthChange(e.target.value));
-      $tradSelect  && $tradSelect.addEventListener('change', e => onTradChange(e.target.value));
-    }
-
-    // =======================
-    // Démarrage
-    // =======================
-    document.addEventListener('DOMContentLoaded', () => {
-      // Footer année
-      const $footerYear = document.getElementById('year');
-      if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
-
-      // Village par défaut
-      if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
-      state.village = ($villageSel?.value || state.village);
-
-      // Inits + events + premier rendu
-      initMonthSelect();
-      initTradSelect();
-      bindEvents();
-      render();
-    });
-  })();
+  document.addEventListener('DOMContentLoaded',()=>{
+    if($footerYear)$footerYear.textContent=String(new Date().getFullYear());
+    if($villageSel&&!$villageSel.value)$villageSel.value=state.village; state.village=($villageSel?.value||state.village);
+    if($yearInput)$yearInput.value=state.year;
+    initMonthSelect(); initTradSelect(); bindEvents(); render();
+  });
+})();
 </script>
 </body>
 </html>
