@@ -1,11 +1,48 @@
 {
   "meta": {
-    "version": 2
+    "version": 6
+  },
+  "roi": "(Param_Table!Y5)",
+  "market_info": [
+    "(Param_Table!Z5)",
+    "(Param_Table!AA5)",
+    "(Param_Table!AB5)"
+  ],
+  "extra_info": "(Param_Table!AC5)",
+  "traditional_months": {
+    "ALL": {
+      "1": "Mois trad. A",
+      "2": "Mois trad. B",
+      "3": "Mois trad. C",
+      "4": "Mois trad. D",
+      "5": "Mois trad. E",
+      "6": "Mois trad. F",
+      "7": "Mois trad. G",
+      "8": "Mois trad. H",
+      "9": "Mois trad. I",
+      "10": "Mois trad. J",
+      "11": "Mois trad. K",
+      "12": "Mois trad. L"
+    },
+    "BALENGOU": {
+      "1": "Zeugn’ia",
+      "2": "Tizoueu",
+      "3": "Ndi’nkap",
+      "4": "Nzeghio",
+      "5": "Ndj’koua",
+      "6": "Ngouo",
+      "7": "Nkouo",
+      "8": "Zem’ze",
+      "9": "Nzié",
+      "10": "Bendjou",
+      "11": "Tsa’tsa",
+      "12": "Ngam’ze"
+    }
   },
   "entries": [
     {
       "dateISO": "2026-03-05",
-      "village": "all",
+      "village": "ALL",
       "trad": "Ndin'kap",
       "tags": [
         "forbidden"
@@ -13,7 +50,7 @@
     },
     {
       "dateISO": "2026-03-10",
-      "village": "balengou",
+      "village": "BALENGOU",
       "trad": "Nzeghio",
       "tags": [
         "market"
@@ -21,7 +58,7 @@
     },
     {
       "dateISO": "2026-03-15",
-      "village": "all",
+      "village": "ALL",
       "trad": "Ndj'koua",
       "tags": [
         "forbidden",
