@@ -365,101 +365,27 @@
         $watermark.textContent = v ? formatWatermark(v) : '';
       }
 
-      function renderThreeMonths(){
-  if (!$monthsWrap) return;
-  $monthsWrap.innerHTML = '';
+    /* ===== Toolbar : nav en 1ère ligne, paramètres en 2ème ===== */
+.toolbar{
+  display: grid;
+  grid-template-areas:
+    "nav"
+    "params";
+  grid-auto-rows: auto;
+  gap: 10px;
+  margin-block: 8px 12px;
+}
+.toolbar__nav   { grid-area: nav; }
+.toolbar__params{ grid-area: params; }
 
-  // Placeholders pour la colonne "Trad" (cycle de 8 jours).
-  // ⚠️ Tu peux remplacer T1..T8 par tes vrais noms une fois prêts.
-  const TRAD8 = ['T1','T2','T3','T4','T5','T6','T7','T8'];
-
-  // Fonction utilitaire : nom du jour (Lundi..Dimanche)
-  const WEEKDAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
-  function weekdayName(dateObj){
-    let d = dateObj.getDay(); // 0=Dimanche..6=Samedi
-    // On renvoie Lundi..Dimanche
-    return WEEKDAYS[(d + 6) % 7];
-  }
-
-  for (let k=0; k<3; k++){
-    const d0 = new Date(state.year, state.month + k, 1);
-    const y  = d0.getFullYear();
-    const m  = d0.getMonth();
-
-    // Conteneur du mois
-    const $m = document.createElement('div');
-    $m.className = 'month';
-
-    // En-tête du mois
-    const $header = document.createElement('div');
-    $header.className = 'month__header';
-
-    const title = new Date(y, m, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    const $title = document.createElement('h3');
-    $title.className = 'month__title';
-    $title.textContent = title;
-
-    const $badge = document.createElement('span');
-    $badge.className = 'month__badge';
-    $badge.textContent = '—'; // ex. badge MTrad si tu veux plus tard
-
-    $header.appendChild($title);
-    $header.appendChild($badge);
-    $m.appendChild($header);
-
-    // Tableau style Excel (Date | Jour | Trad)
-    const $table = document.createElement('table');
-    $table.className = 'month__table';
-
-    // THEAD
-    const $thead = document.createElement('thead');
-    const $trh = document.createElement('tr');
-    ['Date','Jour','Trad.'].forEach((lbl, idx) => {
-      const th = document.createElement('th');
-      th.textContent = lbl;
-      if (idx === 1) th.style.width = '35%';   // Jour
-      if (idx === 2) th.style.width = '25%';   // Trad
-      $trh.appendChild(th);
-    });
-    $thead.appendChild($trh);
-    $table.appendChild($thead);
-
-    // TBODY
-    const $tbody = document.createElement('tbody');
-    const daysInMonth = new Date(y, m+1, 0).getDate();
-
-    // Choix d’un point de départ pour le cycle de 8 (placeholder)
-    // Ici: 1er du mois => T1, 2 => T2, etc. (à remplacer par ta vraie règle si différente)
-    for (let day=1; day<=daysInMonth; day++){
-      const d = new Date(y, m, day);
-      const tr = document.createElement('tr');
-
-      // Colonne Date (n°)
-      const tdDate = document.createElement('td');
-      tdDate.textContent = String(day).padStart(2,' ');
-      // Aujourd’hui ?
-      const isToday = (y===now.getFullYear() && m===now.getMonth() && day===now.getDate());
-      if (isToday) tdDate.classList.add('is-today');
-      tr.appendChild(tdDate);
-
-      // Colonne Jour (Lundi..Dimanche)
-      const tdJour = document.createElement('td');
-      tdJour.textContent = weekdayName(d);
-      // samedi/dimanche (teinte)
-      const dow = d.getDay(); // 0=Dim,6=Sam
-      if (dow === 6) tdJour.classList.add('is-sat');
-      if (dow === 0) tdJour.classList.add('is-sun');
-      tr.appendChild(tdJour);
-
-      // Colonne Trad (cycle de 8 — placeholder)
-      const tdTrad = document.createElement('td');
-      const tradIndex = (day - 1) % 8;
-      tdTrad.textContent = TRAD8[tradIndex];  // ⇐ remplace par tes vrais noms quand prêts
-      tr.appendChild(tdTrad);
-
-      $tbody.appendChild(tr);
-    }
-
+@media (min-width: 1200px){
+  /* Si tu veux, on peut passer en 2 colonnes sur très large écran :
+     nav à gauche, paramètres à droite (décommenter si souhaité) */
+  /* .toolbar{
+       grid-template-areas: "nav params";
+       grid-template-columns: 1fr 1fr;
+     } */
+}
     $table.appendChild($tbody);
     $m.appendChild($table);
     $monthsWrap.appendChild($m);
