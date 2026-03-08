@@ -1,89 +1,271 @@
 (function(){
+  // =======================
   // Sélecteurs
-  const $watermark=document.getElementById('watermark');
-  const $monthsWrap=document.getElementById('monthsWrap');
-  const $villageSel=document.getElementById('villageSelect');
-  const $yearInput=document.getElementById('yearInput');
-  const $monthSelect=document.getElementById('monthSelect');
-  const $tradSelect=document.getElementById('tradSelect');
-  const $prevYearBtn=document.getElementById('prevYearBtn');
-  const $prev3Btn=document.getElementById('prev3Btn');
-  const $todayBtn=document.getElementById('todayBtn');
-  const $next3Btn=document.getElementById('next3Btn');
-  const $nextYearBtn=document.getElementById('nextYearBtn');
-  const $footerYear=document.getElementById('year');
+  // =======================
+  const $watermark   = document.getElementById('watermark');
+  const $monthsWrap  = document.getElementById('monthsWrap');
 
+  const $villageSel  = document.getElementById('villageSelect');
+  const $yearInput   = document.getElementById('yearInput');
+  const $monthSelect = document.getElementById('monthSelect');
+  const $tradSelect  = document.getElementById('tradSelect');
+
+  const $prevYearBtn = document.getElementById('prevYearBtn');
+  const $prev3Btn    = document.getElementById('prev3Btn');
+  const $todayBtn    = document.getElementById('todayBtn');
+  const $next3Btn    = document.getElementById('next3Btn');
+  const $nextYearBtn = document.getElementById('nextYearBtn');
+
+  const $footerYear  = document.getElementById('year');
+
+  // =======================
   // État
-  const now=new Date();
-  const state={year:now.getFullYear(),month:now.getMonth(),village:($villageSel?.value||'BALENGOU')};
+  // =======================
+  const now = new Date();
+  const state = {
+    year: now.getFullYear(),
+    month: now.getMonth(),                // 0..11 (mois central = m)
+    village: ($villageSel?.value || 'BALENGOU')
+  };
 
-  // Constantes
-  const MONTHS_FR=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  // =======================
+  // Constantes utilitaires
+  // =======================
+  const MONTHS_FR = [
+    'janvier','février','mars','avril','mai','juin',
+    'juillet','août','septembre','octobre','novembre','décembre'
+  ];
+  const WEEKDAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+  const weekdayName = d => WEEKDAYS[(d.getDay() + 6) % 7]; // 0=Dim..6=Sam -> Lundi..Dimanche
 
+  // Cycle 8 (placeholder) — remplace par les vrais noms quand tu me les donnes
+  const TRAD8 = ['T1','T2','T3','T4','T5','T6','T7','T8'];
+
+  // =======================
   // Watermark
-  function formatWatermark(v){return String(v||'').toUpperCase()}
-  function updateWatermark(){ if(!$watermark) return; const v=(state.village||'').trim(); $watermark.textContent=v?formatWatermark(v):''; }
+  // =======================
+  function formatWatermark(village){ return String(village || '').toUpperCase(); }
+  function updateWatermark(){
+    if (!$watermark) return;
+    const v = (state.village || '').trim();
+    $watermark.textContent = v ? formatWatermark(v) : '';
+  }
 
-  // Rendu 3 mois : m-1 | m | m+1 (vue simple)
-  function renderThreeMonths(){
-    if(!$monthsWrap) return; $monthsWrap.innerHTML='';
-    const start=new Date(state.year,state.month-1,1);
-    for(let k=0;k<3;k++){
-      const d=new Date(start.getFullYear(),start.getMonth()+k,1);
-      const y=d.getFullYear(); const m=d.getMonth();
+  // =======================
+  // MTrad → Grégorien (adapter si nécessaire)
+  // =======================
+  // Par défaut: M1..M12 → Jan..Déc (0..11)
+  const MTRAD_TO_GREG = { 0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11 };
 
-      const $m=document.createElement('div'); $m.className='month';
-      const $h=document.createElement('h3'); $h.textContent=`${MONTHS_FR[m]} ${y}`; $m.appendChild($h);
+  // =======================
+  // Coloration par village (placeholder)
+  // =======================
+  // Donne-moi tes vraies règles et je remplace ces valeurs.
+  const VILLAGE_RULES = {
+    'BALENGOU': {
+      forbiddenTradIdx: [1,4,6], // T2, T5, T7 (indices 0..7)
+      marketTradIdx:    [2],     // T3
+      // marketWeekday: 6,       // (option) Samedi = marché (0=Dim..6=Sam)
+    },
+    // 'BANDA': {...}, 'N’DJAM': {...}, etc.
+  };
 
-      const $table=document.createElement('table');
-      const $thead=document.createElement('thead'); const $trh=document.createElement('tr');
-      ;['lu','ma','me','je','ve','sa','di'].forEach(lbl=>{const th=document.createElement('th'); th.textContent=lbl; $trh.appendChild(th)});
-      $thead.appendChild($trh); $table.appendChild($thead);
+  function applyRowColoring(tr, ctx){
+    const vName = String(state.village || '').toUpperCase();
+    const rules = VILLAGE_RULES[vName];
+    if (!rules) return;
 
-      const $tbody=document.createElement('tbody');
-      const firstDay=new Date(y,m,1); const startDow=(firstDay.getDay()+6)%7; const daysInMonth=new Date(y,m+1,0).getDate();
-      let day=1; for(let r=0;r<6;r++){
-        const tr=document.createElement('tr');
-        for(let c=0;c<7;c++){
-          const td=document.createElement('td');
-          const cellIndex=r*7+c;
-          if(cellIndex>=startDow && day<=daysInMonth){
-            const isToday=(y===now.getFullYear()&&m===now.getMonth()&&day===now.getDate());
-            td.textContent=day; if(isToday){ td.style.fontWeight='700'; td.style.color='#1a73e8'; }
-            day++;
-          } else { td.textContent=''; }
-          tr.appendChild(td);
-        }
-        $tbody.appendChild(tr);
-      }
-      $table.appendChild($tbody); $m.appendChild($table); $monthsWrap.appendChild($m);
+    const { tradIndex, dow } = ctx;
+
+    if (Array.isArray(rules.forbiddenTradIdx) && rules.forbiddenTradIdx.includes(tradIndex)){
+      tr.classList.add('row--forbidden');
+    }
+    if (Array.isArray(rules.marketTradIdx) && rules.marketTradIdx.includes(tradIndex)){
+      tr.classList.add('row--market');
+    }
+    if (typeof rules.marketWeekday === 'number' && rules.marketWeekday === dow){
+      tr.classList.add('row--market');
     }
   }
 
-  function render(){ if($yearInput)$yearInput.value=state.year; if($monthSelect)$monthSelect.value=String(state.month); renderThreeMonths(); updateWatermark(); }
-  function shiftMonths(d){ const dd=new Date(state.year,state.month+d,1); state.year=dd.getFullYear(); state.month=dd.getMonth(); render(); }
-  function shiftYears(d){ state.year+=d; render(); }
-  function goToday(){ const t=new Date(); state.year=t.getFullYear(); state.month=t.getMonth(); render(); }
+  // =======================
+  // Rendu 3 mois : m-1 | m | m+1
+  //  -> vue "Excel" : une ligne = un jour (Date | Jour | Trad.)
+  // =======================
+  function renderThreeMonths(){
+    if (!$monthsWrap) return;
+    $monthsWrap.innerHTML = '';
 
-  function initMonthSelect(){ if(!$monthSelect)return; $monthSelect.innerHTML=''; MONTHS_FR.forEach((name,i)=>{const opt=document.createElement('option'); opt.value=String(i); opt.textContent=name[0].toUpperCase()+name.slice(1); $monthSelect.appendChild(opt);}); $monthSelect.value=String(state.month); }
-  function initTradSelect(){ if(!$tradSelect)return; $tradSelect.innerHTML=''; for(let i=0;i<12;i++){ const opt=document.createElement('option'); opt.value=String(i); opt.textContent='M'+(i+1); $tradSelect.appendChild(opt);} }
+    // Départ = m-1
+    const start = new Date(state.year, state.month - 1, 1);
 
-  function bindEvents(){
-    $prevYearBtn&&$prevYearBtn.addEventListener('click',()=>shiftYears(-1));
-    $nextYearBtn&&$nextYearBtn.addEventListener('click',()=>shiftYears(+1));
-    $prev3Btn&&$prev3Btn.addEventListener('click',()=>shiftMonths(-3));
-    $next3Btn&&$next3Btn.addEventListener('click',()=>shiftMonths(+3));
-    $todayBtn&&$todayBtn.addEventListener('click',goToday);
-    $villageSel&&$villageSel.addEventListener('change',e=>{state.village=(e.target.value||'').trim(); updateWatermark();});
-    $yearInput&&$yearInput.addEventListener('change',e=>{const v=parseInt(e.target.value,10); if(!isNaN(v)){ state.year=v; render(); }});
-    $monthSelect&&$monthSelect.addEventListener('change',e=>{const n=Number(e.target.value); if(Number.isFinite(n)){ state.month=n; render(); }});
-    $tradSelect&&$tradSelect.addEventListener('change',()=>{/* à brancher plus tard si nécessaire */});
+    for (let k=0; k<3; k++){
+      const d0 = new Date(start.getFullYear(), start.getMonth() + k, 1);
+      const y  = d0.getFullYear();
+      const m  = d0.getMonth();
+
+      // Carte mois
+      const $card = document.createElement('div');
+      $card.className = 'month';
+
+      // En-tête simple
+      const $h = document.createElement('h3');
+      $h.textContent = `${MONTHS_FR[m]} ${y}`;
+      $card.appendChild($h);
+
+      // Tableau Excel
+      const $table = document.createElement('table');
+      $table.className = 'month__table'; // la classe est stylée via CSS ci-dessous
+
+      // THEAD
+      const $thead = document.createElement('thead');
+      const $trh = document.createElement('tr');
+      ['Date','Jour','Trad.'].forEach((lbl, idx) => {
+        const th = document.createElement('th');
+        th.textContent = lbl;
+        if (idx === 1) th.style.width = '38%';   // Jour
+        if (idx === 2) th.style.width = '22%';   // Trad.
+        $trh.appendChild(th);
+      });
+      $thead.appendChild($trh);
+      $table.appendChild($thead);
+
+      // TBODY
+      const $tbody = document.createElement('tbody');
+      const daysInMonth = new Date(y, m+1, 0).getDate();
+
+      for (let day=1; day<=daysInMonth; day++){
+        const d  = new Date(y, m, day);
+        const dow = d.getDay(); // 0=Dim..6=Sam
+        const tr = document.createElement('tr');
+
+        // Col 1 : Date (n°)
+        const tdDate = document.createElement('td');
+        tdDate.textContent = String(day);
+        const isToday = (y===now.getFullYear() && m===now.getMonth() && day===now.getDate());
+        if (isToday) tdDate.classList.add('is-today');
+        tr.appendChild(tdDate);
+
+        // Col 2 : Jour
+        const tdJour = document.createElement('td');
+        tdJour.textContent = weekdayName(d);
+        if (dow === 6) tdJour.classList.add('is-sat');
+        if (dow === 0) tdJour.classList.add('is-sun');
+        tr.appendChild(tdJour);
+
+        // Col 3 : Trad. (cycle 8 — placeholder)
+        const tdTrad = document.createElement('td');
+        const tradIndex = (day - 1) % 8;
+        tdTrad.textContent = TRAD8[tradIndex];
+        tr.appendChild(tdTrad);
+
+        // Coloration selon règles village
+        applyRowColoring(tr, { y, m, day, tradIndex, dow });
+
+        $tbody.appendChild(tr);
+      }
+
+      $table.appendChild($tbody);
+      $card.appendChild($table);
+      $monthsWrap.appendChild($card);
+    }
   }
 
-  document.addEventListener('DOMContentLoaded',()=>{
-    if($footerYear)$footerYear.textContent=String(new Date().getFullYear());
-    if($villageSel&&!$villageSel.value)$villageSel.value=state.village; state.village=($villageSel?.value||state.village);
-    if($yearInput)$yearInput.value=state.year;
-    initMonthSelect(); initTradSelect(); bindEvents(); render();
+  // =======================
+  // Rendu global & navigation
+  // =======================
+  function render(){
+    if ($yearInput)   $yearInput.value = state.year;
+    if ($monthSelect) $monthSelect.value = String(state.month);
+    renderThreeMonths();
+    updateWatermark();
+  }
+  function shiftMonths(delta){
+    const d = new Date(state.year, state.month + delta, 1);
+    state.year  = d.getFullYear();
+    state.month = d.getMonth();
+    render();
+  }
+  function shiftYears(delta){ state.year += delta; render(); }
+  function goToday(){
+    const t = new Date();
+    state.year  = t.getFullYear();
+    state.month = t.getMonth();
+    render();
+  }
+
+  // =======================
+  // Inits selects
+  // =======================
+  function initMonthSelect(){
+    if (!$monthSelect) return;
+    $monthSelect.innerHTML = '';
+    MONTHS_FR.forEach((name, i) => {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = name[0].toUpperCase() + name.slice(1);
+      $monthSelect.appendChild(opt);
+    });
+    $monthSelect.value = String(state.month);
+  }
+  function initTradSelect(){
+    if (!$tradSelect) return;
+    $tradSelect.innerHTML = '';
+    // Placeholder M1..M12 (adapter labels si besoin)
+    for (let i=0; i<12; i++){
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = 'M' + (i+1);
+      $tradSelect.appendChild(opt);
+    }
+  }
+
+  // =======================
+  // Changement MTrad / Mois → recentrer sur m (mois central)
+  // =======================
+  function onTradChange(idx){
+    const n = Number(idx);
+    if (!Number.isFinite(n)) return;
+    const greg = MTRAD_TO_GREG[n] ?? state.month;
+    state.month = greg;         // m devient le mois choisi
+    render();
+  }
+  function onMonthChange(idx){
+    const n = Number(idx);
+    if (!Number.isFinite(n)) return;
+    state.month = n;            // m devient le mois choisi
+    render();
+  }
+
+  // =======================
+  // Bind events
+  // =======================
+  function bindEvents(){
+    // Nav
+    $prevYearBtn && $prevYearBtn.addEventListener('click', ()=> shiftYears(-1));
+    $nextYearBtn && $nextYearBtn.addEventListener('click', ()=> shiftYears(+1));
+    $prev3Btn    && $prev3Btn.addEventListener('click',   ()=> shiftMonths(-3));
+    $next3Btn    && $next3Btn.addEventListener('click',   ()=> shiftMonths(+3));
+    $todayBtn    && $todayBtn.addEventListener('click',   goToday);
+
+    // Paramètres
+    $villageSel  && $villageSel.addEventListener('change', e => { state.village = (e.target.value || '').trim(); updateWatermark(); });
+    $yearInput   && $yearInput.addEventListener('change', e => { const v = parseInt(e.target.value, 10); if (!isNaN(v)) { state.year = v; render(); } });
+    $monthSelect && $monthSelect.addEventListener('change', e => onMonthChange(e.target.value));
+    $tradSelect  && $tradSelect.addEventListener('change', e => onTradChange(e.target.value));
+  }
+
+  // =======================
+  // Démarrage
+  // =======================
+  document.addEventListener('DOMContentLoaded', () => {
+    if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
+    if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
+    state.village = ($villageSel?.value || state.village);
+
+    initMonthSelect();
+    initTradSelect();
+    bindEvents();
+    render();
   });
 })();
