@@ -1,24 +1,58 @@
 
 let DATA=null; let currentVillage=null;
 
+const defaultData = {
+  reference: { gregorian_date: "2026-02-28", cycle_day: 1 },
+  months_local: {
+    1: "Nka'gnia", 2: "Zeu'gnia", 3: "Ti'zoueu", 4: "Ti'zoueu",
+    5: "Sou'gnia", 6: "Nkap'djap", 7: "Tcho'zoueu", 8: "Tcho'zoueu",
+    9: "Mbuo'gnia", 10: "Zue'Diap", 11: "Chui'Kwelè", 12: "Tchoua'Kwelè"
+  },
+  villages: {
+    BALENGOU: {
+      chief: "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
+      cycle_days: [
+        { num:1, name:"Ngèdjou" }, { num:2, name:"Ndin'kap" },
+        { num:3, name:"Nzeu'gheu" }, { num:4, name:"Ndi'keun" },
+        { num:5, name:"Nzedjio" }, { num:6, name:"Ndi'bou" },
+        { num:7, name:"Ndi'kong" }, { num:8, name:"Nditcheu" }
+      ],
+      forbidden_days: ["Ndin'kap","Nzedjio"],
+      market_days: [],
+      infos: ""
+    }
+  }
+};
+
 async function loadData(){
-  const r=await fetch('data.json'); if(!r.ok) throw new Error('data.json'); DATA=await r.json();
-  const villages=Object.keys(DATA.villages||{}); const saved=localStorage.getItem('village');
-  currentVillage=(saved && villages.includes(saved))? saved : (villages[0]||'BALENGOU');
+  const statusEl = document.getElementById('dataStatus');
+  try {
+    const res = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    DATA = await res.json();
+    statusEl.textContent = '';
+  } catch (e) {
+    // Fallback secours
+    DATA = defaultData;
+    statusEl.textContent = 'Mode secours : data.json indisponible (utilisation des données par défaut).';
+    console.warn('Fallback DATA used:', e);
+  }
+  const villages = Object.keys(DATA.villages || {});
+  const saved = localStorage.getItem('village');
+  currentVillage = (saved && villages.includes(saved)) ? saved : (villages[0] || 'BALENGOU');
 }
 
 function getVillageData(){ return DATA.villages[currentVillage]; }
 function getCycleDayName(n){ const v=getVillageData(); const it=v.cycle_days.find(x=>x.num===n); return it?it.name:`Jour ${n}`; }
 function isForbidden(name){ const v=getVillageData(); return (v.forbidden_days||[]).includes(name); }
-function getLocalMonthName(m){ return DATA.months_local[String(m)] || ''; }
+function getLocalMonthName(m){ return DATA.months_local[String(m)] || DATA.months_local[m] || ''; }
 function toDateOnly(d){ const z=new Date(d); return new Date(z.getFullYear(), z.getMonth(), z.getDate()); }
 function daysBetween(a,b){ const ms=86400000; return Math.round((toDateOnly(a)-toDateOnly(b))/ms); }
 function getCycleDayNumber(date){ const ref=new Date(DATA.reference.gregorian_date+'T00:00:00'); const refN=DATA.reference.cycle_day; const delta=daysBetween(date,ref); const off=(refN-1+delta)%8; return ((off+8)%8)+1; }
 function firstCap(s){ return s? s.charAt(0).toUpperCase()+s.slice(1): s; }
 
-let startDate=new Date(); startDate.setDate(1); // centered month
-
-function monthMeta(y,m){ const first=new Date(y,m,1); const last=new Date(y,m+1,0); return {first,last,days:last.getDate()}; }
+let startDate=new Date(); startDate.setDate(1);
+function monthMeta(y,m){ const first=new Date(y,m,1); const last=new Date(y,m+1,0); return { first,last,days:last.getDate() }; }
 
 function renderMonth(container, y, m){
   const meta=monthMeta(y,m); const local=getLocalMonthName(m+1); const title=firstCap(new Date(y,m,1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'}));
@@ -57,43 +91,28 @@ function updateVillageUI(){
 }
 
 function populateSelectors(){
-  // Village list (always visible even with one option)
   const selV=document.getElementById('villageSelect'); selV.innerHTML='';
   Object.keys(DATA.villages).forEach(name=>{ const o=document.createElement('option'); o.value=name; o.textContent=name; selV.appendChild(o); });
   selV.value=currentVillage; selV.onchange=()=>{ currentVillage=selV.value; localStorage.setItem('village', currentVillage); updateVillageUI(); renderThreeMonths(); };
 
-  // Year input
   const yi=document.getElementById('yearInput'); yi.value=startDate.getFullYear(); yi.onchange=()=>{ const y=parseInt(yi.value||startDate.getFullYear(),10); startDate=new Date(y, startDate.getMonth(), 1); renderThreeMonths(); };
 
-  // Gregorian month select (1..12 with names)
   const monthSel=document.getElementById('monthSelect'); monthSel.innerHTML='';
   const gregNames=new Intl.DateTimeFormat('fr-FR',{month:'long'});
   for(let i=0;i<12;i++){ const o=document.createElement('option'); o.value=String(i); o.textContent=gregNames.format(new Date(2026,i,1)); monthSel.appendChild(o); }
   monthSel.value=String(startDate.getMonth());
   monthSel.onchange=()=>{ startDate=new Date(startDate.getFullYear(), parseInt(monthSel.value,10), 1); renderThreeMonths(); };
 
-  // Traditional months select (maps 1..12)
   const tradSel=document.getElementById('tradSelect'); tradSel.innerHTML='';
   for(let i=1;i<=12;i++){ const o=document.createElement('option'); o.value=String(i-1); o.textContent=DATA.months_local[String(i)]||String(i); tradSel.appendChild(o); }
   tradSel.value=String(startDate.getMonth());
   tradSel.onchange=()=>{ startDate=new Date(startDate.getFullYear(), parseInt(tradSel.value,10), 1); renderThreeMonths(); monthSel.value=tradSel.value; };
 }
 
-function setupNav(){
-  document.getElementById('prevYearBtn').onclick = ()=>{ startDate=new Date(startDate.getFullYear()-1, startDate.getMonth(), 1); document.getElementById('yearInput').value=startDate.getFullYear(); renderThreeMonths(); };
-  document.getElementById('prev3Btn').onclick   = ()=>{ startDate=new Date(startDate.getFullYear(), startDate.getMonth()-3, 1); document.getElementById('monthSelect').value=String(startDate.getMonth()); document.getElementById('tradSelect').value=String(startDate.getMonth()); renderThreeMonths(); };
-  document.getElementById('next3Btn').onclick   = ()=>{ startDate=new Date(startDate.getFullYear(), startDate.getMonth()+3, 1); document.getElementById('monthSelect').value=String(startDate.getMonth()); document.getElementById('tradSelect').value=String(startDate.getMonth()); renderThreeMonths(); };
-  document.getElementById('nextYearBtn').onclick= ()=>{ startDate=new Date(startDate.getFullYear()+1, startDate.getMonth(), 1); document.getElementById('yearInput').value=startDate.getFullYear(); renderThreeMonths(); };
-  document.getElementById('todayBtn').onclick   = ()=>{ const now=new Date(); startDate=new Date(now.getFullYear(), now.getMonth(), 1); document.getElementById('yearInput').value=startDate.getFullYear(); document.getElementById('monthSelect').value=String(startDate.getMonth()); document.getElementById('tradSelect').value=String(startDate.getMonth()); renderThreeMonths(); };
-}
-
 function renderAll(){ updateVillageUI(); populateSelectors(); renderThreeMonths(); document.getElementById('year').textContent=(new Date()).getFullYear(); }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
   try{
-    await loadData(); setupNav(); renderAll();
-    if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js').catch(console.error); }
-    let dp; window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); dp=e; document.getElementById('installBtn').classList.remove('hidden'); });
-    document.getElementById('installBtn').addEventListener('click', async ()=>{ if(!dp) return; dp.prompt(); await dp.userChoice; dp=null; document.getElementById('installBtn').classList.add('hidden'); });
+    await loadData(); renderAll();
   }catch(err){ console.error(err); alert('Erreur de chargement des données.'); }
 });
