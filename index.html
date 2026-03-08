@@ -12,28 +12,28 @@
     <h1>Calendrier du Village</h1>
   </header>
 
-  <!-- NAV BAR (haut) -->
+  <!-- NAV HAUT -->
   <nav class="nav-row nav-vibrant">
     <div class="nav-group">
-      <button class="btn ghost" data-action="prev3">«« 3 mois</button>
-      <button class="btn" data-action="prev">◀ Mois précédent</button>
+      <button class="btn" data-action="prev3">−3 mois</button>
+      <button class="btn" data-action="next3">+3 mois</button>
       <button class="btn" data-action="today">Aujourd’hui</button>
-      <button class="btn" data-action="next">Mois suivant ▶</button>
-      <button class="btn ghost" data-action="next3">3 mois »»</button>
+      <button class="btn ghost" data-action="prevY">−1 an</button>
+      <button class="btn ghost" data-action="nextY">+1 an</button>
     </div>
   </nav>
 
-  <!-- PARAMS (doit être sous la nav) -->
+  <!-- PARAMS (sous la nav) : M = mois central -->
   <section class="params-row">
     <div class="params">
-      <label>Année : <input type="number" id="param-annee" min="1900" max="2100" step="1" /></label>
-      <label>Mois : <input type="number" id="param-mois" min="1" max="12" step="1" /></label>
+      <label>Année (M) : <input type="number" id="param-annee" min="1900" max="2100" step="1" /></label>
+      <label>Mois (M) : <input type="number" id="param-mois" min="1" max="12" step="1" /></label>
       <label>Village :
         <select id="param-village">
-          <option value="all">Tous</option>
-          <option value="balengou">BALENGOU</option>
-          <option value="zeugnia">Zeu’gnia</option>
-          <option value="tizoueu">Ti’zoueu</option>
+          <option value="ALL">TOUS</option>
+          <option value="BALENGOU">BALENGOU</option>
+          <option value="ZEUGNIA">ZEUGNIA</option>
+          <option value="TIZOUEU">TIZOUEU</option>
         </select>
       </label>
       <label>Filtre :
@@ -46,31 +46,39 @@
     </div>
   </section>
 
-  <!-- NAV BAR (bas) -->
+  <!-- NAV BAS (miroir) -->
   <nav class="nav-row nav-vibrant">
     <div class="nav-group">
-      <button class="btn ghost" data-action="prev3">«« 3 mois</button>
-      <button class="btn" data-action="prev">◀ Mois précédent</button>
+      <button class="btn" data-action="prev3">−3 mois</button>
+      <button class="btn" data-action="next3">+3 mois</button>
       <button class="btn" data-action="today">Aujourd’hui</button>
-      <button class="btn" data-action="next">Mois suivant ▶</button>
-      <button class="btn ghost" data-action="next3">3 mois »»</button>
+      <button class="btn ghost" data-action="prevY">−1 an</button>
+      <button class="btn ghost" data-action="nextY">+1 an</button>
     </div>
   </nav>
 
-  <!-- CALENDAR GRID 3 mois x (Date | Greg | Trad) = 9 colonnes -->
-  <main id="calendar-9cols" class="c9" aria-live="polite" aria-busy="false" data-watermark="Calendrier du Village">
-    <!-- injecté par app.js -->
-  </main>
+  <!-- CALENDRIER : M-1 | M | M+1 -->
+  <main id="calendar-9cols" class="c9" aria-live="polite" aria-busy="false" data-watermark="VILLAGE"></main>
 
-  <footer class="footer">
-    <small>© Calendrier du Village</small>
-  </footer>
+  <!-- BLOC D’INFOS EN BAS -->
+  <section id="info-bottom" class="info-bottom">
+    <div class="legend">
+      <span class="chip forbid">Jour interdit</span>
+      <span class="chip market">Jour de marché</span>
+      <span class="chip today">Aujourd’hui</span>
+    </div>
+    <div class="village-meta">
+      <div><strong>C42 – Roi du village :</strong> <span id="roi-village">—</span></div>
+      <div><strong>C43 – Jours de marché :</strong> <span id="marche-village">—</span></div>
+      <div><strong>C44 – Info :</strong> <span id="info-village">—</span></div>
+    </div>
+  </section>
+
+  <footer class="footer"><small>Proposé par <strong>Gilbert FONGA</strong></small></footer>
 
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
-      });
+      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
     }
   </script>
   <script src="./app.js" type="module"></script>
