@@ -51,6 +51,12 @@
     $watermark.textContent = v ? formatWatermark(v) : '';
   }
 
+/* Repère léger pour la carte centrale (m) */
+.month--center{
+  outline: 2px solid #e6eaff;         /* liseré bleu très léger */
+  outline-offset: 2px;
+}
+   
   // ======= Rendu des 3 mois (exemple simple et propre) =======
   function renderThreeMonths(){
     if (!$monthsWrap) return;
