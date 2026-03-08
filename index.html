@@ -327,181 +327,288 @@
 
   <!-- ==== JS INLINE (pas de <script src>) ==== -->
   <script>
-    (function(){
-      const $watermark   = document.getElementById('watermark');
-      const $monthsWrap  = document.getElementById('monthsWrap');
+  (function(){
+    // =======================
+    // Sélecteurs
+    // =======================
+    const $watermark   = document.getElementById('watermark');
+    const $monthsWrap  = document.getElementById('monthsWrap');
 
-      const $villageSel  = document.getElementById('villageSelect');
-      const $yearInput   = document.getElementById('yearInput');
-      const $monthSelect = document.getElementById('monthSelect');
-      const $tradSelect  = document.getElementById('tradSelect');
+    const $villageSel  = document.getElementById('villageSelect');
+    const $yearInput   = document.getElementById('yearInput');
+    const $monthSelect = document.getElementById('monthSelect');
+    const $tradSelect  = document.getElementById('tradSelect');
 
-      const $prevYearBtn = document.getElementById('prevYearBtn');
-      const $prev3Btn    = document.getElementById('prev3Btn');
-      const $todayBtn    = document.getElementById('todayBtn');
-      const $next3Btn    = document.getElementById('next3Btn');
-      const $nextYearBtn = document.getElementById('nextYearBtn');
+    const $prevYearBtn = document.getElementById('prevYearBtn');
+    const $prev3Btn    = document.getElementById('prev3Btn');
+    const $todayBtn    = document.getElementById('todayBtn');
+    const $next3Btn    = document.getElementById('next3Btn');
+    const $nextYearBtn = document.getElementById('nextYearBtn');
 
-      const $footerYear  = document.getElementById('year');
+    // État
+    const now = new Date();
+    const state = {
+      year:  now.getFullYear(),
+      month: now.getMonth(),                // 0..11
+      village: ($villageSel?.value || 'BALENGOU')
+    };
 
-      const now = new Date();
-      const state = {
-        year: now.getFullYear(),
-        month: now.getMonth(),
-        village: ($villageSel?.value || 'BALENGOU')
-      };
+    // =======================
+    // Constantes utilitaires
+    // =======================
+    const MONTHS_FR = [
+      'janvier','février','mars','avril','mai','juin',
+      'juillet','août','septembre','octobre','novembre','décembre'
+    ];
+    const WEEKDAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+    const weekdayName = d => WEEKDAYS[(d.getDay() + 6) % 7]; // 0=Dim..6=Sam -> Lundi..Dimanche
 
-      const MONTHS_FR = [
-        'janvier','février','mars','avril','mai','juin',
-        'juillet','août','septembre','octobre','novembre','décembre'
-      ];
+    // =======================
+    // Watermark
+    // =======================
+    function formatWatermark(village){ return String(village || '').toUpperCase(); }
+    function updateWatermark(){
+      if (!$watermark) return;
+      const v = (state.village || '').trim();
+      $watermark.textContent = v ? formatWatermark(v) : '';
+    }
 
-      function formatWatermark(village){
-        return String(village || '').toUpperCase();
+    // =======================
+    // MTrad → Grégorien
+    // (adapter si les mois tradi ne coïncident pas 1:1)
+    // =======================
+    // M1..M12 → Jan..Déc (0..11) par défaut :
+    const MTRAD_TO_GREG = { 0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11 };
+
+    // =======================
+    // Coloration par village (placeholders)
+    // =======================
+    // Remplace par tes vraies règles (indices du cycle 0..7)
+    const VILLAGE_RULES = {
+      'BALENGOU': {
+        forbiddenTradIdx: [1,4,6], // ex. T2, T5, T7
+        marketTradIdx:    [2],     // ex. T3
+        // marketWeekday: 6,       // (option) Samedi marché
+      },
+      // 'BANDA': {...}, 'N’DJAM': {...} etc.
+    };
+
+    function applyRowColoring(tr, ctx){
+      const vName = String(state.village || '').toUpperCase();
+      const rules = VILLAGE_RULES[vName];
+      if (!rules) return;
+
+      const { tradIndex, dow } = ctx;
+
+      if (Array.isArray(rules.forbiddenTradIdx) && rules.forbiddenTradIdx.includes(tradIndex)){
+        tr.classList.add('row--forbidden');
       }
-      function updateWatermark(){
-        if (!$watermark) return;
-        const v = (state.village || '').trim();
-        $watermark.textContent = v ? formatWatermark(v) : '';
+      if (Array.isArray(rules.marketTradIdx) && rules.marketTradIdx.includes(tradIndex)){
+        tr.classList.add('row--market');
       }
-
-    /* ===== Toolbar : nav en 1ère ligne, paramètres en 2ème ===== */
-.toolbar{
-  display: grid;
-  grid-template-areas:
-    "nav"
-    "params";
-  grid-auto-rows: auto;
-  gap: 10px;
-  margin-block: 8px 12px;
-}
-.toolbar__nav   { grid-area: nav; }
-.toolbar__params{ grid-area: params; }
-
-@media (min-width: 1200px){
-  /* Si tu veux, on peut passer en 2 colonnes sur très large écran :
-     nav à gauche, paramètres à droite (décommenter si souhaité) */
-  /* .toolbar{
-       grid-template-areas: "nav params";
-       grid-template-columns: 1fr 1fr;
-     } */
-}
-    $table.appendChild($tbody);
-    $m.appendChild($table);
-    $monthsWrap.appendChild($m);
-  }
-}
-
-      function render(){
-        if ($yearInput)   $yearInput.value = state.year;
-        if ($monthSelect) $monthSelect.value = String(state.month);
-        renderThreeMonths();
-        updateWatermark();
+      if (typeof rules.marketWeekday === 'number' && rules.marketWeekday === dow){
+        tr.classList.add('row--market');
       }
+    }
 
-      function shiftMonths(delta){
-        const d = new Date(state.year, state.month + delta, 1);
-        state.year = d.getFullYear();
-        state.month = d.getMonth();
-        render();
-      }
-      function shiftYears(delta){
-        state.year += delta;
-        render();
-      }
-      function goToday(){
-        const t = new Date();
-        state.year = t.getFullYear();
-        state.month = t.getMonth();
-        render();
-      }
+    // =======================
+    // Rendu des 3 mois : m-1 | m | m+1
+    // =======================
+    function renderThreeMonths(){
+      if (!$monthsWrap) return;
+      $monthsWrap.innerHTML = '';
 
-      function initMonthSelect(){
-        if (!$monthSelect) return;
-        $monthSelect.innerHTML = '';
-        MONTHS_FR.forEach((name, i) => {
-          const opt = document.createElement('option');
-          opt.value = String(i);
-          opt.textContent = name[0].toUpperCase() + name.slice(1);
-          $monthSelect.appendChild(opt);
+      // Cycle de 8 (placeholder) — remplace par tes vrais noms quand tu me les donnes
+      const TRAD8 = ['T1','T2','T3','T4','T5','T6','T7','T8'];
+
+      // Point de départ = mois central - 1
+      const start = new Date(state.year, state.month - 1, 1);
+
+      for (let k=0; k<3; k++){
+        const d0 = new Date(start.getFullYear(), start.getMonth() + k, 1);
+        const y  = d0.getFullYear();
+        const m  = d0.getMonth();
+
+        // Carte mois
+        const $m = document.createElement('div');
+        $m.className = 'month';
+        if (k === 1) $m.classList.add('month--center'); // repère mois central
+
+        // En-tête
+        const $header = document.createElement('div');
+        $header.className = 'month__header';
+        const $title = document.createElement('h3');
+        $title.className = 'month__title';
+        $title.textContent = new Date(y, m, 1).toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+        const $badge = document.createElement('span');
+        $badge.className = 'month__badge';
+        $badge.textContent = '—'; // (option) y mettre l’intitulé MTrad
+        $header.appendChild($title);
+        $header.appendChild($badge);
+        $m.appendChild($header);
+
+        // Tableau type Excel
+        const $table = document.createElement('table');
+        $table.className = 'month__table';
+
+        // THEAD
+        const $thead = document.createElement('thead');
+        const $trh = document.createElement('tr');
+        ['Date','Jour','Trad.'].forEach((lbl, idx) => {
+          const th = document.createElement('th');
+          th.textContent = lbl;
+          if (idx === 1) th.style.width = '35%';
+          if (idx === 2) th.style.width = '25%';
+          $trh.appendChild(th);
         });
-        $monthSelect.value = String(state.month);
+        $thead.appendChild($trh);
+        $table.appendChild($thead);
+
+        // TBODY
+        const $tbody = document.createElement('tbody');
+        const daysInMonth = new Date(y, m+1, 0).getDate();
+
+        for (let day=1; day<=daysInMonth; day++){
+          const d = new Date(y, m, day);
+          const tr = document.createElement('tr');
+
+          // Date
+          const tdDate = document.createElement('td');
+          tdDate.textContent = String(day);
+          const isToday = (y===now.getFullYear() && m===now.getMonth() && day===now.getDate());
+          if (isToday) tdDate.classList.add('is-today');
+          tr.appendChild(tdDate);
+
+          // Jour
+          const tdJour = document.createElement('td');
+          tdJour.textContent = weekdayName(d);
+          const dow = d.getDay(); // 0=Dim..6=Sam
+          if (dow === 6) tdJour.classList.add('is-sat');
+          if (dow === 0) tdJour.classList.add('is-sun');
+          tr.appendChild(tdJour);
+
+          // Trad. (placeholder)
+          const tdTrad = document.createElement('td');
+          const tradIndex = (day - 1) % 8;
+          tdTrad.textContent = TRAD8[tradIndex];
+          tr.appendChild(tdTrad);
+
+          // Couleurs selon règles village
+          applyRowColoring(tr, { y, m, day, tradIndex, dow });
+
+          $tbody.appendChild(tr);
+        }
+
+        $table.appendChild($tbody);
+        $m.appendChild($table);
+        $monthsWrap.appendChild($m);
       }
-      function initTradSelect(){
-        if (!$tradSelect) return;
-        $tradSelect.innerHTML = '';
-        ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'].forEach((lbl,i)=>{
-          const opt = document.createElement('option');
-          opt.value = String(i);
-          opt.textContent = lbl;
-          $tradSelect.appendChild(opt);
-        });
-      }
+    }
 
-      function bindEvents(){
-        $prevYearBtn && $prevYearBtn.addEventListener('click', ()=> shiftYears(-1));
-        $nextYearBtn && $nextYearBtn.addEventListener('click', ()=> shiftYears(+1));
-        $prev3Btn    && $prev3Btn.addEventListener('click',   ()=> shiftMonths(-3));
-        $next3Btn    && $next3Btn.addEventListener('click',   ()=> shiftMonths(+3));
-        $todayBtn    && $todayBtn.addEventListener('click',   goToday);
+    // =======================
+    // Rendu global & navigation
+    // =======================
+    function render(){
+      if ($yearInput)   $yearInput.value = state.year;
+      if ($monthSelect) $monthSelect.value = String(state.month);
+      renderThreeMonths();
+      updateWatermark();
+    }
 
-        $villageSel && $villageSel.addEventListener('change', (e)=>{
-          state.village = (e.target.value || '').trim();
-          updateWatermark();
-        });
+    function shiftMonths(delta){
+      const d = new Date(state.year, state.month + delta, 1);
+      state.year  = d.getFullYear();
+      state.month = d.getMonth();
+      render();
+    }
+    function shiftYears(delta){ state.year += delta; render(); }
+    function goToday(){
+      const t = new Date();
+      state.year  = t.getFullYear();
+      state.month = t.getMonth();
+      render();
+    }
 
-        $yearInput && $yearInput.addEventListener('change', (e)=>{
-          const v = parseInt(e.target.value, 10);
-          if (!isNaN(v)) { state.year = v; render(); }
-        });
-
-        $monthSelect && $monthSelect.addEventListener('change', (e)=>{
-          const v = parseInt(e.target.value, 10);
-          if (!isNaN(v)) { state.month = v; render(); }
-        });
-      }
-
-    // ========= MTrad → centre sur le mois choisi =========
-// Par défaut on mappe MTrad M1..M12 sur Jan..Déc (0..11).
-// 👉 Modifie cette table si tes mois traditionnels ne coïncident pas
-const MTRAD_TO_GREG = {
-  0: 0,  1: 1,  2: 2,  3: 3,  4: 4,  5: 5,
-  6: 6,  7: 7,  8: 8,  9: 9, 10:10, 11:11
-};
-
-function onTradChange(idx){
-  const n = Number(idx);
-  if (!Number.isFinite(n)) return;
-  // Convertit MTrad → mois grégorien cible (au centre)
-  const greg = MTRAD_TO_GREG[n] ?? state.month;
-  state.month = greg;
-  render(); // centre se met à jour (m-1 | m | m+1)
-}
-
-// ========= Grégorien → centre sur le mois choisi =========
-function onMonthChange(idx){
-  const n = Number(idx);
-  if (!Number.isFinite(n)) return;
-  state.month = n; // le centre devient ce mois
-  render();
-}
-
-// Listeners (assure-toi que ces IDs existent)
-$tradSelect  && $tradSelect.addEventListener('change', e => onTradChange(e.target.value));
-$monthSelect && $monthSelect.addEventListener('change', e => onMonthChange(e.target.value));
-      document.addEventListener('DOMContentLoaded', ()=>{
-        if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
-        if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
-        state.village = ($villageSel?.value || state.village);
-
-        if ($yearInput) $yearInput.value = state.year;
-
-        initMonthSelect();
-        initTradSelect();
-        bindEvents();
-        render();
+    // =======================
+    // Initialisation des selects
+    // =======================
+    function initMonthSelect(){
+      if (!$monthSelect) return;
+      $monthSelect.innerHTML = '';
+      MONTHS_FR.forEach((name, i) => {
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = name[0].toUpperCase() + name.slice(1);
+        $monthSelect.appendChild(opt);
       });
-    })();
-  </script>
+      $monthSelect.value = String(state.month);
+    }
+    function initTradSelect(){
+      if (!$tradSelect) return;
+      $tradSelect.innerHTML = '';
+      // Placeholder M1..M12
+      for (let i=0; i<12; i++){
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = 'M' + (i+1);
+        $tradSelect.appendChild(opt);
+      }
+    }
+
+    // =======================
+    // Changement MTrad / Mois → centrer sur m
+    // =======================
+    function onTradChange(idx){
+      const n = Number(idx);
+      if (!Number.isFinite(n)) return;
+      const greg = MTRAD_TO_GREG[n] ?? state.month;
+      state.month = greg;              // le centre devient ce mois
+      render();
+    }
+    function onMonthChange(idx){
+      const n = Number(idx);
+      if (!Number.isFinite(n)) return;
+      state.month = n;                 // le centre devient ce mois
+      render();
+    }
+
+    // =======================
+    // Bind des événements
+    // =======================
+    function bindEvents(){
+      // Nav
+      $prevYearBtn && $prevYearBtn.addEventListener('click', ()=> shiftYears(-1));
+      $nextYearBtn && $nextYearBtn.addEventListener('click', ()=> shiftYears(+1));
+      $prev3Btn    && $prev3Btn.addEventListener('click',   ()=> shiftMonths(-3));
+      $next3Btn    && $next3Btn.addEventListener('click',   ()=> shiftMonths(+3));
+      $todayBtn    && $todayBtn.addEventListener('click',   goToday);
+
+      // Paramètres
+      $villageSel  && $villageSel.addEventListener('change', e => { state.village = (e.target.value || '').trim(); updateWatermark(); });
+      $yearInput   && $yearInput.addEventListener('change', e => { const v = parseInt(e.target.value, 10); if (!isNaN(v)) { state.year = v; render(); } });
+      $monthSelect && $monthSelect.addEventListener('change', e => onMonthChange(e.target.value));
+      $tradSelect  && $tradSelect.addEventListener('change', e => onTradChange(e.target.value));
+    }
+
+    // =======================
+    // Démarrage
+    // =======================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Footer année
+      const $footerYear = document.getElementById('year');
+      if ($footerYear) $footerYear.textContent = String(new Date().getFullYear());
+
+      // Village par défaut
+      if ($villageSel && !$villageSel.value) $villageSel.value = state.village;
+      state.village = ($villageSel?.value || state.village);
+
+      // Inits + events + premier rendu
+      initMonthSelect();
+      initTradSelect();
+      bindEvents();
+      render();
+    });
+  })();
+</script>
 </body>
 </html>
