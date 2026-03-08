@@ -1,6 +1,32 @@
 {
   "meta": {
-    "version": 1
+    "version": 2
   },
-  "notes": "Placez ici vos données traditionnelles si nécessaire."
+  "entries": [
+    {
+      "dateISO": "2026-03-05",
+      "village": "all",
+      "trad": "Ndin'kap",
+      "tags": [
+        "forbidden"
+      ]
+    },
+    {
+      "dateISO": "2026-03-10",
+      "village": "balengou",
+      "trad": "Nzeghio",
+      "tags": [
+        "market"
+      ]
+    },
+    {
+      "dateISO": "2026-03-15",
+      "village": "all",
+      "trad": "Ndj'koua",
+      "tags": [
+        "forbidden",
+        "market"
+      ]
+    }
+  ]
 }
