@@ -90,3 +90,12 @@
   </script>
 </body>
 </html>
+
+<!-- SUPPRIMER/COMMENTER ce bloc si tu désactives le SW -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(console.warn);
+    });
+  }
+</script>
