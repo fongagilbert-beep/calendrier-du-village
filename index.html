@@ -111,17 +111,28 @@
       .months-wrap{ grid-template-columns: 1fr; }
     }
 
-    .month{
-      border: 1px solid #e6e6e6;
-      border-radius: 8px;
-      padding: 10px;
-      background: #fff;
-    }
-    .month h3{
-      margin: 0 0 8px 0;
-      font-size: 1rem;
-      text-transform: capitalize;
-    }
+   /* Grille des 3 mois – en colonne (comme Excel) */
+.months-wrap{
+  display: grid;
+  grid-template-columns: 1fr;  /* <= UNE SEULE COLONNE */
+  gap: 12px;
+  align-content: start;        /* colle en haut de la zone */
+}
+
+/* (Optionnel) un peu plus “carte Excel” en pleine largeur */
+.month{
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+  width: 100%;                 /* <= plein container */
+}
+
+.month h3{
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
 
     .legend{
       margin-top: 10px;
