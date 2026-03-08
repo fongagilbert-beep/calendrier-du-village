@@ -1,0 +1,14 @@
+
+:root { --accent:#C89B3C; --bg:#0F0F0F; --fg:#F2F2F2; --muted:#B8B8B8; --card:#1A1A1A; --card-border:#2A2A2A; }
+*{box-sizing:border-box} html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{text-align:center;padding:24px 16px 8px}
+.logo{width:72px;height:72px;border-radius:16px;box-shadow:0 0 0 2px var(--accent)}
+h1{margin:12px 0 4px;font-size:1.6rem} header p{margin:0;color:var(--muted)}
+main{max-width:840px;margin:0 auto;padding:16px} h2{margin-top:28px;font-size:1.2rem}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:16px}
+.card.highlight{border-color:var(--accent)} .label{color:var(--muted);font-size:.9rem}
+.value{margin-top:8px;font-weight:600;font-size:1.25rem} .value.big{font-size:2.5rem;color:var(--accent)}
+.picker{margin-top:16px} input[type=date]{padding:10px;border-radius:8px;border:1px solid var(--card-border);background:#121212;color:var(--fg)}
+button{padding:10px 14px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--fg);cursor:pointer} button:hover{background:#2a2212}
+.result{margin-top:10px;color:var(--muted)} footer{margin:24px 0 40px;text-align:center;color:var(--muted)} .hidden{display:none}
