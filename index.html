@@ -5,17 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calendrier du Village – Cycle de 8 jours</title>
 
-  <!-- PWA / Icônes (garde si tu les as dans /icons) -->
+  <!-- Ces balises DOIVENT être telles quelles, avec < ... > -->
   manifest.webmanifest
   icons/icon-192.png
   icons/apple-touch-icon.png
   <meta name="theme-color" content="#C89B3C">
 
+  <!-- Feuille de styles -->
   styles.css
 </head>
 <body>
   <header>
-    icons/icon-192.png
+    <img srcon-192.png
     <h1>Calendrier du Village</h1>
     <p>Cycle traditionnel de 8 jours</p>
   </header>
@@ -36,7 +37,6 @@
       <div class="toolbar__row toolbar__params">
         <label for="villageSelect" class="strong">Village :</label>
         <select id="villageSelect" class="wide">
-          <!-- Tu peux remplacer/compléter ces valeurs par les villages réels -->
           <option value="BALENGOU" selected>BALENGOU</option>
           <option value="BANDA">BANDA</option>
           <option value="N’DJAM">N’DJAM</option>
@@ -94,6 +94,7 @@
     <small>© <span id="year"></span> Calendrier du Village</small>
   </footer>
 
+  <!-- Cette balise DOIT avoir <script ...></script> -->
   app.js</script>
 </body>
 </html>
