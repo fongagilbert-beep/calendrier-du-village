@@ -1,1 +1,176 @@
 
+/* ============ Base ============ */
+:root{
+  --gap: 10px;
+  --btn-h: 36px;
+  --btn-radius: 8px;
+  --btn-bg: #f6f7f9;
+  --btn-border: #d5d7dd;
+  --btn-fg: #21242a;
+  --focus: #1a73e8;
+
+  /* Teinte watermark retenue */
+  --wm-color: rgba(80, 80, 80, 0.24);
+}
+
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#202124; }
+
+header{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+header .logo{ width:48px; height:48px; border-radius:10px; }
+header h1{ margin:0; font-size: 1.4rem; }
+header p{ margin:0; color:#5f6368; }
+
+main{ padding: 12px 16px; }
+
+/* ============ Toolbar en 2 lignes ============ */
+.toolbar{
+  display: grid;
+  grid-template-rows: auto auto; /* L1 : nav — L2 : paramètres */
+  gap: 10px;
+  margin-block: 8px 12px;
+}
+.toolbar__row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.strong{ font-weight: 600; }
+.wide{ min-width: 180px; }
+
+/* Boutons navigation uniformes */
+.toolbar button{
+  height: var(--btn-h);
+  min-width: var(--btn-h);
+  padding: 0 12px;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--btn-radius);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.toolbar button:hover{ background: #eef0f3; }
+.toolbar button:active{ background: #e6e9ee; }
+.toolbar button:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Statut */
+.status{ margin-left:auto; color:#5f6368; font-size: 0.9rem; }
+
+/* ============ Section 3 mois ============ */
+.three-months{
+  position: relative;
+  overflow: hidden; /* confine le watermark */
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+}
+
+/* Watermark diagonal interne (dynamiquement rempli) */
+#watermark.watermark{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;           /* ne bloque pas les clics */
+  transform: rotate(-35deg);
+  transform-origin: center;
+
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  font-size: clamp(28px, 8vw, 84px);
+
+  color: var(--wm-color);
+  mix-blend-mode: multiply;       /* meilleur fondu */
+}
+
+/* Grille des 3 mois (exemple) */
+.months-wrap{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 900px){
+  .months-wrap{ grid-template-columns: 1fr; }
+}
+
+/* Carte d’un mois */
+.month{
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 10px;
+}
+.month h3{
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+/* Légende */
+.legend{
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.badge{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  border: 1px solid #ddd;
+  background:#fafafa;
+}
+.badge.forbidden{ border-color:#c62828; color:#c62828; }
+.badge.today{ border-color:#1a73e8; color:#1a73e8; }
+
+/* ============ Infos village ============ */
+.village-info{
+  margin-top: 16px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 12px;
+  background: #fff;
+}
+.info-row{
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 10px;
+  padding: 4px 0;
+  border-bottom: 1px dashed #f0f0f0;
+}
+.info-row:last-child{ border-bottom: none; }
+.info-label{ color:#5f6368; }
+.info-value{ font-weight: 500; }
+
+/* ============ Footer ============ */
+footer{
+  padding: 14px 16px;
+  border-top: 1px solid #eee;
+  color:#5f6368;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
