@@ -1,101 +1,48 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calendrier du Village – Cycle de 8 jours</title>
-
-  <!-- Manifest & icônes -->
-  manifest.webmanifest
-  icons/icon-192.png
-  icons/apple-touch-icon.png
-  <meta name="theme-color" content="#C89B3C" />
-
-  <!-- Styles -->
-  styles.css
+  <title>Calendrier du Village</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <header>
-    icons/icon-192.png
     <h1>Calendrier du Village</h1>
-    <p>Cycle traditionnel de 8 jours</p>
   </header>
-
-  <main>
-    <!-- Toolbar : NAV au-dessus des paramètres -->
-    <section class="toolbar">
-      <div class="toolbar__nav" role="group" aria-label="Navigation">
-        <button id="prevYearBtn" aria-label="Année précédente">« 1 an</button>
-        <button id="prev3Btn"   aria-label="Reculer de 3 mois">‹‹ 3 mois</button>
-        <button id="todayBtn"   aria-label="Aller à aujourd’hui">Aujourd’hui</button>
-        <button id="next3Btn"   aria-label="Avancer de 3 mois">3 mois ››</button>
-        <button id="nextYearBtn" aria-label="Année suivante">1 an »</button>
-        <div id="dataStatus" class="status" aria-live="polite"></div>
-      </div>
-
-      <div class="toolbar__params">
-        <label for="villageSelect" class="strong">Village :</label>
-        <select id="villageSelect" class="wide">
-          <option value="BALENGOU" selected>BALENGOU</option>
-          <option value="BANDA">BANDA</option>
-          <option value="N’DJAM">N’DJAM</option>
-          <option value="KOLO">KOLO</option>
+  <nav class="nav-row">
+    <button data-action="prev">◀ Mois précédent</button>
+    <button data-action="today">Aujourd’hui</button>
+    <button data-action="next">Mois suivant ▶</button>
+  </nav>
+  <section class="params-row">
+    <div class="params">
+      <label>Village :
+        <select id="param-village">
+          <option value="all">Tous</option>
+          <option value="villageA">Village A</option>
+          <option value="villageB">Village B</option>
         </select>
-
-        <label for="yearInput" class="strong">Année :</label>
-        <input id="yearInput" type="number" step="1" min="1800" max="2400" style="width:100px" />
-
-        <label for="monthSelect" class="strong">Mois :</label>
-        <select id="monthSelect"></select>
-
-        <label for="tradSelect" class="strong">MTrad :</label>
-        <select id="tradSelect"></select>
-      </div>
-    </section>
-
-    <!-- Zone des 3 mois avec watermark interne -->
-    <section class="three-months">
-      <div id="watermark" class="watermark" aria-hidden="true"></div>
-      <div id="monthsWrap" class="months-wrap"></div>
-      <div class="legend">
-        <span class="badge forbidden">Jours interdits</span>
-        <span class="badge today">Aujourd’hui</span>
-      </div>
-    </section>
-
-    <!-- Infos village -->
-    <section class="village-info">
-      <div class="info-row"><div class="info-label">Roi du village :</div><div class="info-value" id="chief">—</div></div>
-      <div class="info-row"><div class="info-label">Jour de marché :</div><div class="info-value" id="market">—</div></div>
-      <div class="info-row"><div class="info-label">Informations :</div><div class="info-value" id="moreInfos">—</div></div>
-      <div class="info-row forbidden-row"><div class="info-label">Jours interdits :</div><div class="info-value" id="forbidden">—</div></div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="credit">Proposé par <strong>Gilbert FONGA</strong></div>
-    <small>© <span id="year"></span> Calendrier du Village</small>
+      </label>
+    </div>
+  </section>
+  <main id="calendar-9cols" class="c9" aria-live="polite" aria-busy="false"></main>
+  <nav class="nav-row">
+    <button data-action="prev">◀ Mois précédent</button>
+    <button data-action="today">Aujourd’hui</button>
+    <button data-action="next">Mois suivant ▶</button>
+  </nav>
+  <footer class="footer">
+    <small>© Calendrier du Village</small>
   </footer>
-
-  <!-- JS principal -->
-  <pp.js</script>
-
-  <!-- Enregistrement du Service Worker (installabilité PWA) -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(console.warn);
+        navigator.serviceWorker.register('./sw.js');
       });
     }
   </script>
+  <script src="./app.js" type="module"></script>
 </body>
 </html>
-
-<!-- SUPPRIMER/COMMENTER ce bloc si tu désactives le SW -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(console.warn);
-    });
-  }
-</script>
