@@ -8,34 +8,64 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <h1>Calendrier du Village</h1>
   </header>
-  <nav class="nav-row">
-    <button data-action="prev">◀ Mois précédent</button>
-    <button data-action="today">Aujourd’hui</button>
-    <button data-action="next">Mois suivant ▶</button>
+
+  <!-- NAV BAR (haut) -->
+  <nav class="nav-row nav-vibrant">
+    <div class="nav-group">
+      <button class="btn ghost" data-action="prev3">«« 3 mois</button>
+      <button class="btn" data-action="prev">◀ Mois précédent</button>
+      <button class="btn" data-action="today">Aujourd’hui</button>
+      <button class="btn" data-action="next">Mois suivant ▶</button>
+      <button class="btn ghost" data-action="next3">3 mois »»</button>
+    </div>
   </nav>
+
+  <!-- PARAMS (doit être sous la nav) -->
   <section class="params-row">
     <div class="params">
+      <label>Année : <input type="number" id="param-annee" min="1900" max="2100" step="1" /></label>
+      <label>Mois : <input type="number" id="param-mois" min="1" max="12" step="1" /></label>
       <label>Village :
         <select id="param-village">
           <option value="all">Tous</option>
-          <option value="villageA">Village A</option>
-          <option value="villageB">Village B</option>
+          <option value="balengou">BALENGOU</option>
+          <option value="zeugnia">Zeu’gnia</option>
+          <option value="tizoueu">Ti’zoueu</option>
+        </select>
+      </label>
+      <label>Filtre :
+        <select id="param-filtre">
+          <option value="all">Tous</option>
+          <option value="forbidden">Jours interdits</option>
+          <option value="market">Jours de marché</option>
         </select>
       </label>
     </div>
   </section>
-  <main id="calendar-9cols" class="c9" aria-live="polite" aria-busy="false"></main>
-  <nav class="nav-row">
-    <button data-action="prev">◀ Mois précédent</button>
-    <button data-action="today">Aujourd’hui</button>
-    <button data-action="next">Mois suivant ▶</button>
+
+  <!-- NAV BAR (bas) -->
+  <nav class="nav-row nav-vibrant">
+    <div class="nav-group">
+      <button class="btn ghost" data-action="prev3">«« 3 mois</button>
+      <button class="btn" data-action="prev">◀ Mois précédent</button>
+      <button class="btn" data-action="today">Aujourd’hui</button>
+      <button class="btn" data-action="next">Mois suivant ▶</button>
+      <button class="btn ghost" data-action="next3">3 mois »»</button>
+    </div>
   </nav>
+
+  <!-- CALENDAR GRID 3 mois x (Date | Greg | Trad) = 9 colonnes -->
+  <main id="calendar-9cols" class="c9" aria-live="polite" aria-busy="false" data-watermark="Calendrier du Village">
+    <!-- injecté par app.js -->
+  </main>
+
   <footer class="footer">
     <small>© Calendrier du Village</small>
   </footer>
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
