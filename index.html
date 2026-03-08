@@ -346,77 +346,105 @@
       }
 
       function renderThreeMonths(){
-        if (!$monthsWrap) return;
-        $monthsWrap.innerHTML = '';
+  if (!$monthsWrap) return;
+  $monthsWrap.innerHTML = '';
 
-        for (let k=0; k<3; k++){
-          const d = new Date(state.year, state.month + k, 1);
-          const y = d.getFullYear();
-          const m = d.getMonth();
+  // Placeholders pour la colonne "Trad" (cycle de 8 jours).
+  // ⚠️ Tu peux remplacer T1..T8 par tes vrais noms une fois prêts.
+  const TRAD8 = ['T1','T2','T3','T4','T5','T6','T7','T8'];
 
-          const $m = document.createElement('div');
-          $m.className = 'month';
+  // Fonction utilitaire : nom du jour (Lundi..Dimanche)
+  const WEEKDAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+  function weekdayName(dateObj){
+    let d = dateObj.getDay(); // 0=Dimanche..6=Samedi
+    // On renvoie Lundi..Dimanche
+    return WEEKDAYS[(d + 6) % 7];
+  }
 
-          const $h = document.createElement('h3');
-          $h.textContent = `${MONTHS_FR[m]} ${y}`;
-          $m.appendChild($h);
+  for (let k=0; k<3; k++){
+    const d0 = new Date(state.year, state.month + k, 1);
+    const y  = d0.getFullYear();
+    const m  = d0.getMonth();
 
-          const $table = document.createElement('table');
-          $table.style.width = '100%';
-          $table.style.borderCollapse = 'collapse';
-          $table.style.fontSize = '0.9rem';
+    // Conteneur du mois
+    const $m = document.createElement('div');
+    $m.className = 'month';
 
-          const $thead = document.createElement('thead');
-          const $trh = document.createElement('tr');
-          ['lu','ma','me','je','ve','sa','di'].forEach(lbl=>{
-            const th = document.createElement('th');
-            th.textContent = lbl;
-            th.style.textAlign = 'center';
-            th.style.fontWeight = '600';
-            th.style.padding = '4px 0';
-            $trh.appendChild(th);
-          });
-          $thead.appendChild($trh);
-          $table.appendChild($thead);
+    // En-tête du mois
+    const $header = document.createElement('div');
+    $header.className = 'month__header';
 
-          const $tbody = document.createElement('tbody');
+    const title = new Date(y, m, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const $title = document.createElement('h3');
+    $title.className = 'month__title';
+    $title.textContent = title;
 
-          const firstDay = new Date(y, m, 1);
-          const startDow = (firstDay.getDay() + 6) % 7; // Lundi=0 .. Dimanche=6
-          const daysInMonth = new Date(y, m+1, 0).getDate();
+    const $badge = document.createElement('span');
+    $badge.className = 'month__badge';
+    $badge.textContent = '—'; // ex. badge MTrad si tu veux plus tard
 
-          let day = 1;
-          for (let r=0; r<6; r++){
-            const tr = document.createElement('tr');
-            for (let c=0; c<7; c++){
-              const td = document.createElement('td');
-              td.style.textAlign = 'center';
-              td.style.padding = '4px';
-              td.style.borderTop = '1px dashed #eee';
+    $header.appendChild($title);
+    $header.appendChild($badge);
+    $m.appendChild($header);
 
-              const cellIndex = r*7 + c;
-              if (cellIndex >= startDow && day <= daysInMonth){
-                const isToday = (y===now.getFullYear() && m===now.getMonth() && day===now.getDate());
-                td.textContent = day;
-                if (isToday){
-                  td.style.fontWeight = '700';
-                  td.style.color = '#1a73e8';
-                }
-                day++;
-              } else {
-                td.textContent = '';
-              }
-              tr.appendChild(td);
-            }
-            $tbody.appendChild(tr);
-          }
+    // Tableau style Excel (Date | Jour | Trad)
+    const $table = document.createElement('table');
+    $table.className = 'month__table';
 
-          $table.appendChild($tbody);
-          $m.appendChild($table);
+    // THEAD
+    const $thead = document.createElement('thead');
+    const $trh = document.createElement('tr');
+    ['Date','Jour','Trad.'].forEach((lbl, idx) => {
+      const th = document.createElement('th');
+      th.textContent = lbl;
+      if (idx === 1) th.style.width = '35%';   // Jour
+      if (idx === 2) th.style.width = '25%';   // Trad
+      $trh.appendChild(th);
+    });
+    $thead.appendChild($trh);
+    $table.appendChild($thead);
 
-          $monthsWrap.appendChild($m);
-        }
-      }
+    // TBODY
+    const $tbody = document.createElement('tbody');
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+
+    // Choix d’un point de départ pour le cycle de 8 (placeholder)
+    // Ici: 1er du mois => T1, 2 => T2, etc. (à remplacer par ta vraie règle si différente)
+    for (let day=1; day<=daysInMonth; day++){
+      const d = new Date(y, m, day);
+      const tr = document.createElement('tr');
+
+      // Colonne Date (n°)
+      const tdDate = document.createElement('td');
+      tdDate.textContent = String(day).padStart(2,' ');
+      // Aujourd’hui ?
+      const isToday = (y===now.getFullYear() && m===now.getMonth() && day===now.getDate());
+      if (isToday) tdDate.classList.add('is-today');
+      tr.appendChild(tdDate);
+
+      // Colonne Jour (Lundi..Dimanche)
+      const tdJour = document.createElement('td');
+      tdJour.textContent = weekdayName(d);
+      // samedi/dimanche (teinte)
+      const dow = d.getDay(); // 0=Dim,6=Sam
+      if (dow === 6) tdJour.classList.add('is-sat');
+      if (dow === 0) tdJour.classList.add('is-sun');
+      tr.appendChild(tdJour);
+
+      // Colonne Trad (cycle de 8 — placeholder)
+      const tdTrad = document.createElement('td');
+      const tradIndex = (day - 1) % 8;
+      tdTrad.textContent = TRAD8[tradIndex];  // ⇐ remplace par tes vrais noms quand prêts
+      tr.appendChild(tdTrad);
+
+      $tbody.appendChild(tr);
+    }
+
+    $table.appendChild($tbody);
+    $m.appendChild($table);
+    $monthsWrap.appendChild($m);
+  }
+}
 
       function render(){
         if ($yearInput)   $yearInput.value = state.year;
