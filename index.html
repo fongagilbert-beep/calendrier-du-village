@@ -8,11 +8,11 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="theme-color" content="#C89B3C">
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="watermark" class="watermark">Calendrier du Village — BALENGOU</div>
+
   <header>
     <img src="icons/icon-192.png" alt="Logo Calendrier du Village" class="logo">
     <h1>Calendrier du Village</h1>
@@ -20,8 +20,22 @@
   </header>
 
   <main>
+    <section class="toolbar">
+      <button id="prevYearBtn">« 1 an</button>
+      <button id="prev3Btn">‹‹ 3 mois</button>
+      <button id="prev1Btn">‹ 1 mois</button>
+      <div class="spacer"></div>
+      <label for="villageSelect" style="font-weight:600">Village&nbsp;:</label>
+      <select id="villageSelect"></select>
+      <div class="spacer"></div>
+      <button id="todayBtn">Aujourd’hui</button>
+      <div class="spacer"></div>
+      <button id="next1Btn">1 mois ›</button>
+      <button id="next3Btn">3 mois ››</button>
+      <button id="nextYearBtn">1 an »</button>
+    </section>
+
     <section class="today">
-      <h2>Aujourd’hui</h2>
       <div class="cards">
         <div class="card">
           <div class="label">Date grégorienne</div>
@@ -39,21 +53,10 @@
     </section>
 
     <section class="three-months">
-      <div class="toolbar">
-        <button id="prevYearBtn">« 1 an</button>
-        <button id="prev3Btn">‹‹ 3 mois</button>
-        <button id="prev1Btn">‹ 1 mois</button>
-        <div class="spacer"></div>
-        <button id="todayBtn">Aujourd’hui</button>
-        <div class="spacer"></div>
-        <button id="next1Btn">1 mois ›</button>
-        <button id="next3Btn">3 mois ››</button>
-        <button id="nextYearBtn">1 an »</button>
-      </div>
       <div id="monthsWrap" class="months-wrap"></div>
       <div class="legend">
-        <span class="badge forbidden">⚠ Jours interdits</span>
-        <span class="badge today">● Aujourd’hui</span>
+        <span class="badge forbidden">Jours interdits</span>
+        <span class="badge today">Aujourd’hui</span>
       </div>
     </section>
 
@@ -64,9 +67,23 @@
       <div id="result" class="result"></div>
     </section>
 
-    <section class="info">
-      <h2>À propos</h2>
-      <p>Un calendrier perpétuel africain basé sur un cycle de 8 jours. Conçu par Gilbert Fonga.</p>
+    <section class="village-info">
+      <div class="info-row">
+        <div class="info-label">Roi du village :</div>
+        <div class="info-value" id="chief">—</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Jour de marché :</div>
+        <div class="info-value" id="market">—</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">Informations :</div>
+        <div class="info-value" id="moreInfos">—</div>
+      </div>
+      <div class="info-row forbidden-row">
+        <div class="info-label">Jours interdits :</div>
+        <div class="info-value" id="forbidden">—</div>
+      </div>
     </section>
   </main>
 
