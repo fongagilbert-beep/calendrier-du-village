@@ -25,3 +25,23 @@ async function loadVillageConfig(){
 
 // Dans DOMContentLoaded (avant render()):
 await loadVillageConfig();
+
+
+{
+  "_meta": {
+    "tradNames": ["NZINYAM","NTÂNBÙ’","NTÂNTƏ’","NTÂNLA’","NSIGHA","NSƏMNTƏ’","NGA","NKOTʉ"]
+  },
+  "BALENGOU": {
+    "chief": "Nom du chef",
+    "marketDay": "samedi",
+    "forbiddenTradIdx": [1,4,6],
+    "marketTradIdx": [2],
+    "moreInfos": "Info libre"
+  },
+  "BANDA": {
+    "chief": "",
+    "marketDay": 3,
+    "forbiddenTradIdx": "0,5",   // ta macro peut produire une chaîne -> le code convertit
+    "moreInfos": ""
+  }
+}
