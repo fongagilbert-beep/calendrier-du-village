@@ -1,118 +1,89 @@
+(function(){
+  // Sélecteurs
+  const $watermark=document.getElementById('watermark');
+  const $monthsWrap=document.getElementById('monthsWrap');
+  const $villageSel=document.getElementById('villageSelect');
+  const $yearInput=document.getElementById('yearInput');
+  const $monthSelect=document.getElementById('monthSelect');
+  const $tradSelect=document.getElementById('tradSelect');
+  const $prevYearBtn=document.getElementById('prevYearBtn');
+  const $prev3Btn=document.getElementById('prev3Btn');
+  const $todayBtn=document.getElementById('todayBtn');
+  const $next3Btn=document.getElementById('next3Btn');
+  const $nextYearBtn=document.getElementById('nextYearBtn');
+  const $footerYear=document.getElementById('year');
 
-let DATA=null; let currentVillage=null;
+  // État
+  const now=new Date();
+  const state={year:now.getFullYear(),month:now.getMonth(),village:($villageSel?.value||'BALENGOU')};
 
-const defaultData = {
-  reference: { gregorian_date: "2026-02-28", cycle_day: 1 },
-  months_local: {
-    1: "Nka'gnia", 2: "Zeu'gnia", 3: "Ti'zoueu", 4: "Ti'zoueu",
-    5: "Sou'gnia", 6: "Nkap'djap", 7: "Tcho'zoueu", 8: "Tcho'zoueu",
-    9: "Mbuo'gnia", 10: "Zue'Diap", 11: "Chui'Kwelè", 12: "Tchoua'Kwelè"
-  },
-  villages: {
-    BALENGOU: {
-      chief: "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
-      cycle_days: [
-        { num:1, name:"Ngèdjou" }, { num:2, name:"Ndin'kap" },
-        { num:3, name:"Nzeu'gheu" }, { num:4, name:"Ndi'keun" },
-        { num:5, name:"Nzedjio" }, { num:6, name:"Ndi'bou" },
-        { num:7, name:"Ndi'kong" }, { num:8, name:"Nditcheu" }
-      ],
-      forbidden_days: ["Ndin'kap","Nzedjio"],
-      market_days: [],
-      infos: ""
+  // Constantes
+  const MONTHS_FR=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+  // Watermark
+  function formatWatermark(v){return String(v||'').toUpperCase()}
+  function updateWatermark(){ if(!$watermark) return; const v=(state.village||'').trim(); $watermark.textContent=v?formatWatermark(v):''; }
+
+  // Rendu 3 mois : m-1 | m | m+1 (vue simple)
+  function renderThreeMonths(){
+    if(!$monthsWrap) return; $monthsWrap.innerHTML='';
+    const start=new Date(state.year,state.month-1,1);
+    for(let k=0;k<3;k++){
+      const d=new Date(start.getFullYear(),start.getMonth()+k,1);
+      const y=d.getFullYear(); const m=d.getMonth();
+
+      const $m=document.createElement('div'); $m.className='month';
+      const $h=document.createElement('h3'); $h.textContent=`${MONTHS_FR[m]} ${y}`; $m.appendChild($h);
+
+      const $table=document.createElement('table');
+      const $thead=document.createElement('thead'); const $trh=document.createElement('tr');
+      ;['lu','ma','me','je','ve','sa','di'].forEach(lbl=>{const th=document.createElement('th'); th.textContent=lbl; $trh.appendChild(th)});
+      $thead.appendChild($trh); $table.appendChild($thead);
+
+      const $tbody=document.createElement('tbody');
+      const firstDay=new Date(y,m,1); const startDow=(firstDay.getDay()+6)%7; const daysInMonth=new Date(y,m+1,0).getDate();
+      let day=1; for(let r=0;r<6;r++){
+        const tr=document.createElement('tr');
+        for(let c=0;c<7;c++){
+          const td=document.createElement('td');
+          const cellIndex=r*7+c;
+          if(cellIndex>=startDow && day<=daysInMonth){
+            const isToday=(y===now.getFullYear()&&m===now.getMonth()&&day===now.getDate());
+            td.textContent=day; if(isToday){ td.style.fontWeight='700'; td.style.color='#1a73e8'; }
+            day++;
+          } else { td.textContent=''; }
+          tr.appendChild(td);
+        }
+        $tbody.appendChild(tr);
+      }
+      $table.appendChild($tbody); $m.appendChild($table); $monthsWrap.appendChild($m);
     }
   }
-};
 
-async function loadData(){
-  const statusEl = document.getElementById('dataStatus');
-  try {
-    const res = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    DATA = await res.json();
-    statusEl.textContent = '';
-  } catch (e) {
-    // Fallback secours
-    DATA = defaultData;
-    statusEl.textContent = 'Mode secours : data.json indisponible (utilisation des données par défaut).';
-    console.warn('Fallback DATA used:', e);
+  function render(){ if($yearInput)$yearInput.value=state.year; if($monthSelect)$monthSelect.value=String(state.month); renderThreeMonths(); updateWatermark(); }
+  function shiftMonths(d){ const dd=new Date(state.year,state.month+d,1); state.year=dd.getFullYear(); state.month=dd.getMonth(); render(); }
+  function shiftYears(d){ state.year+=d; render(); }
+  function goToday(){ const t=new Date(); state.year=t.getFullYear(); state.month=t.getMonth(); render(); }
+
+  function initMonthSelect(){ if(!$monthSelect)return; $monthSelect.innerHTML=''; MONTHS_FR.forEach((name,i)=>{const opt=document.createElement('option'); opt.value=String(i); opt.textContent=name[0].toUpperCase()+name.slice(1); $monthSelect.appendChild(opt);}); $monthSelect.value=String(state.month); }
+  function initTradSelect(){ if(!$tradSelect)return; $tradSelect.innerHTML=''; for(let i=0;i<12;i++){ const opt=document.createElement('option'); opt.value=String(i); opt.textContent='M'+(i+1); $tradSelect.appendChild(opt);} }
+
+  function bindEvents(){
+    $prevYearBtn&&$prevYearBtn.addEventListener('click',()=>shiftYears(-1));
+    $nextYearBtn&&$nextYearBtn.addEventListener('click',()=>shiftYears(+1));
+    $prev3Btn&&$prev3Btn.addEventListener('click',()=>shiftMonths(-3));
+    $next3Btn&&$next3Btn.addEventListener('click',()=>shiftMonths(+3));
+    $todayBtn&&$todayBtn.addEventListener('click',goToday);
+    $villageSel&&$villageSel.addEventListener('change',e=>{state.village=(e.target.value||'').trim(); updateWatermark();});
+    $yearInput&&$yearInput.addEventListener('change',e=>{const v=parseInt(e.target.value,10); if(!isNaN(v)){ state.year=v; render(); }});
+    $monthSelect&&$monthSelect.addEventListener('change',e=>{const n=Number(e.target.value); if(Number.isFinite(n)){ state.month=n; render(); }});
+    $tradSelect&&$tradSelect.addEventListener('change',()=>{/* à brancher plus tard si nécessaire */});
   }
-  const villages = Object.keys(DATA.villages || {});
-  const saved = localStorage.getItem('village');
-  currentVillage = (saved && villages.includes(saved)) ? saved : (villages[0] || 'BALENGOU');
-}
 
-function getVillageData(){ return DATA.villages[currentVillage]; }
-function getCycleDayName(n){ const v=getVillageData(); const it=v.cycle_days.find(x=>x.num===n); return it?it.name:`Jour ${n}`; }
-function isForbidden(name){ const v=getVillageData(); return (v.forbidden_days||[]).includes(name); }
-function getLocalMonthName(m){ return DATA.months_local[String(m)] || DATA.months_local[m] || ''; }
-function toDateOnly(d){ const z=new Date(d); return new Date(z.getFullYear(), z.getMonth(), z.getDate()); }
-function daysBetween(a,b){ const ms=86400000; return Math.round((toDateOnly(a)-toDateOnly(b))/ms); }
-function getCycleDayNumber(date){ const ref=new Date(DATA.reference.gregorian_date+'T00:00:00'); const refN=DATA.reference.cycle_day; const delta=daysBetween(date,ref); const off=(refN-1+delta)%8; return ((off+8)%8)+1; }
-function firstCap(s){ return s? s.charAt(0).toUpperCase()+s.slice(1): s; }
-
-let startDate=new Date(); startDate.setDate(1);
-function monthMeta(y,m){ const first=new Date(y,m,1); const last=new Date(y,m+1,0); return { first,last,days:last.getDate() }; }
-
-function renderMonth(container, y, m){
-  const meta=monthMeta(y,m); const local=getLocalMonthName(m+1); const title=firstCap(new Date(y,m,1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'}));
-  const mEl=document.createElement('div'); mEl.className='month';
-  const header=document.createElement('div'); header.className='header'; header.innerHTML=`<div class="greg">${title}</div><div class="local">${local||''}</div>`; mEl.appendChild(header);
-  const table=document.createElement('table'); table.className='table'; table.innerHTML=`<thead><tr><th style="width:24%">Date</th><th style="width:30%">Jour</th><th>Trad.</th></tr></thead><tbody></tbody>`; const tbody=table.querySelector('tbody');
-  const today=toDateOnly(new Date());
-  for(let d=1; d<=meta.days; d++){
-    const cur=new Date(y,m,d); const tr=document.createElement('tr');
-    const wd=cur.toLocaleDateString('fr-FR',{weekday:'long'}); const n=getCycleDayNumber(cur); const trad=getCycleDayName(n);
-    if(toDateOnly(cur).getTime()===today.getTime()) tr.classList.add('today');
-    if(isForbidden(trad)) tr.classList.add('forbidden');
-    const tdDate=document.createElement('td'); tdDate.textContent=`${d} ${firstCap(wd)}`;
-    const tdJour=document.createElement('td'); tdJour.textContent=firstCap(wd);
-    const tdTrad=document.createElement('td'); tdTrad.textContent=trad;
-    tr.appendChild(tdDate); tr.appendChild(tdJour); tr.appendChild(tdTrad); tbody.appendChild(tr);
-  }
-  mEl.appendChild(table); container.appendChild(mEl);
-}
-
-function renderThreeMonths(){
-  const wrap=document.getElementById('monthsWrap'); wrap.innerHTML='';
-  const y=startDate.getFullYear(); const m=startDate.getMonth();
-  const prev=new Date(y,m-1,1); renderMonth(wrap, prev.getFullYear(), prev.getMonth());
-  renderMonth(wrap, y, m);
-  const next=new Date(y,m+1,1); renderMonth(wrap, next.getFullYear(), next.getMonth());
-}
-
-function updateVillageUI(){
-  document.getElementById('watermark').textContent = `Calendrier du Village — ${currentVillage}`;
-  const v=getVillageData();
-  document.getElementById('chief').textContent = v.chief || '—';
-  document.getElementById('market').textContent = (v.market_days||[]).join(', ') || '—';
-  document.getElementById('moreInfos').textContent = v.infos || '—';
-  document.getElementById('forbidden').textContent = (v.forbidden_days||[]).join(', ') || '—';
-}
-
-function populateSelectors(){
-  const selV=document.getElementById('villageSelect'); selV.innerHTML='';
-  Object.keys(DATA.villages).forEach(name=>{ const o=document.createElement('option'); o.value=name; o.textContent=name; selV.appendChild(o); });
-  selV.value=currentVillage; selV.onchange=()=>{ currentVillage=selV.value; localStorage.setItem('village', currentVillage); updateVillageUI(); renderThreeMonths(); };
-
-  const yi=document.getElementById('yearInput'); yi.value=startDate.getFullYear(); yi.onchange=()=>{ const y=parseInt(yi.value||startDate.getFullYear(),10); startDate=new Date(y, startDate.getMonth(), 1); renderThreeMonths(); };
-
-  const monthSel=document.getElementById('monthSelect'); monthSel.innerHTML='';
-  const gregNames=new Intl.DateTimeFormat('fr-FR',{month:'long'});
-  for(let i=0;i<12;i++){ const o=document.createElement('option'); o.value=String(i); o.textContent=gregNames.format(new Date(2026,i,1)); monthSel.appendChild(o); }
-  monthSel.value=String(startDate.getMonth());
-  monthSel.onchange=()=>{ startDate=new Date(startDate.getFullYear(), parseInt(monthSel.value,10), 1); renderThreeMonths(); };
-
-  const tradSel=document.getElementById('tradSelect'); tradSel.innerHTML='';
-  for(let i=1;i<=12;i++){ const o=document.createElement('option'); o.value=String(i-1); o.textContent=DATA.months_local[String(i)]||String(i); tradSel.appendChild(o); }
-  tradSel.value=String(startDate.getMonth());
-  tradSel.onchange=()=>{ startDate=new Date(startDate.getFullYear(), parseInt(tradSel.value,10), 1); renderThreeMonths(); monthSel.value=tradSel.value; };
-}
-
-function renderAll(){ updateVillageUI(); populateSelectors(); renderThreeMonths(); document.getElementById('year').textContent=(new Date()).getFullYear(); }
-
-document.addEventListener('DOMContentLoaded', async ()=>{
-  try{
-    await loadData(); renderAll();
-  }catch(err){ console.error(err); alert('Erreur de chargement des données.'); }
-});
+  document.addEventListener('DOMContentLoaded',()=>{
+    if($footerYear)$footerYear.textContent=String(new Date().getFullYear());
+    if($villageSel&&!$villageSel.value)$villageSel.value=state.village; state.village=($villageSel?.value||state.village);
+    if($yearInput)$yearInput.value=state.year;
+    initMonthSelect(); initTradSelect(); bindEvents(); render();
+  });
+})();
