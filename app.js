@@ -117,6 +117,21 @@
       const $table = document.createElement('table');
       $table.className = 'month__table'; // la classe est stylée via CSS ci-dessous
 
+
+// juste après: const $table = document.createElement('table');
+$table.className = 'month__table';
+
+// === colonne fixes : Date | Jour | Trad. ===
+const colgroup = document.createElement('colgroup');
+const colDate = document.createElement('col'); colDate.className = 'col-date';
+const colJour = document.createElement('col'); // auto
+const colTrad = document.createElement('col'); colTrad.className = 'col-trad';
+colgroup.appendChild(colDate);
+colgroup.appendChild(colJour);
+colgroup.appendChild(colTrad);
+$table.appendChild(colgroup);
+
+      
       // THEAD
       const $thead = document.createElement('thead');
       const $trh = document.createElement('tr');
