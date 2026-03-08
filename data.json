@@ -1,0 +1,62 @@
+{
+  "village": "BALENGOU",
+  "chief": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
+  "reference": {
+    "gregorian_date": "2026-02-28",
+    "cycle_day": 1
+  },
+  "cycle_days": [
+    {
+      "num": 1,
+      "name": "Ngèdjou"
+    },
+    {
+      "num": 2,
+      "name": "Ndin'kap"
+    },
+    {
+      "num": 3,
+      "name": "Nzeu'gheu"
+    },
+    {
+      "num": 4,
+      "name": "Ndi'keun"
+    },
+    {
+      "num": 5,
+      "name": "Nzedjio"
+    },
+    {
+      "num": 6,
+      "name": "Ndi'bou"
+    },
+    {
+      "num": 7,
+      "name": "Ndi'kong"
+    },
+    {
+      "num": 8,
+      "name": "Nditcheu"
+    }
+  ],
+  "months_local": {
+    "1": "Nka'gnia",
+    "2": "Zeu'gnia",
+    "3": "Ti'zoueu",
+    "4": "Ti'zoueu",
+    "5": "Sou'gnia",
+    "6": "Nkap'djap",
+    "7": "Tcho'zoueu",
+    "8": "Tcho'zoueu",
+    "9": "Mbuo'gnia",
+    "10": "Zue'Diap",
+    "11": "Chui'Kwelè",
+    "12": "Tchoua'Kwelè"
+  },
+  "market_days": [],
+  "forbidden_days": [
+    "Ndin'kap",
+    "Nzedjio"
+  ],
+  "infos": ""
+}

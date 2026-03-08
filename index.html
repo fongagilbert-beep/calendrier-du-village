@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendrier du Village – Cycle de 8 jours</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#C89B3C">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon-192.png" alt="Logo Calendrier du Village" class="logo">
+    <h1>Calendrier du Village</h1>
+    <p>Cycle traditionnel de 8 jours</p>
+  </header>
+  <main>
+    <section class="today">
+      <h2>Aujourd’hui</h2>
+      <div class="cards">
+        <div class="card"><div class="label">Date grégorienne</div><div id="gregorianDate" class="value">—</div></div>
+        <div class="card highlight"><div class="label">Jour du cycle (1–8)</div><div id="cycleDayNumber" class="value big">—</div></div>
+        <div class="card"><div class="label">Nom du jour</div><div id="cycleDayName" class="value">—</div></div>
+      </div>
+    </section>
+    <section class="picker">
+      <h2>Consulter une date</h2>
+      <input type="date" id="datePicker" />
+      <button id="btnCheck">Voir dans le cycle</button>
+      <div id="result" class="result"></div>
+    </section>
+    <section class="info">
+      <h2>À propos</h2>
+      <p>Un calendrier perpétuel africain basé sur un cycle de 8 jours. Conçu par Gilbert Fonga.</p>
+    </section>
+  </main>
+  <footer>
+    <div class="credit">Proposé par <strong>Gilbert FONGA</strong></div>
+    <button id="installBtn" class="hidden">Installer l’application</button>
+    <small>© <span id="year"></span> Calendrier du Village</small>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
