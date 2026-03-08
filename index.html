@@ -102,12 +102,17 @@
       mix-blend-mode: multiply;
     }
 
-   /* ===== 3 mois en colonne (une seule colonne) ===== */
+/* ===== 3 colonnes : m-1 | m | m+1 ===== */
 .months-wrap{
   display: grid;
-  grid-template-columns: 1fr;   /* une seule colonne */
-  gap: 16px;                    /* espace entre les mois */
+  grid-template-columns: repeat(3, minmax(260px, 1fr)); /* 3 colonnes flexibles */
+  gap: 16px;                                           /* espace entre mois */
   align-content: start;
+}
+
+/* Sur mobile/étroit, on empile proprement en 1 colonne */
+@media (max-width: 900px){
+  .months-wrap{ grid-template-columns: 1fr; }
 }
 
 /* ===== Carte d’un mois (plein-largeur, style Excel) ===== */
