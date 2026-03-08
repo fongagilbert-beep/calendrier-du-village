@@ -41,12 +41,27 @@
       gap: 10px;
       margin-block: 8px 12px;
     }
-    .toolbar__row{
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px 10px;
-    }
+    /* ===== Toolbar : nav en 1ère ligne, paramètres en 2ème ===== */
+.toolbar{
+  display: grid;
+  grid-template-areas:
+    "nav"
+    "params";
+  grid-auto-rows: auto;
+  gap: 10px;
+  margin-block: 8px 12px;
+}
+.toolbar__nav   { grid-area: nav; }
+.toolbar__params{ grid-area: params; }
+
+@media (min-width: 1200px){
+  /* Si tu veux, on peut passer en 2 colonnes sur très large écran :
+     nav à gauche, paramètres à droite (décommenter si souhaité) */
+  /* .toolbar{
+       grid-template-areas: "nav params";
+       grid-template-columns: 1fr 1fr;
+     } */
+}
     .strong{ font-weight: 600; }
     .wide{ min-width: 180px; }
 
