@@ -1,265 +1,246 @@
-/* ===================== */
-/* VARIABLES GLOBALES    */
-/* ===================== */
-:root {
-  --date-col: 50px;           /* largeur colonne Date */
-  --gap-month: 10px;          /* écart entre les mois */
-  --row-h: 28px;
-  --zebra: #fbfbff;
-  --bg: #fff8e6;
-  --primary: #0b3c8d;
-  --accent: #f7b500;
-  --forbid: #e53935;
-  --market: #1976d2;
-  --today: #43a047;
-}
+/* =====================================================
+   CALENDRIER DU VILLAGE — CSS STABILISÉ 2026
+   Compatible avec l'app.js fourni (renderOneMonth)
+   ===================================================== */
 
-* { box-sizing: border-box; }
-body {
+/* --------------------------
+   RESET SIMPLE
+--------------------------- */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #fafafa;
   color: #222;
+  line-height: 1.4;
 }
 
-/* ===================== */
-/* HEADER & NAV          */
-/* ===================== */
-.site-header { display:flex; justify-content:center; padding:10px; }
-.site-header h1 { margin:6px 0; font-size:1.4rem; }
-
-.nav-vibrant { background:#ffe8b3; border-top:2px solid var(--accent); border-bottom:2px solid var(--accent); }
-.nav-row, .params-row {
-  display:flex; justify-content:center; align-items:center;
-  gap:12px; padding:8px;
+/* --------------------------
+   HEADER
+--------------------------- */
+.site-header {
+  text-align: center;
+  padding: 1rem 0;
+  background: #004aad;
+  color: white;
 }
-.nav-group { display:flex; gap:8px; flex-wrap:wrap; }
+.site-header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+/* --------------------------
+   NAVIGATION
+--------------------------- */
+.nav-row {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  background: #e7f0ff;
+  border-bottom: 1px solid #d0d8e0;
+}
+
+.nav-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
 
 .btn {
-  background:var(--accent); border:none; color:#1f1f1f;
-  padding:6px 12px; border-radius:18px; font-weight:700; cursor:pointer;
+  background: #006af5;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
 }
-.btn.ghost { background:#ffd37a; }
-
-/* ===================== */
-/* PARAMÈTRES            */
-/* ===================== */
-.params-row .params {
-  display:flex; gap:12px; align-items:center;
-  background:#fffbef; padding:6px 10px;
-  border:1px solid #f2cc7a; border-radius:10px; flex-wrap:wrap;
-}
-.params-row label { font-size:0.95rem; }
-.params-row input, .params-row select {
-  padding:4px 6px; border-radius:6px; border:1px solid #ccc;
+.btn:hover {
+  background: #004ec2;
 }
 
-/* ===================== */
-/* GRILLE DES 3 MOIS     */
-/* ===================== */
-#calendar-9cols {
+.btn.ghost {
+  background: white;
+  color: #006af5;
+  border: 1px solid #006af5;
+}
+.btn.ghost:hover {
+  background: #e9f1ff;
+}
+
+/* --------------------------
+   PARAMÈTRES
+--------------------------- */
+.params-row {
+  padding: 0.8rem;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.params {
   display: flex;
-  justify-content: space-between;
-  gap: var(--gap-month);
-  max-width: 1600px;
-  margin: 12px auto;
-  padding: 0 12px 40px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+.params label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* --------------------------
+   GRILLE PRINCIPALE : 3 MOIS
+--------------------------- */
+#calendar-9cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* ← Aligne parfaitement M‑1 | M | M+1 */
+  gap: 1.2rem;
+  padding: 1rem;
   position: relative;
 }
 
-/* Watermark du village */
+/* WATERMARK dynamique */
 #calendar-9cols::after {
   content: attr(data-watermark);
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transform: translateY(0) rotate(-28deg);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-28deg);
-  font-size: 64px;
-  font-weight: 900;
-  text-align: center;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6rem;
   color: rgba(0,0,0,0.06);
-
+  pointer-events: none;
+  white-space: nowrap;
+  text-transform: uppercase;
 }
 
-/* ===================== */
-/* BLOC : UN MOIS        */
-/* ===================== */
-/* 🔒 FIX ALIGNEMENT – Version stable */
+/* --------------------------
+   BLOC D’UN MOIS
+--------------------------- */
 .month {
-  display: grid;
-  grid-template-columns:
-      var(--date-col)
-      minmax(var(--greg-min,150px), 1fr)
-      minmax(var(--trad-min,150px), 1fr);
-}
-
-/* Entête du mois */
-.month-header {
-  grid-column: 1 / -1;
-}
-
-/* Les 3 titres */
-.col-title:nth-of-type(1) { grid-column: 1; }
-.col-title:nth-of-type(2) { grid-column: 2; }
-.col-title:nth-of-type(3) { grid-column: 3; }
-
-/* Les lignes restent dans les 3 colonnes */
-.row { display: contents; }
-.row > .cell.date  { grid-column: 1; }
-.row > .cell.greg  { grid-column: 2; }
-.row > .cell.tradi { grid-column: 3; }
-
-/* En-tête du mois */
-.month-header {
-  grid-column: 1 / -1;
-  background: var(--primary);
-  color: white;
-  padding: 6px 10px;
-  font-weight: 800;
-  text-align: center;
-  border-bottom: 2px solid #0a2e6c;
-}
-
-/* ===================== */
-/* COLONNES INTERNES     */
-/* ===================== */
-.col-title {
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: #1f1f1f;
-  padding: 4px 0;
-  text-align: left;
+  background: white;
+  padding: 0.6rem;
+  border-radius: 6px;
   border: 1px solid #ddd;
-  background: #ffe9b6;
+  display: grid;
+  grid-template-columns: 1fr; /* interne : une seule colonne ; les rows gèrent le reste */
+  gap: 0.3rem;
+}
+
+.month-header {
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+  text-align: center;
+  padding: 0.4rem;
+  background: #f4f7ff;
+  border-radius: 4px;
+  border: 1px solid #dbe4ff;
+}
+
+/* --------------------------
+   TITRES DES COLONNES INTERNES
+--------------------------- */
+.col-title {
+  font-weight: bold;
+  background: #eef3ff;
+  padding: 0.3rem;
+  border: 1px solid #d8e0f3;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* --------------------------
+   LIGNE (un jour)
+--------------------------- */
+.row {
+  display: grid;
+  grid-template-columns: 45px 1fr 1fr; /* Date | Jour grégorien | Jour tradi */
+  border-bottom: 1px solid #eee;
+  padding: 0.15rem 0.2rem;
   border-radius: 4px;
 }
 
-/* ===================== */
-/* LIGNES ET CELLULES    */
-/* ===================== */
-.row { display: contents; }
-
+/* --------------------------
+   CELLS
+--------------------------- */
 .cell {
-  padding: 4px 6px;
-  height: var(--row-h);
-  display: flex;
-  align-items: center;
-  border: 1px solid #e6e6e6;
-  background: white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 0.25rem 0.3rem;
+  font-size: 0.9rem;
 }
 
-.cell.date { justify-content: center; font-weight: 700; }
-.cell.zebra { background: var(--zebra); }
-
-/* États */
-.row.today .cell {
-  outline: 2px solid var(--today);
-  outline-offset: -2px;
-}
-.row.forbidden .cell.tradi {
-  background: #ffd6d6; color:#a10000; font-weight: 800;
-}
-.row.market .cell.greg {
-  background: #d6e9ff; color:#0a3f80; font-weight: 800;
+/* ZEBRA */
+.zebra {
+  background: #fafafa;
 }
 
-/* ===================== */
-/* SECTION BAS DE PAGE   */
-/* (VERSION CORRECTE, UNIQUE ET CENTRÉE) */
-/* ===================== */
+/* --------------------------
+   ÉTATS SPÉCIAUX
+--------------------------- */
+.today {
+  background: #fff3d0 !important;
+  border-left: 4px solid #ffb700;
+}
+
+.forbidden {
+  background: #ffe5e5 !important;
+  color: #b30000;
+}
+.market {
+  background: #e9ffe5 !important;
+  color: #006b24;
+}
+
+/* Filtrage */
+.filtered-out {
+  opacity: 0.3;
+}
+
+/* --------------------------
+   INFO BAS
+--------------------------- */
 .info-bottom {
-  max-width: 1600px;
-  margin: 12px auto 20px;
-  padding: 10px 12px;
+  padding: 1rem;
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
+.legend {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-bottom: 0.6rem;
 }
 
-/* Harmonisation avec le calendrier */
-#calendar-9cols,
-.info-bottom {
-  padding-left: 12px;
-  padding-right: 12px;
+.chip {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
 }
 
-/* ===================== */
-/* RESPONSIVE MOBILE     */
-/* ===================== */
-@media(max-width:1100px) {
+.chip.forbid { background:#ffeaea; border-color:#ff9a9a; }
+.chip.market { background:#eaffea; border-color:#91e691; }
+.chip.today  { background:#fff4d6; border-color:#ffd87a; }
+
+/* --------------------------
+   FOOTER
+--------------------------- */
+.footer {
+  text-align: center;
+  padding: 0.6rem;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+/* --------------------------
+   RESPONSIVE
+--------------------------- */
+@media(max-width: 900px){
   #calendar-9cols {
-    flex-direction: column;
-  }
-  .month {
-    min-width: 100%;
+    grid-template-columns: 1fr;
   }
 }
-
-/* ===================== */
-/* FILTRE VISUEL (GRISAGE)
-/* ===================== */
-.filtered-out .cell {
-  opacity: 0.35;
-  filter: grayscale(0.3);
-}
-
-/* WEEK-END – Mise en évidence douce */
-.cell.greg[data-day="samedi"],
-.cell.greg[data-day="dimanche"] {
-  background: #fff2cc !important;
-  font-weight: 700;
-}
-
-.row .cell[data-day="samedi"], 
-.row .cell[data-day="dimanche"] {
-  background: #fff8e6 !important;
-}
-``
-
-/* 🔒 HOTFIX ALIGNEMENT COLONNES — à coller en bas du CSS */
-.month{
-  /* On garde tes réglages de largeur (Date étroite, Greg/Trad légèrement resserrés) */
-  grid-template-columns:
-    var(--date-col)
-    minmax(var(--greg-min,156px), var(--text-fr,0.95fr))
-    minmax(var(--trad-min,156px), var(--text-fr,0.95fr)) !important;
-
-  /* On force une ligne pour l'entête + une ligne pour les 3 titres */
-  grid-auto-rows: var(--row-h);
-  grid-template-areas:
-    "hdr hdr hdr"
-    "hdate hgreg htrad";
-}
-
-/* Entête du mois sur toute la largeur */
-.month-header{ grid-area: hdr !important; }
-
-/* Les trois titres de colonnes sur la même ligne */
-.month > .col-title:nth-of-type(1){ grid-area: hdate !important; display:block; }
-.month > .col-title:nth-of-type(2){ grid-area: hgreg !important; display:block; }
-.month > .col-title:nth-of-type(3){ grid-area: htrad !important; display:block; }
-
-/* 🌟 Verrouillage des cellules par colonne (empêche tout glissement) */
-.row{ display: contents; }
-.row > .cell.date  { grid-column: 1 !important; }
-.row > .cell.greg  { grid-column: 2 !important; }
-.row > .cell.tradi { grid-column: 3 !important; }
-
-#calendar-9cols {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  align-items: start;
-}
-.month {
-  display: block;
-}
-
