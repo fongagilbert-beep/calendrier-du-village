@@ -124,9 +124,9 @@ body {
 .month::before {
   content: attr(data-watermark);     /* Exemple : BALENGOU */
   font-family: "Noto Sans Bamum", sans-serif;
-  font-size: 3.8rem;
-  font-weight: 700;
-  color: rgba(0,0,0,0.06);
+  font-size: 4.2rem;
+  font-weight: 800;
+  color: rgba(0,0,0,0.12);
 
   position: absolute;
   top: 50%;
@@ -198,18 +198,22 @@ body {
 /* --- ÉTATS SPÉCIAUX ---------------------------------------------------- */
 
 .today {
-  background: #fff2cc !important;
-  border-left: 4px solid #ffbf00;
+  background: #fff7cc !important;
+  border-left: 4px solid #ffc400;
+  color: #5f4100 !important;
+  font-weight: 700;
 }
 
 .forbidden {
-  background: #ffe5e5 !important;
-  color: #b30000;
+  background: #ffe1e1 !important;
+  border-left: 4px solid #ff4f4f;
+  color: #8f0000 !important;
 }
 
 .market {
-  background: #e3ffe3 !important;
-  color: #007023;
+  background: #e3ffe7 !important;
+  border-left: 4px solid #1a9c35;
+  color: #005f20 !important;
 }
 
 .filtered-out {
@@ -257,3 +261,16 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Samedi */
+.cell[data-day="samedi"] {
+  color: #0059c0;
+  font-weight: 600;
+}
+
+/* Dimanche */
+.cell[data-day="dimanche"] {
+  color: #c00000;
+  font-weight: 700;
+}
+
