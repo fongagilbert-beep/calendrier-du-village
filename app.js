@@ -161,11 +161,20 @@ async function loadDataJSON() {
 //  Filtre
 // =====================================================
 
-function shouldHideByFilter({ isForbidden, isMarket }) {
-  const f = String(state.filtre || 'all').toLowerCase();
-  if (f === 'forbidden') return !isForbidden; // n’affiche que les "interdits"
-  if (f === 'market') return !isMarket;       // n’affiche que les "marchés"
-  return false;                                // "all"/"tous"/inconnu -> ne cache rien
+function getFilterValue(){
+  const sel = document.getElementById('param-filtre');
+  if (!sel) return 'all';
+  const raw = String(sel.value || sel.options[sel.selectedIndex]?.text || '').toLowerCase().trim();
+  if (raw.includes('interdit')) return 'forbidden';
+  if (raw.includes('march'))   return 'market';
+  return 'all';
+}
+
+function shouldHideByFilter({isForbidden, isMarket}){
+  const f = getFilterValue();  // <- lecture directe, normalisée
+  if (f === 'forbidden') return !isForbidden; // grise tout sauf les interdits
+  if (f === 'market')   return !isMarket;     // grise tout sauf les marchés
+  return false;                                // all -> ne grise rien
 }
 
 // =====================================================
