@@ -252,3 +252,14 @@ body {
 .row > .cell.date  { grid-column: 1 !important; }
 .row > .cell.greg  { grid-column: 2 !important; }
 .row > .cell.tradi { grid-column: 3 !important; }
+
+#calendar-9cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+.month {
+  display: block;
+}
+
