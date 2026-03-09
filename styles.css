@@ -12,25 +12,93 @@
 --------------------------- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* =====================================================
+   FOND "ÉCRU + MOTIF BAMILÉKÉ"
+   - 3 couches : base écru + grain + motif géométrique
+   - aucun asset externe, tout inline data:SVG
+   ===================================================== */
+
 body {
   font-family: system-ui, sans-serif;
-  background: 
-    linear-gradient(#f3efe4, #f3efe4), /* base écru */
-    url("data:image/svg+xml;utf8,\
-    <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>
-      <rect width='160' height='160' fill='none'/>
-      <circle cx='12' cy='8' r='1' fill='%23d6d0c4' opacity='0.28'/>
-      <circle cx='45' cy='22' r='1' fill='%23d6d0c4' opacity='0.22'/>
-      <circle cx='90' cy='40' r='1' fill='%23d6d0c4' opacity='0.26'/>
-      <circle cx='140' cy='70' r='1' fill='%23d6d0c4' opacity='0.24'/>
-      <circle cx='30' cy='100' r='1' fill='%23d6d0c4' opacity='0.28'/>
-      <circle cx='110' cy='120' r='1' fill='%23d6d0c4' opacity='0.30'/>
-      <circle cx='70' cy='150' r='1' fill='%23d6d0c4' opacity='0.22'/>
-    </svg>"
-    );
-  background-size: auto, 220px 220px;
   color: #222;
   line-height: 1.42;
+
+  /* Couche 1 : fond écru uni (base) */
+  background:
+    linear-gradient(#f3efe4, #f3efe4),
+
+    /* Couche 2 : grain papier (points irréguliers) */
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'>\
+        <rect width='200' height='200' fill='none'/>\
+        <circle cx='18' cy='14' r='1' fill='%23ccc5b5' opacity='0.22'/>\
+        <circle cx='68' cy='40' r='1.2' fill='%23ccc5b5' opacity='0.18'/>\
+        <circle cx='120' cy='72' r='1' fill='%23ccc5b5' opacity='0.20'/>\
+        <circle cx='170' cy='110' r='1.1' fill='%23ccc5b5' opacity='0.24'/>\
+        <circle cx='42' cy='150' r='1.2' fill='%23ccc5b5' opacity='0.19'/>\
+        <circle cx='105' cy='178' r='1.1' fill='%23ccc5b5' opacity='0.17'/>\
+      </svg>"
+    ),
+
+    /* Couche 3 : motif géométrique bamiléké (discret) */
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'>\
+        <defs>\
+          <!-- Trame de lignes diagonales (tissage) -->\
+          <pattern id='ndop' patternUnits='userSpaceOnUse' width='26' height='26' patternTransform='rotate(45)'>\
+            <path d='M0 13 H26' stroke='%239c8f77' stroke-width='1' stroke-linecap='square' opacity='0.10'/>\
+            <path d='M0 6.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/>\
+            <path d='M0 19.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/>\
+          </pattern>\
+          <!-- Rosace/losange très léger au centre de la tuile -->\
+          <g id='rosace'>\
+            <path d='M130 105 L155 130 L130 155 L105 130 Z' fill='none' stroke='%239c8f77' stroke-width='1' opacity='0.08'/>\
+            <circle cx='130' cy='130' r='6' fill='%239c8f77' opacity='0.08'/>\
+          </g>\
+        </defs>\
+        <rect width='260' height='260' fill='url(%23ndop)'/>\
+        %23rosace\
+      </svg>"
+    );
+
+  /* Échelles des 3 couches : base auto, grain 260px, motif 520px (plus large = plus discret) */
+  background-size: auto, 260px 260px, 520px 520px;
+  background-attachment: fixed; /* effet papier fixe au scroll */
+}
+
+/* ---------------------------------------------
+   Variantes d’intensité (facultatif)
+   Ajoute sur <body> la classe :
+   - motif-soft (défaut)
+   - motif-medium
+   - motif-strong
+----------------------------------------------*/
+
+/* Soft (défaut) : rien à faire, les opacités sont déjà faibles */
+
+/* Medium : on renforce légèrement la 3e couche via mix-blend overlay sur un voile */
+body.motif-medium::after,
+body.motif-strong::after {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Medium : voile très léger */
+body.motif-medium::after {
+  background:
+    radial-gradient(1200px 1200px at 30% 20%, rgba(156,143,119,0.05), transparent 60%),
+    radial-gradient(1000px 1000px at 80% 70%, rgba(156,143,119,0.04), transparent 55%);
+  mix-blend-mode: multiply;
+}
+
+/* Strong : un peu plus visible, toujours respectueux de la lisibilité */
+body.motif-strong::after {
+  background:
+    radial-gradient(1200px 1200px at 30% 20%, rgba(156,143,119,0.08), transparent 60%),
+    radial-gradient(1000px 1000px at 80% 70%, rgba(156,143,119,0.07), transparent 55%);
+  mix-blend-mode: multiply;
 }
 
 /* --------------------------
