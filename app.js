@@ -207,6 +207,7 @@ function renderOneMonth(root, startOfMonth, village, placeClass){
   header.className='month-header';
   const tradMonth = getTraditionalMonthName(y,m,village);
   header.textContent = `${monthLabel(y,m)} — ${tradMonth}` + (placeClass==='mC'?' (M)':'');
+  wrap.setAttribute("data-watermark", village);
   wrap.appendChild(header);
 
   // Titres colonnes
