@@ -231,9 +231,18 @@ function renderOneMonth(root, startOfMonth, village, placeClass){
 
     const zebra = (d % 2 === 0);
 
-    const c1=document.createElement('div'); c1.className='cell date'+(zebra?' zebra':''); c1.textContent=String(d);
-    const c2=document.createElement('div'); c2.className='cell greg'+(zebra?' zebra':''); c2.textContent=formatDayLabel(cur);
-    const c3=document.createElement('div'); c3.className='cell tradi'+(zebra?' zebra':''); c3.textContent=trad;
+    const c1 = document.createElement('div');
+c1.className = 'cell date' + (zebra ? ' zebra' : '');
+c1.textContent = String(d);
+
+const c2 = document.createElement('div');
+c2.className = 'cell greg' + (zebra ? ' zebra' : '');
+c2.textContent = formatDayLabel(cur);
+c2.setAttribute('data-day', formatDayLabel(cur).toLowerCase()); // ← ⭐ AJOUT IMPORTANT ⭐
+
+const c3 = document.createElement('div');
+c3.className = 'cell tradi' + (zebra ? ' zebra' : '');
+c3.textContent = trad;
 
     row.appendChild(c1);
     row.appendChild(c2);
