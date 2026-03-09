@@ -501,3 +501,19 @@ body.motif-strong::after {
 .month-head-row .col-title:nth-child(1) { text-align: center; }  /* Date */
 .month-head-row .col-title:nth-child(2) { text-align: center; }  /* Jour grégorien */
 .month-head-row .col-title:nth-child(3) { text-align: center; }  /* Jour traditionnel */
+
+/* === FIX CRITIQUE : remettre les 3 titres sur une seule ligne === */
+.month-head-row {
+  display: grid !important;
+  grid-template-columns: 55px 0.6fr 0.6fr !important; /* Date | Grégorien | Trad */
+  column-gap: .35rem !important;
+  margin-bottom: .3rem;
+}
+
+/* Les lignes jours utilisent la MÊME grille, pour un alignement parfait */
+.row {
+  display: grid !important;
+  grid-template-columns: 55px 0.6fr 0.6fr !important;
+  align-items: center;
+  gap: .2rem;
+}
