@@ -162,9 +162,10 @@ async function loadDataJSON(){
 // =====================================================
 
 function shouldHideByFilter({isForbidden, isMarket}){
-  if (state.filtre === 'forbidden') return !isForbidden;
-  if (state.filtre === 'market') return !isMarket;
-  return false;
+  const f = String(state.filtre || 'all').toLowerCase();
+  if (f === 'forbidden') return !isForbidden; // n’affiche que les "interdits"
+  if (f === 'market')   return !isMarket;     // n’affiche que les "marchés"
+  return false;                                // "all"/"tous"/inconnu -> ne cache rien
 }
 
 // =====================================================
