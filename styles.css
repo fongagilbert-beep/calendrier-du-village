@@ -202,3 +202,16 @@ body {
   opacity: 0.35;
   filter: grayscale(0.3);
 }
+
+/* WEEK-END – Mise en évidence douce */
+.cell.greg[data-day="samedi"],
+.cell.greg[data-day="dimanche"] {
+  background: #fff2cc !important;
+  font-weight: 700;
+}
+
+.row .cell[data-day="samedi"], 
+.row .cell[data-day="dimanche"] {
+  background: #fff8e6 !important;
+}
+``
