@@ -248,3 +248,22 @@ body { margin:0; font-family: Segoe UI, Roboto, Arial, "Noto Sans"; background:v
     grid-column: 1 / -1;
   }
 }
+
+/* Grille simple : 3 colonnes bien séparées pour M-1 | M | M+1 */
+#calendar-9cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* chaque mois garde sa largeur */
+  column-gap: 10px; /* <-- réduis à 6px, 4px ou même 2px si tu veux */
+  align-items: start;
+}
+
+/* Chaque bloc garde sa largeur interne naturelle */
+.month {
+  width: 100%;
+  min-width: 260px; /* empêche les chevauchements */
+}
+
+/* Largeur de la colonne Date seulement (comme demandé) */
+.month {
+  grid-template-columns: 50px 1fr 1fr; /* Date plus étroite */
+}
