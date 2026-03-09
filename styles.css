@@ -1,36 +1,47 @@
 /* =====================================================
-   CALENDRIER DU VILLAGE — CSS FINAL 2026
-   Alignements parfaits — Watermark par mois — 3 colonnes
-   ===================================================== */
+   CALENDRIER DU VILLAGE — STYLE FINAL LISIBLE (2026)
+   - Alignement parfait
+   - Watermark vertical par mois
+   - Colonnes compactes
+   - Compatible avec app.js corrigé (month-head-row)
+===================================================== */
 
-/* --------------------------
-   RESET
---------------------------- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* --- RESET ------------------------------------------------------------ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: system-ui, sans-serif;
   background: #f5f7fb;
   color: #222;
+  line-height: 1.4;
 }
 
-/* --------------------------
-   HEADER
---------------------------- */
+/* --- HEADER ------------------------------------------------------------ */
+
 .site-header {
   background: #004aad;
   color: white;
   padding: 1rem;
   text-align: center;
 }
-.site-header h1 { font-size: 1.7rem; }
 
-/* --------------------------
-   NAVIGATION
---------------------------- */
+.site-header h1 {
+  font-size: 1.7rem;
+}
+
+/* --- NAVIGATION -------------------------------------------------------- */
+
 .nav-row {
-  display: flex; justify-content: center;
+  display: flex;
+  justify-content: center;
   background: #e9f1ff;
-  padding: .6rem; gap: .5rem;
+  padding: .6rem;
+  gap: .5rem;
 }
 
 .btn {
@@ -52,7 +63,7 @@ body {
   background: #0053c7;
 }
 
-/* Aujourd'hui */
+/* Aujourd’hui */
 .btn[data-action="today"] {
   background: #004aad;
 }
@@ -62,7 +73,7 @@ body {
 
 /* -1 an / +1 an */
 .btn.ghost {
-  background: #ffffff;
+  background: white;
   color: #006af5;
   border: 1px solid #006af5;
 }
@@ -70,128 +81,143 @@ body {
   background: #e8f0ff;
 }
 
-/* --------------------------
-   PARAMETRES
---------------------------- */
+/* --- PARAMÈTRES -------------------------------------------------------- */
+
 .params-row {
-  background: white;
   padding: .8rem;
+  background: white;
   border-bottom: 1px solid #ddd;
 }
+
 .params {
-  display: flex; flex-wrap: wrap;
-  gap: 1rem; justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
 }
 
-/* --------------------------
-   GRILLE DES 3 MOIS
---------------------------- */
+/* --- GRILLE PRINCIPALE : 3 MOIS --------------------------------------- */
+
 #calendar-9cols {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.2rem;
   padding: 1.2rem;
-  position: relative;
 }
 
-/* --------------------------
-   BLOC MOIS — grille interne 3 colonnes
---------------------------- */
+/* --- MOIS --------------------------------------------------------------- */
+
 .month {
-  background: #ffffff;
+  background: white;
   border: 1px solid #d0d8e8;
   border-radius: 6px;
   padding: .8rem;
 
-  display: grid;
-  /* colonnes compactes */
-  grid-template-columns: 30px 0.8fr 0.9fr;
-  grid-auto-rows: auto;
-  row-gap: .35rem;
-
   position: relative;
-  overflow: hidden;   /* pour watermark */
+  overflow: hidden;  /* nécessaire pour watermark */
 }
 
-/* --------------------------
-   WATERMARK PAR MOIS
---------------------------- */
+/* --- WATERMARK PAR MOIS (VILLAGE) ------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bamum:wght@400;700&display=swap');
+
 .month::before {
-  content: attr(data-watermark);
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%) rotate(-90deg);
-
-  font-size: 3.5rem;
+  content: attr(data-watermark);     /* Exemple : BALENGOU */
+  font-family: "Noto Sans Bamum", sans-serif;
+  font-size: 3.8rem;
   font-weight: 700;
-  color: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.06);
 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
   pointer-events: none;
   white-space: nowrap;
   z-index: 0;
 }
 
-/* Tout le contenu au-dessus du watermark */
+/* Le contenu passe AU-DESSUS du watermark */
 .month > * {
   position: relative;
   z-index: 1;
 }
 
-/* --------------------------
-   HEADER MOIS
---------------------------- */
+/* --- HEADER DU MOIS ---------------------------------------------------- */
+
 .month-header {
-  grid-column: 1 / -1;
   background: #004aad;
   color: white;
   border-radius: 4px;
   padding: .55rem;
   font-weight: 700;
   text-align: center;
+  margin-bottom: .4rem;
 }
 
-/* --------------------------
-   ENTÊTES DE COLONNES
---------------------------- */
+/* --- ENTÊTES DES 3 COLONNES ------------------------------------------- */
+
+.month-head-row {
+  display: grid;
+  grid-template-columns: 30px 0.8fr 0.9fr;
+  gap: .35rem;
+  margin-bottom: .3rem;
+}
+
 .col-title {
   background: #eef3ff;
   border: 1px solid #d8dff7;
   border-radius: 4px;
-  font-weight: bold;
   padding: .35rem;
   text-align: center;
+  font-weight: bold;
 }
 
-/* placer dans bonnes colonnes */
-.month > .col-title:nth-of-type(1) { grid-column: 1; }
-.month > .col-title:nth-of-type(2) { grid-column: 2; }
-.month > .col-title:nth-of-type(3) { grid-column: 3; }
+/* --- LIGNES DU MOIS ---------------------------------------------------- */
 
-/* --------------------------
-   LIGNE JOUR
---------------------------- */
 .row {
   display: grid;
   grid-template-columns: 30px 0.8fr 0.9fr;
   align-items: center;
+  gap: .2rem;
+  padding: .15rem .2rem;
   border-bottom: 1px solid #eee;
   border-radius: 4px;
-  padding: .15rem .2rem;
 }
 
-.cell { padding: .2rem .25rem; font-size: .92rem; }
-.zebra { background: #fafafa; }
+.cell {
+  padding: .2rem .25rem;
+  font-size: .92rem;
+}
 
-/* États */
-.today     { background: #fff2cc !important; border-left: 4px solid #ffbf00; }
-.forbidden { background: #ffe5e5 !important; color: #b30000; }
-.market    { background: #e3ffe3 !important; color: #007023; }
-.filtered-out { opacity: .3; }
+/* Ligne zébrée */
+.zebra {
+  background: #fafafa;
+}
 
-/* --------------------------
-   INFO BAS
---------------------------- */
+/* --- ÉTATS SPÉCIAUX ---------------------------------------------------- */
+
+.today {
+  background: #fff2cc !important;
+  border-left: 4px solid #ffbf00;
+}
+
+.forbidden {
+  background: #ffe5e5 !important;
+  color: #b30000;
+}
+
+.market {
+  background: #e3ffe3 !important;
+  color: #007023;
+}
+
+.filtered-out {
+  opacity: .3;
+}
+
+/* --- INFO BAS ---------------------------------------------------------- */
+
 .info-bottom {
   background: white;
   padding: 1rem;
@@ -205,23 +231,27 @@ body {
   margin-bottom: .8rem;
 }
 
-.chip { padding: .25rem .5rem; border-radius: 4px; border: 1px solid #ccc; font-size: .85rem; }
+.chip {
+  padding: .25rem .5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: .85rem;
+}
+
 .chip.forbid { background:#ffeaea; border-color:#ff9a9a; }
 .chip.market { background:#eaffea; border-color:#91e691; }
 .chip.today  { background:#fff4d6; border-color:#ffd87a; }
 
-/* --------------------------
-   FOOTER
---------------------------- */
+/* --- FOOTER ------------------------------------------------------------ */
+
 .footer {
   text-align: center;
   padding: .8rem;
   color: #888;
 }
 
-/* --------------------------
-   RESPONSIVE
---------------------------- */
+/* --- RESPONSIVE -------------------------------------------------------- */
+
 @media(max-width: 900px){
   #calendar-9cols {
     grid-template-columns: 1fr;
