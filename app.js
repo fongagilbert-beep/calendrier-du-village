@@ -1,6 +1,7 @@
 // =====================================================
-//  CALENDRIER DU VILLAGE — VERSION STABILISÉE
-//  Avec correctifs fuseau horaire, filtres, performances
+//  CALENDRIER DU VILLAGE — VERSION STABILISÉE (NON-MODULE)
+//  Correctifs fuseau horaire, filtres, performances
+//  -> A coller tel quel dans app.js
 // =====================================================
 
 // Fenêtre centrée : M-1 | M | M+1 (M = mois central)
@@ -83,10 +84,10 @@ function resolveTraditionalAndTags(d, village){
 }
 
 // =====================================================
-//  API EXPOSEE
+//  API (exposée via window.* en bas du fichier)
 // =====================================================
 
-export function cvUpdateData(entries){
+function cvUpdateData(entries){
   for (const e of entries){
     const vKey = (e.village || 'ALL').toUpperCase();
     const k = makeKey(e.dateISO, vKey);
@@ -106,12 +107,12 @@ export function cvUpdateData(entries){
   renderNineColumns();
 }
 
-export function cvSetWatermark(text){
+function cvSetWatermark(text){
   const el = document.getElementById('calendar-9cols');
   if (el) el.setAttribute('data-watermark', (text||'VILLAGE').toUpperCase());
 }
 
-export function cvSetVillageMeta({ roi, marche, info }){
+function cvSetVillageMeta({ roi, marche, info }){
   if (roi) state.roi = roi;
   if (Array.isArray(marche)) state.marche = marche;
   if (info) state.motif = info;
@@ -332,9 +333,7 @@ wireParams();
 loadDataJSON();
 renderNineColumns();
 
-// Helpers exposés
-window.cvUpdateData=cvUpdateData;
-window.cvSetWatermark=cvSetWatermark;
-window.cvSetVillageMeta=cvSetVillageMeta;
-
-Replace app.js with stabilized calendar version
+// Helpers exposés globalement
+window.cvUpdateData = cvUpdateData;
+window.cvSetWatermark = cvSetWatermark;
+window.cvSetVillageMeta = cvSetVillageMeta;
