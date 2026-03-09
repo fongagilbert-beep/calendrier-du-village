@@ -1,239 +1,201 @@
 /* =====================================================
-   CALENDRIER DU VILLAGE — CSS STABILISÉ 2026
-   Compatible avec l'app.js fourni (renderOneMonth)
+   CALENDRIER DU VILLAGE — CSS OFFICIEL 2026
+   Version stabilisée pour app.js (structure fixe)
    ===================================================== */
 
 /* --------------------------
-   RESET SIMPLE
+   RESET
 --------------------------- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: system-ui, sans-serif;
-  background: #fafafa;
+  background: #f5f7fb;
   color: #222;
-  line-height: 1.4;
 }
 
 /* --------------------------
    HEADER
 --------------------------- */
 .site-header {
-  text-align: center;
-  padding: 1rem 0;
   background: #004aad;
   color: white;
+  padding: 1rem;
+  text-align: center;
 }
-.site-header h1 {
-  margin: 0;
-  font-size: 1.6rem;
-}
+.site-header h1 { font-size: 1.7rem; }
 
 /* --------------------------
    NAVIGATION
 --------------------------- */
 .nav-row {
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem;
-  gap: 0.5rem;
-  background: #e7f0ff;
-  border-bottom: 1px solid #d0d8e0;
-}
-
-.nav-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: flex; justify-content: center;
+  background: #e9f1ff;
+  padding: .6rem; gap: .5rem;
 }
 
 .btn {
-  background: #006af5;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  color: white;
+  padding: .45rem .9rem;
   border-radius: 4px;
+  border: none;
   cursor: pointer;
-}
-.btn:hover {
-  background: #004ec2;
+  color: white;
+  font-weight: 500;
 }
 
+/* -3M / +3M = bleu normal */
+.btn[data-action="prev3"],
+.btn[data-action="next3"] {
+  background: #006af5;
+}
+.btn[data-action="prev3"]:hover,
+.btn[data-action="next3"]:hover {
+  background: #0053c7;
+}
+
+/* Aujourd'hui = bleu foncé */
+.btn[data-action="today"] {
+  background: #004aad;
+}
+.btn[data-action="today"]:hover {
+  background: #003c8f;
+}
+
+/* -1an / +1an = mode ghost */
 .btn.ghost {
   background: white;
   color: #006af5;
   border: 1px solid #006af5;
 }
 .btn.ghost:hover {
-  background: #e9f1ff;
+  background: #e8f0ff;
 }
 
 /* --------------------------
    PARAMÈTRES
 --------------------------- */
 .params-row {
-  padding: 0.8rem;
   background: white;
+  padding: .8rem;
   border-bottom: 1px solid #ddd;
 }
-
 .params {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  font-size: 0.9rem;
+  display: flex; flex-wrap: wrap;
+  gap: 1rem; justify-content: center;
 }
-.params label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
+.params label { display: flex; gap: .4rem; }
 
 /* --------------------------
-   GRILLE PRINCIPALE : 3 MOIS
+   GRILLE 3 MOIS
 --------------------------- */
 #calendar-9cols {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);  /* ← Aligne parfaitement M‑1 | M | M+1 */
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.2rem;
-  padding: 1rem;
+  padding: 1.2rem;
   position: relative;
 }
 
-/* WATERMARK dynamique */
-#calendar-9cols::after {
-  content: attr(data-watermark);
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 6rem;
-  color: rgba(0,0,0,0.06);
-  pointer-events: none;
-  white-space: nowrap;
-  text-transform: uppercase;
-}
-
 /* --------------------------
-   BLOC D’UN MOIS
+   BLOC MOIS
 --------------------------- */
 .month {
   background: white;
-  padding: 0.6rem;
+  border: 1px solid #d0d8e8;
   border-radius: 6px;
-  border: 1px solid #ddd;
+  padding: .8rem;
   display: grid;
-  grid-template-columns: 1fr; /* interne : une seule colonne ; les rows gèrent le reste */
-  gap: 0.3rem;
+  grid-template-columns: 1fr;
+  gap: .4rem;
 }
 
+/* HEADER MOIS — bleu clair */
 .month-header {
-  font-weight: bold;
-  margin-bottom: 0.4rem;
-  text-align: center;
-  padding: 0.4rem;
-  background: #f4f7ff;
+  background: #e8efff;
+  border: 1px solid #c9d5ff;
+  padding: .5rem;
   border-radius: 4px;
-  border: 1px solid #dbe4ff;
+  font-weight: bold;
+  text-align: center;
+  color: #003080;
 }
 
 /* --------------------------
-   TITRES DES COLONNES INTERNES
+   TITRES DES 3 COLONNES
 --------------------------- */
 .col-title {
-  font-weight: bold;
-  background: #eef3ff;
-  padding: 0.3rem;
-  border: 1px solid #d8e0f3;
+  background: #f0f4ff;
+  border: 1px solid #d8dff7;
   border-radius: 4px;
+  font-weight: bold;
+  padding: .35rem;
   text-align: center;
 }
 
 /* --------------------------
-   LIGNE (un jour)
+   UNE LIGNE DE JOUR
 --------------------------- */
 .row {
   display: grid;
-  grid-template-columns: 45px 1fr 1fr; /* Date | Jour grégorien | Jour tradi */
+  grid-template-columns: 50px 1fr 1fr;  /* ← Alignement stable */
+  padding: .25rem;
   border-bottom: 1px solid #eee;
-  padding: 0.15rem 0.2rem;
   border-radius: 4px;
 }
 
-/* --------------------------
-   CELLS
---------------------------- */
-.cell {
-  padding: 0.25rem 0.3rem;
-  font-size: 0.9rem;
-}
-
-/* ZEBRA */
-.zebra {
-  background: #fafafa;
-}
+/* cellules internes */
+.cell { padding: .2rem .25rem; font-size: .9rem; }
+.zebra { background: #fafafa; }
 
 /* --------------------------
-   ÉTATS SPÉCIAUX
+   ÉTATS
 --------------------------- */
 .today {
-  background: #fff3d0 !important;
-  border-left: 4px solid #ffb700;
+  background: #fff2cc !important;
+  border-left: 4px solid #ffbf00;
 }
 
 .forbidden {
   background: #ffe5e5 !important;
-  color: #b30000;
-}
-.market {
-  background: #e9ffe5 !important;
-  color: #006b24;
+  color: #a70000;
 }
 
-/* Filtrage */
-.filtered-out {
-  opacity: 0.3;
+.market {
+  background: #e3ffe3 !important;
+  color: #007023;
 }
+
+.filtered-out { opacity: .3; }
 
 /* --------------------------
    INFO BAS
 --------------------------- */
 .info-bottom {
+  background: white;
   padding: 1rem;
-  background: #fff;
   border-top: 1px solid #ddd;
 }
 
 .legend {
-  display: flex;
-  gap: 0.8rem;
+  display: flex; gap: .8rem;
   justify-content: center;
-  margin-bottom: 0.6rem;
+  margin-bottom: .8rem;
 }
 
 .chip {
-  padding: 0.2rem 0.5rem;
+  padding: .25rem .5rem;
   border-radius: 4px;
-  font-size: 0.85rem;
   border: 1px solid #ccc;
+  font-size: .85rem;
 }
-
 .chip.forbid { background:#ffeaea; border-color:#ff9a9a; }
 .chip.market { background:#eaffea; border-color:#91e691; }
 .chip.today  { background:#fff4d6; border-color:#ffd87a; }
 
-/* --------------------------
-   FOOTER
---------------------------- */
+/* FOOTER */
 .footer {
   text-align: center;
-  padding: 0.6rem;
-  color: #777;
-  font-size: 0.85rem;
+  padding: .8rem;
+  color: #888;
 }
 
 /* --------------------------
@@ -244,3 +206,4 @@ body {
     grid-template-columns: 1fr;
   }
 }
+``
