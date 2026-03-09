@@ -448,3 +448,57 @@ body.motif-strong::after {
   /* si c’est aujourd’hui + week-end, on laisse l’épingle 📍 seulement */
   content: "";
 }
+
+/* ========= Centrage et harmonisation des champs Année / Mois ========= */
+
+/* Le conteneur de paramètres est déjà centré, on renforce l'alignement vertical */
+.params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;      /* centre horizontal */
+  align-items: center;           /* aligne verticalement les libellés et inputs */
+}
+
+/* Les libellés et leurs inputs alignés en ligne */
+.params label {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .95rem;
+}
+
+/* Les deux inputs numériques centrés et de même largeur */
+.params input[type="number"] {
+  text-align: center;            /* centre le texte dans l’input */
+  width: 6ch;                    /* largeur compacte (6 caractères) */
+  min-width: 5.5rem;             /* garde une base confortable */
+  padding: .25rem .4rem;
+  border: 1px solid #cfd6e0;
+  border-radius: 4px;
+  background: #fff;
+}
+
+/* (Option) enlever les flèches des champs number pour un rendu plus propre */
+/* Chrome / Edge */
+.params input[type="number"]::-webkit-outer-spin-button,
+.params input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.params input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ========= Cohérence de centrage côté calendrier ========= */
+
+/* Colonne 1 "Date" : centre les chiffres pour une lecture nette */
+.cell.date {
+  text-align: center;
+}
+
+/* (Sécurité) en-têtes "Date / Jour grégorien / Jour traditionnel" centrés */
+.month-head-row .col-title:nth-child(1) { text-align: center; }  /* Date */
+.month-head-row .col-title:nth-child(2) { text-align: center; }  /* Jour grégorien */
+.month-head-row .col-title:nth-child(3) { text-align: center; }  /* Jour traditionnel */
