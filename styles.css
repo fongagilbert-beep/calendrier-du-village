@@ -91,3 +91,61 @@ body { margin:0; font-family: Segoe UI, Roboto, Arial, "Noto Sans"; background:v
 .village-meta { color:#333; display:flex; flex-direction:column; gap:4px; }
 
 .footer { display:flex; justify-content:center; padding:8px; color:#333; font-weight:700; }
+
+/* Grille 3 colonnes : Date | Jour grégorien | Jour traditionnel */
+.month {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr; /* <-- CORRIGÉ */
+  border: 1px solid #ccc;
+  margin-bottom: 16px;
+}
+
+/* Titres */
+.col-title {
+  font-weight: bold;
+  background: #f4f4f4;
+  padding: 6px 4px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+/* Lignes */
+.row {
+  display: contents; /* Magic trick → chaque ".cell" s'aligne dans la grille parent */
+}
+
+/* Cellules */
+.cell {
+  padding: 4px 6px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+}
+
+/* Alignements spécifiques */
+.cell.date {
+  text-align: center;
+  justify-content: center;
+}
+
+.cell.greg {
+  text-align: left;
+}
+
+.cell.tradi {
+  text-align: left;
+}
+
+/* Alternance */
+.zebra {
+  background: #fafafa;
+}
+
+/* Aujourd’hui, marché, interdit */
+.row.today .cell   { background: #fffce0; }
+.row.market .cell  { color: #0a6300; font-weight: 600; }
+.row.forbidden .cell { color: #a40000; font-weight: 600; }
+
+.filtered-out {
+  display: none;
+}
