@@ -612,3 +612,107 @@ body.motif-strong::after {
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
 }
+
+/* === WIDTH LOCK pour les colonnes === */
+:root{
+  --w-date: 52px;     /* assez grand pour "Date" centré */
+  --w-greg: 150px;    /* largeur visible compactée */
+  --w-trad: 170px;    /* un peu plus large si tes libellés sont longs */
+}
+
+/* La ligne d'entêtes et les lignes jours utilisent la même découpe */
+.month-head-row,
+.row{
+  display: grid !important;
+  grid-template-columns: var(--w-date) var(--w-greg) var(--w-trad) !important;
+  column-gap: .35rem;
+}
+
+/* Empêcher l'étirement et couper proprement si trop long */
+.cell.greg,
+.cell.tradi{
+  max-width: calc(var(--w-greg)); /* la bonne cellule prendra sa var, l'autre sera rognée */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive : sur grands écrans, on garde compact */
+@media (min-width: 1280px){
+  :root{
+    --w-greg: 140px;
+    --w-trad: 160px;
+  }
+}
+
+/* On ne met plus de padding-left; l'icône sera vraiment centrée */
+.row .greg{
+  position: relative;
+  padding-left: 0 !important;
+}
+
+/* Interdit — icône centrée */
+.row.forbidden .greg::before{
+  content: "🛇";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  opacity: .9;
+}
+
+/* Marché — icône centrée (si seul) */
+.row.market:not(.forbidden) .greg::before{
+  content: "🛒";
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  opacity: .9;
+}
+
+/* Si un jour est à la fois interdit ET marché : on en met deux, côte à côte */
+.row.forbidden.market .greg::before{
+  content: "🛇";
+  left: calc(50% - .7rem); top: 50%;
+  transform: translate(-50%, -50%);
+}
+.row.forbidden.market .greg::after{
+  content: "🛒";
+  position: absolute;
+  left: calc(50% + .7rem); top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  opacity: .9;
+}
+
+/* Aujourd'hui : petit repère à droite de la cellule grégorienne */
+.row.today .greg::after{
+  content: "📍";
+  position: absolute;
+  right: .2rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: .95rem;
+  opacity: .9;
+}
+
+/* (Option) Week-end : icône centrée, mais désactivée si déjà interdit/marché */
+.row .greg[data-day="samedi"]::before{
+  content: "🎉";
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: .95rem; opacity: .55;
+}
+.row .greg[data-day="dimanche"]::before{
+  content: "🎉";
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: .95rem; opacity: .55;
+}
+/* Si interdit ou marché, on garde l’icône principale et on supprime 🎉 */
+.row.forbidden .greg[data-day="samedi"]::before,
+.row.forbidden .greg[data-day="dimanche"]::before,
+.row.market .greg[data-day="samedi"]::before,
+.row.market .greg[data-day="dimanche"]::before{
+  content: "";
+}
