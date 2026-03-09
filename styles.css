@@ -188,3 +188,19 @@ body {
     min-width: 100%;
   }
 }
+
+
+/* ——— Réglage fin des colonnes internes (Date | Grégorien | Traditionnel) ——— */
+:root{
+  /* planchers de sécurité : ajuste si besoin */
+  --greg-min: 156px;
+  --trad-min: 156px;
+
+  /* facteur d’élasticité : 1fr (actuel), 0.95fr (-5%), 0.92fr (-8%), 0.90fr (-10%) */
+  --text-fr: 0.95fr; /* ← commence à -5%, très doux */
+}
+
+/* Grille interne d’un mois : on garde Date = 50px, on resserre légèrement les 2 autres */
+.month{
+  grid-template-columns: var(--date-col) minmax(var(--greg-min), var(--text-fr)) minmax(var(--trad-min), var(--text-fr));
+}
