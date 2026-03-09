@@ -1,269 +1,190 @@
+/* ===================== */
+/* VARIABLES GLOBALES    */
+/* ===================== */
 :root {
-  --gap-cell: 4px; --month-gap: 12px;
-  --date-col-min: 44px; --date-col-max: 60px;
-  --text-col-min: 160px; --text-col-max: 1fr;
-  --row-height: 28px;
-  --bg: #fff8e6;
-  --primary: #0b3c8d; --accent: #f7b500;
-  --forbid: #e53935; --market: #1976d2; --today: #43a047;
+  --date-col: 50px;           /* largeur colonne Date */
+  --gap-month: 10px;          /* écart entre les mois */
+  --row-h: 28px;
   --zebra: #fbfbff;
+  --bg: #fff8e6;
+  --primary: #0b3c8d;
+  --accent: #f7b500;
+  --forbid: #e53935;
+  --market: #1976d2;
+  --today: #43a047;
 }
+
 * { box-sizing: border-box; }
-html, body { height:100%; }
-body { margin:0; font-family: Segoe UI, Roboto, Arial, "Noto Sans"; background:var(--bg); color:#222; }
-.site-header { display:flex; justify-content:center; padding:10px 12px; }
+body {
+  margin: 0;
+  font-family: Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: #222;
+}
+
+/* ===================== */
+/* HEADER & NAV          */
+/* ===================== */
+.site-header { display:flex; justify-content:center; padding:10px; }
 .site-header h1 { margin:6px 0; font-size:1.4rem; }
 
 .nav-vibrant { background:#ffe8b3; border-top:2px solid var(--accent); border-bottom:2px solid var(--accent); }
-.nav-row, .params-row { display:flex; justify-content:center; align-items:center; gap: 12px; padding:8px; }
+.nav-row, .params-row {
+  display:flex; justify-content:center; align-items:center;
+  gap:12px; padding:8px;
+}
 .nav-group { display:flex; gap:8px; flex-wrap:wrap; }
-.btn { background:var(--accent); border:none; color:#1f1f1f; padding:6px 12px; border-radius:18px; font-weight:700; cursor:pointer; }
+
+.btn {
+  background:var(--accent); border:none; color:#1f1f1f;
+  padding:6px 12px; border-radius:18px; font-weight:700; cursor:pointer;
+}
 .btn.ghost { background:#ffd37a; }
 
-.params-row .params { display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#fffbef; padding:6px 10px; border:1px solid #f2cc7a; border-radius:10px; }
+/* ===================== */
+/* PARAMÈTRES            */
+/* ===================== */
+.params-row .params {
+  display:flex; gap:12px; align-items:center;
+  background:#fffbef; padding:6px 10px;
+  border:1px solid #f2cc7a; border-radius:10px; flex-wrap:wrap;
+}
 .params-row label { font-size:0.95rem; }
-.params-row input, .params-row select { padding:4px 6px; border-radius:6px; border:1px solid #ccc; }
-
-/* GRILLE 9 COLS : M-1 (1..3) | M (4..6) | M+1 (7..9) */
-.c9 {
-  position:relative; display:grid;
-  grid-template-columns:
-    minmax(var(--date-col-min), var(--date-col-max)) minmax(var(--text-col-min), var(--text-col-max)) minmax(var(--text-col-min), var(--text-col-max))
-    minmax(var(--date-col-min), var(--date-col-max)) minmax(var(--text-col-min), var(--text-col-max)) minmax(var(--text-col-min), var(--text-col-max))
-    minmax(var(--date-col-min), var(--date-col-max)) minmax(var(--text-col-min), var(--text-col-max)) minmax(var(--text-col-min), var(--text-col-max));
-  column-gap: var(--gap-cell); row-gap: var(--gap-cell); align-items:start;
-  margin: 12px auto 12px; max-width: 1600px; padding: 0 8px 40px;
+.params-row input, .params-row select {
+  padding:4px 6px; border-radius:6px; border:1px solid #ccc;
 }
 
-/* Watermark = NOM DU VILLAGE (majuscules) */
-.c9::after { content: attr(data-watermark); position:absolute; inset:0; pointer-events:none; text-align:center; transform:rotate(-28deg); transform-origin:center; font-size:64px; font-weight:900; letter-spacing:2px; color:rgba(0,0,0,0.06); top:200px; }
-
-/* Placement explicite par mois : mL|mC|mR */
-.month { display: contents; }
-.month.mL > .month-header { grid-column: 1 / span 3; }
-.month.mL > .col-title:nth-of-type(1) { grid-column: 1; }
-.month.mL > .col-title:nth-of-type(2) { grid-column: 2; }
-.month.mL > .col-title:nth-of-type(3) { grid-column: 3; }
-.month.mL > .row > .cell:nth-child(1) { grid-column: 1; }
-.month.mL > .row > .cell:nth-child(2) { grid-column: 2; }
-.month.mL > .row > .cell:nth-child(3) { grid-column: 3; }
-
-.month.mC > .month-header { grid-column: 4 / span 3; }
-.month.mC > .col-title:nth-of-type(1) { grid-column: 4; }
-.month.mC > .col-title:nth-of-type(2) { grid-column: 5; }
-.month.mC > .col-title:nth-of-type(3) { grid-column: 6; }
-.month.mC > .row > .cell:nth-child(1) { grid-column: 4; }
-.month.mC > .row > .cell:nth-child(2) { grid-column: 5; }
-.month.mC > .row > .cell:nth-child(3) { grid-column: 6; }
-
-.month.mR > .month-header { grid-column: 7 / span 3; }
-.month.mR > .col-title:nth-of-type(1) { grid-column: 7; }
-.month.mR > .col-title:nth-of-type(2) { grid-column: 8; }
-.month.mR > .col-title:nth-of-type(3) { grid-column: 9; }
-.month.mR > .row > .cell:nth-child(1) { grid-column: 7; }
-.month.mR > .row > .cell:nth-child(2) { grid-column: 8; }
-.month.mR > .row > .cell:nth-child(3) { grid-column: 9; }
-
-/* En-tête des mois + colonnes */
-.month .month-header { text-align:center; font-weight:800; padding:6px 0; border-radius:6px; color:#fff; background:var(--primary); border:2px solid #0a2e6c; }
-.col-title { font-size:0.9rem; font-weight:700; color:#1f1f1f; text-align:center; padding:4px 0; border:1px solid #e6e6e6; border-radius:6px; background:#ffe9b6; }
-
-/* Lignes */
-.row { display: contents; }
-.cell { border:1px solid #e6e6e6; background:#fff; border-radius:6px; padding:0 8px; height:var(--row-height); display:flex; align-items:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.cell.date { justify-content:center; font-variant-numeric:tabular-nums; font-weight:700; }
-.cell.zebra { background: var(--zebra); }
-
-/* États */
-.row.today .cell { outline:2px solid var(--today); outline-offset:-2px; }
-.row.forbidden .cell.tradi { background:#ffd6d6; color:#a10000; font-weight:800; }
-.row.forbidden .cell { background-image:linear-gradient(90deg, rgba(229,57,53,0.12), rgba(229,57,53,0)); }
-.row.market .cell.greg { background:#d6e9ff; color:#0a3f80; font-weight:800; }
-.row.market .cell { background-image:linear-gradient(90deg, rgba(25,118,210,0.10), rgba(25,118,210,0)); }
-
-/* Bloc d'infos bas */
-.info-bottom { max-width:1600px; margin: 8px auto 18px; padding: 10px 8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-.legend { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:14px; font-weight:700; color:#1f1f1f; background:#ffe9b6; border:1px solid #f2cc7a; }
-.chip.forbid { background:#ffd6d6; border-color:#ffb3b3; color:#a10000; }
-.chip.market { background:#d6e9ff; border-color:#b9d7ff; color:#0a3f80; }
-.chip.today { background:#d9f1df; border-color:#b8e2c2; color:#1b5e20; }
-.village-meta { color:#333; display:flex; flex-direction:column; gap:4px; }
-
-.footer { display:flex; justify-content:center; padding:8px; color:#333; font-weight:700; }
-
-/* Grille 3 colonnes : Date | Jour grégorien | Jour traditionnel */
-.month {
-  display: grid;
-  grid-template-columns: 60px 1fr 1fr; /* <-- CORRIGÉ */
-  border: 1px solid #ccc;
-  margin-bottom: 16px;
-}
-
-/* Titres */
-.col-title {
-  font-weight: bold;
-  background: #f4f4f4;
-  padding: 6px 4px;
-  border-bottom: 1px solid #ccc;
-  text-align: left;
-}
-
-/* Lignes */
-.row {
-  display: contents; /* Magic trick → chaque ".cell" s'aligne dans la grille parent */
-}
-
-/* Cellules */
-.cell {
-  padding: 4px 6px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  align-items: center;
-}
-
-/* Alignements spécifiques */
-.cell.date {
-  text-align: center;
-  justify-content: center;
-}
-
-.cell.greg {
-  text-align: left;
-}
-
-.cell.tradi {
-  text-align: left;
-}
-
-/* Alternance */
-.zebra {
-  background: #fafafa;
-}
-
-/* Aujourd’hui, marché, interdit */
-.row.today .cell   { background: #fffce0; }
-.row.market .cell  { color: #0a6300; font-weight: 600; }
-.row.forbidden .cell { color: #a40000; font-weight: 600; }
-
-.filtered-out {
-  display: none;
-}
-
-/* ===============================
-   Grille globale compacte (A..K)
-   =============================== */
+/* ===================== */
+/* GRILLE DES 3 MOIS     */
+/* ===================== */
 #calendar-9cols {
-  display: grid;
-
-  /* Colonnes hyper compactes : 
-     A=4px, B=4px, puis 3×3 blocs serrés */
-  grid-template-columns:
-    4px     /* A : marge minuscule */
-    4px     /* B */
-    minmax(180px, 1fr) /* C */
-    minmax(180px, 1fr) /* D */
-    minmax(180px, 1fr) /* E */
-    minmax(180px, 1fr) /* F */
-    minmax(180px, 1fr) /* G */
-    minmax(180px, 1fr) /* H */
-    minmax(180px, 1fr) /* I */
-    minmax(180px, 1fr) /* J */
-    minmax(180px, 1fr) /* K */;
-
-  column-gap: 4px;   /* gouttières minimales */
-  padding: 0;
-  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap-month);
+  max-width: 1600px;
+  margin: 12px auto;
+  padding: 0 12px 40px;
+  position: relative;
 }
 
-/* Ancrage strict des 3 blocs */
-.month.mL { grid-column: 3 / span 3; } /* C D E */
-.month.mC { grid-column: 6 / span 3; } /* F G H */
-.month.mR { grid-column: 9 / span 3; } /* I J K */
+/* Watermark du village */
+#calendar-9cols::after {
+  content: attr(data-watermark);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform: rotate(-28deg);
+  font-size: 64px;
+  font-weight: 900;
+  text-align: center;
+  color: rgba(0,0,0,0.06);
+  top: 180px;
+}
 
-/* ===============================
-   Mois compact
-   =============================== */
+/* ===================== */
+/* BLOC : UN MOIS        */
+/* ===================== */
 .month {
+  flex: 1 1 0;
+  min-width: 260px;
   display: grid;
-  grid-template-columns: 48px 1fr 1fr; /* Date + Greg + Tradi (compact) */
-  background: #ffffff;
+  grid-template-columns: var(--date-col) 1fr 1fr; /* Alignement parfait */
   border: 1px solid #c4c8d0;
-  border-radius: 4px;
+  border-radius: 6px;
+  background: #fff;
   overflow: hidden;
 }
 
-/* En-tête compact */
+/* En-tête du mois */
 .month-header {
   grid-column: 1 / -1;
-  background: #1f4b87;
-  color: #fff;
-  padding: 4px 6px;  /* réduit */
-  font-size: 13px;   /* réduit */
-  font-weight: 600;
-  border-bottom: 1px solid #163a67;
+  background: var(--primary);
+  color: white;
+  padding: 6px 10px;
+  font-weight: 800;
+  text-align: center;
+  border-bottom: 2px solid #0a2e6c;
 }
 
-/* Titres */
+/* ===================== */
+/* COLONNES INTERNES     */
+/* ===================== */
 .col-title {
-  background: #e7edf7;
-  padding: 4px 6px;
-  font-size: 12px;
-  font-weight: 600;
-  border-bottom: 1px solid #d5ddec;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1f1f1f;
+  padding: 4px 0;
+  text-align: left;
+  border: 1px solid #ddd;
+  background: #ffe9b6;
+  border-radius: 4px;
 }
 
-/* Lignes */
+/* ===================== */
+/* LIGNES ET CELLULES    */
+/* ===================== */
 .row { display: contents; }
 
-/* Cellules compactes */
 .cell {
-  padding: 3px 4px;
-  font-size: 12px;
-  border-bottom: 1px solid #eef2f7;
-  min-height: 22px; /* Ultra compact */
+  padding: 4px 6px;
+  height: var(--row-h);
   display: flex;
   align-items: center;
+  border: 1px solid #e6e6e6;
+  background: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.cell.date  { justify-content: center; }
-.cell.greg  { text-align: left; }
-.cell.tradi { text-align: left; }
+.cell.date { justify-content: center; font-weight: 700; }
+.cell.zebra { background: var(--zebra); }
 
-/* Zébrage */
-.zebra { background: #fafcff; }
+/* États */
+.row.today .cell {
+  outline: 2px solid var(--today);
+  outline-offset: -2px;
+}
+.row.forbidden .cell.tradi {
+  background: #ffd6d6; color:#a10000; font-weight: 800;
+}
+.row.market .cell.greg {
+  background: #d6e9ff; color:#0a3f80; font-weight: 800;
+}
 
-/* Etats */
-.row.today .cell   { background: #fff9d6; }
-.row.market .cell  { color: #0a6300; font-weight: 600; }
-.row.forbidden .cell { color: #a40000; font-weight: 600; }
-.filtered-out { display: none; }
+/* ===================== */
+/* SECTION BAS DE PAGE   */
+/* ===================== */
+.info-bottom {
+  max-width: 1600px;
+  margin: 8px auto 18px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
-/* Responsive : empile en mobile */
-@media (max-width: 1100px) {
+.legend { display: flex; gap: 8px; flex-wrap: wrap; align-items:center; }
+.chip {
+  display: inline-flex; gap:6px;
+  padding:6px 10px; border-radius:14px; font-weight:700;
+  background:#ffe9b6; border:1px solid #f2cc7a;
+}
+.chip.forbid { background:#ffd6d6; color:#a10000; }
+.chip.market { background:#d6e9ff; color:#0a3f80; }
+.chip.today { background:#d9f1df; color:#1b5e20; }
+
+.village-meta { display:flex; flex-direction:column; gap:3px; }
+
+/* ===================== */
+/* RESPONSIVE MOBILE     */
+/* ===================== */
+@media(max-width:1100px) {
   #calendar-9cols {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
-  .month.mL, .month.mC, .month.mR {
-    grid-column: 1 / -1;
+  .month {
+    min-width: 100%;
   }
-}
-
-/* Grille simple : 3 colonnes bien séparées pour M-1 | M | M+1 */
-#calendar-9cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* chaque mois garde sa largeur */
-  column-gap: 10px; /* <-- réduis à 6px, 4px ou même 2px si tu veux */
-  align-items: start;
-}
-
-/* Chaque bloc garde sa largeur interne naturelle */
-.month {
-  width: 100%;
-  min-width: 260px; /* empêche les chevauchements */
-}
-
-/* Largeur de la colonne Date seulement (comme demandé) */
-.month {
-  grid-template-columns: 50px 1fr 1fr; /* Date plus étroite */
 }
