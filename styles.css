@@ -191,6 +191,67 @@ body {
   font-weight: 600;
 }
 
+/* =====================================================
+   ICÔNES (pseudo-éléments) — pas de JS nécessaire
+   ===================================================== */
+
+/* Base : petit badge avant la 2e cellule (.greg) pour laisser le chiffre à gauche propre */
+.row .greg {
+  position: relative;
+  padding-left: 1.45rem; /* place pour l’icône */
+}
+
+/* Jour interdit → 🛇 */
+.row.forbidden .greg::before {
+  content: "🛇";
+  position: absolute;
+  left: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  filter: drop-shadow(0 0 0 transparent);
+}
+
+/* Jour de marché → 🛒 */
+.row.market .greg::before {
+  content: "🛒";
+  position: absolute;
+  left: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+}
+
+/* Aujourd’hui → 📍 (se cumule avec interdit/market si présent) */
+.row.today .greg::after {
+  content: "📍";
+  position: absolute;
+  right: -0.2rem;           /* petit repère côté droit de la cellule */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.95rem;
+  opacity: .85;
+}
+
+/* Option : icône week-end (🎉) — si tu veux un marqueur doux pour samedi/dimanche */
+.row .greg[data-day="samedi"]::after,
+.row .greg[data-day="dimanche"]::after {
+  /* désactive si already today ; sinon place à droite */
+  content: "🎉";
+  position: absolute;
+  right: -0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: .95rem;
+  opacity: .6;
+}
+.row.today .greg[data-day="samedi"]::after,
+.row.today .greg[data-day="dimanche"]::after {
+  /* si c’est aujourd’hui + week-end, on laisse l’épingle 📍 seulement */
+  content: "";
+}
+
+
 /* Week‑end : on cible la 2e cellule (.greg) par l’attribut data-day
    (déjà posé dans app.js : c2.setAttribute('data-day', 'samedi' | 'dimanche')) */
 .greg[data-day="samedi"]   { color: #004fc5; font-weight: 600; }
@@ -244,4 +305,64 @@ body {
 --------------------------- */
 @media (max-width: 900px) {
   #calendar-9cols { grid-template-columns: 1fr; }
+}
+
+/* =====================================================
+   ICÔNES (pseudo-éléments) — pas de JS nécessaire
+   ===================================================== */
+
+/* Base : petit badge avant la 2e cellule (.greg) pour laisser le chiffre à gauche propre */
+.row .greg {
+  position: relative;
+  padding-left: 1.45rem; /* place pour l’icône */
+}
+
+/* Jour interdit → 🛇 */
+.row.forbidden .greg::before {
+  content: "🛇";
+  position: absolute;
+  left: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  filter: drop-shadow(0 0 0 transparent);
+}
+
+/* Jour de marché → 🛒 */
+.row.market .greg::before {
+  content: "🛒";
+  position: absolute;
+  left: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+}
+
+/* Aujourd’hui → 📍 (se cumule avec interdit/market si présent) */
+.row.today .greg::after {
+  content: "📍";
+  position: absolute;
+  right: -0.2rem;           /* petit repère côté droit de la cellule */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.95rem;
+  opacity: .85;
+}
+
+/* Option : icône week-end (🎉) — si tu veux un marqueur doux pour samedi/dimanche */
+.row .greg[data-day="samedi"]::after,
+.row .greg[data-day="dimanche"]::after {
+  /* désactive si already today ; sinon place à droite */
+  content: "🎉";
+  position: absolute;
+  right: -0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: .95rem;
+  opacity: .6;
+}
+.row.today .greg[data-day="samedi"]::after,
+.row.today .greg[data-day="dimanche"]::after {
+  /* si c’est aujourd’hui + week-end, on laisse l’épingle 📍 seulement */
+  content: "";
 }
