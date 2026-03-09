@@ -210,12 +210,30 @@ function renderOneMonth(root, startOfMonth, village, placeClass){
   wrap.setAttribute("data-watermark", village);
   wrap.appendChild(header);
 
-  // Titres colonnes
-  const t1=document.createElement('div'); t1.className='col-title'; t1.textContent='Date';           wrap.appendChild(t1);
-  const t2=document.createElement('div'); t2.className='col-title'; t2.textContent='Jour grégorien'; wrap.appendChild(t2);
-  const t3=document.createElement('div'); t3.className='col-title'; t3.textContent='Jour traditionnel'; wrap.appendChild(t3);
+ // Titres colonnes — regroupés dans une ligne
+const head = document.createElement('div');
+head.className = 'month-head-row';
 
-  const frag = document.createDocumentFragment();
+const t1 = document.createElement('div');
+t1.className = 'col-title';
+t1.textContent = 'Date';
+
+const t2 = document.createElement('div');
+t2.className = 'col-title';
+t2.textContent = 'Jour grégorien';
+
+const t3 = document.createElement('div');
+t3.className = 'col-title';
+t3.textContent = 'Jour traditionnel';
+
+head.appendChild(t1);
+head.appendChild(t2);
+head.appendChild(t3);
+
+// AJOUT DU NOUVEAU GROUPE
+wrap.appendChild(head);
+
+const frag = document.createDocumentFragment();
 
   for (let d=1; d<=nDays; d++){
     const cur = new Date(y,m,d);
