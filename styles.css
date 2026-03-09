@@ -216,21 +216,20 @@ body.motif-strong::after {
 /* --------------------------
    ENTÊTES DE COLONNES (ligne unique)
 --------------------------- */
-.month-head-row {
-  display: grid;
-  grid-template-columns: 55px 0.7fr 0.7fr;   /* Date | Grégorien | Traditionnel */
-  gap: .35rem;
-  margin-bottom: .3rem;
-}
-.col-title {
-  background: #eef3ff;
-  border: 1px solid #d8dff7;
-  border-radius: 4px;
-  padding: .35rem;
-  text-align: center;
-  font-weight: 700;
+/* Réduit encore la part des colonnes 2 et 3 */
+.month-head-row,
+.row {
+  grid-template-columns: 55px 0.55fr 0.55fr; /* ← 0.55 au lieu de 0.7 */
 }
 
+/* Empêche les cellules texte de s’étirer trop / coupe proprement */
+.cell.greg,
+.cell.tradi {
+  max-width: 15ch;              /* ~15 caractères visibles */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* --------------------------
    LIGNES (JOURS)
 --------------------------- */
