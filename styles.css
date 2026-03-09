@@ -537,4 +537,78 @@ body.motif-strong::after {
   color: #0d2a6b;                        /* texte bleu foncé lisible */
 }
 
+/* === ROLLBACK SAUF-GARDE CALENDRIER — À COLLER EN BAS === */
 
+/* Conteneur : 3 colonnes stables */
+#calendar-9cols {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(320px, 1fr)) !important;
+  gap: 1.2rem !important;
+  padding: 1.2rem !important;
+  justify-content: center !important; /* centre si plus large */
+}
+
+/* Un mois = carte blanche simple, visible */
+.month {
+  background: #fff !important;
+  border: 1px solid #d0d8e8 !important;
+  border-radius: 6px !important;
+  padding: .8rem !important;
+  min-height: 380px !important;  /* laisse de la place au watermark */
+  position: relative !important;
+  overflow: hidden !important;
+  max-width: none !important;    /* ⛔ annule la limite max-width qui a pu cacher le contenu */
+}
+
+/* Bandeau mois (bleu foncé) */
+.month-header {
+  background: #004aad !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+  padding: .55rem !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  margin-bottom: .4rem !important;
+}
+
+/* Ligne d’entêtes : 3 colonnes sur UNE SEULE LIGNE */
+.month-head-row {
+  display: grid !important;
+  grid-template-columns: 55px 0.6fr 0.6fr !important; /* Date | Grégorien | Trad */
+  column-gap: .35rem !important;
+  margin-bottom: .3rem !important;
+}
+
+/* Les 3 cartouches d’entête (bleu clair) */
+.month .month-head-row .col-title {
+  background: #eef3ff !important;
+  border: 1px solid #d8dff7 !important;
+  border-radius: 4px !important;
+  padding: .35rem !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  color: #0d2a6b !important;
+}
+
+/* Chaque ligne de jour = même grille que la ligne d’entêtes */
+.row {
+  display: grid !important;
+  grid-template-columns: 55px 0.6fr 0.6fr !important;
+  align-items: center !important;
+  gap: .2rem !important;
+  padding: .15rem .2rem !important;
+  border-bottom: 1px solid #eee !important;
+  border-radius: 4px !important;
+}
+
+/* Cellules, centrage de la date */
+.cell { padding: .2rem .25rem !important; font-size: .94rem !important; }
+.cell.date { text-align: center !important; }
+
+/* Limiter visuellement l’étirement des colonnes 2/3 (sans empiler) */
+.cell.greg, .cell.tradi {
+  max-width: 18ch !important;    /* ajuste 14–18ch selon ton œil */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
