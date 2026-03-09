@@ -826,3 +826,15 @@ body.motif-strong::after {
   transform: translate(-50%, -50%);
 }
 
+/* Équilibre 1:1 pour Grégorien/Trad • Date compacte */
+.month .month-head-row,
+.month .row {
+  display: grid !important;
+  grid-template-columns: 56px 1fr 1fr !important;
+  column-gap: .35rem !important;
+}
+.cell.date { text-align: center !important; }
+.cell.greg, .cell.tradi {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
