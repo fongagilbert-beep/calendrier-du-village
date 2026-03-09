@@ -383,3 +383,10 @@ renderNineColumns();
 window.cvUpdateData = cvUpdateData;
 window.cvSetWatermark = cvSetWatermark;
 window.cvSetVillageMeta = cvSetVillageMeta;
+
+const state = {
+  // ...
+  vmeta: {},            // roi, market_info[], forbidden_days[], extra_info
+  j8: {},               // { VILLAGE: { "1":"J1", ... "8":"J8" } }
+};
+
