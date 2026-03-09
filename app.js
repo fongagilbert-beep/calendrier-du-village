@@ -189,11 +189,14 @@ function renderNineColumns(){
 
   months.forEach((start,i)=>renderOneMonth(frag, start, state.village, classes[i]));
 
+  // --- purge défensive des traces de filtre (facultatif)
+  frag.querySelectorAll('.row.filtered-out').forEach(el => el.classList.remove('filtered-out'));
+
   root.appendChild(frag);
   syncParamFields();
   root.setAttribute('aria-busy','false');
   renderVillageMeta();
-}
+} // <-- ne pas supprimer cette accolade !
 
 function renderOneMonth(root, startOfMonth, village, placeClass){
   const y = startOfMonth.getFullYear();
