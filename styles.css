@@ -202,3 +202,38 @@ body {
 @media (max-width: 900px) {
   #calendar-9cols { grid-template-columns: 1fr; }
 }
+
+/* =======================================
+   FIX WATERMARK — STOP LAYOUT BREAKING
+   ======================================= */
+
+/* Le conteneur doit servir d’ancre de position */
+#calendar-9cols {
+  position: relative;
+  overflow: hidden;     /* Empêche le watermark de déborder */
+}
+
+/* Version stable du watermark (non intrusif) */
+#calendar-9cols::after {
+  content: attr(data-watermark);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 9rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.05);
+
+  pointer-events: none;    /* Ne perturbe jamais le layout */
+  user-select: none;
+  z-index: 0;              /* Derrière tout */
+}
+
+/* Tous les mois passent AU-DESSUS du watermark */
+.month {
+  position: relative;
+  z-index: 1;
+  background: white;
+}
