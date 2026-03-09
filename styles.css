@@ -517,3 +517,24 @@ body.motif-strong::after {
   align-items: center;
   gap: .2rem;
 }
+
+/* === FIX : rétablir l'apparence (couleur) de la ligne d'en‑têtes === */
+.month-head-row {
+  display: grid !important;
+  grid-template-columns: 55px 0.6fr 0.6fr !important;
+  column-gap: .35rem !important;
+  margin-bottom: .3rem;
+}
+
+/* Style visuel des 3 entêtes, avec plus de spécificité et !important pour contrer un override */
+.month .month-head-row .col-title {
+  background: #e6efff !important;        /* fond bleu clair */
+  border: 1px solid #d8dff7 !important;  /* liseré */
+  border-radius: 4px !important;
+  padding: .35rem !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  color: #0d2a6b;                        /* texte bleu foncé lisible */
+}
+
+
