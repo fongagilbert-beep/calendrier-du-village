@@ -276,20 +276,6 @@ c3.textContent = trad;
 }
 
 // =====================================================
-//  Métadonnées village
-// =====================================================
-
-function renderVillageMeta(){
-  const r = document.getElementById('roi-village');
-  const m = document.getElementById('motif-village');
-  const mk= document.getElementById('marche-village');
-
-  if (r)  r.textContent  = state.roi || '—';
-  if (m)  m.textContent  = state.motif || '—';
-  if (mk) mk.textContent = (state.marche || []).join(', ') || '—';
-}
-
-// =====================================================
 //  Navigation
 // =====================================================
 
@@ -298,11 +284,11 @@ function wireNav(){
     btn.addEventListener('click', ()=>{
       const a = btn.dataset.action;
 
-      if(a==='prev3') state.anchor=new Date(state.anchor.getFullYear(), state.anchor.getMonth()-3, 1);
-      if(a==='next3') state.anchor=new Date(state.anchor.getFullYear(), state.anchor.getMonth()+3, 1);
-      if(a==='prevY') state.anchor=new Date(state.anchor.getFullYear()-1, state.anchor.getMonth(),1);
-      if(a==='nextY') state.anchor=new Date(state.anchor.getFullYear()+1, state.anchor.getMonth(),1);
-      if(a==='today') state.anchor=new Date(today.getFullYear(), today.getMonth(),1);
+      if (a === 'prev3') state.anchor = new Date(state.anchor.getFullYear(), state.anchor.getMonth()-3, 1);
+      if (a === 'next3') state.anchor = new Date(state.anchor.getFullYear(), state.anchor.getMonth()+3, 1);
+      if (a === 'prevY') state.anchor = new Date(state.anchor.getFullYear()-1, state.anchor.getMonth(), 1);
+      if (a === 'nextY') state.anchor = new Date(state.anchor.getFullYear()+1, state.anchor.getMonth(), 1);
+      if (a === 'today') state.anchor = new Date(today.getFullYear(), today.getMonth(), 1);
 
       syncParamFields();
       renderNineColumns();
@@ -315,14 +301,14 @@ function wireNav(){
 // =====================================================
 
 function wireParams(){
-  const y=document.getElementById('param-annee');
-  const m=document.getElementById('param-mois');
-  const v=document.getElementById('param-village');
-  const f=document.getElementById('param-filtre');
+  const y = document.getElementById('param-annee');
+  const m = document.getElementById('param-mois');
+  const v = document.getElementById('param-village');
+  const f = document.getElementById('param-filtre');
 
   if (y && m){
-    const update=()=>{
-      state.anchor=new Date(Number(y.value)||today.getFullYear(), (Number(m.value)||1)-1, 1);
+    const update = ()=>{
+      state.anchor = new Date(Number(y.value)||today.getFullYear(), (Number(m.value)||1)-1, 1);
       renderNineColumns();
     };
     y.addEventListener('change', update);
@@ -331,27 +317,29 @@ function wireParams(){
 
   if (v){
     v.addEventListener('change', e=>{
-      state.village=(e.target.value||'ALL').toUpperCase();
+      state.village = (e.target.value || 'ALL').toUpperCase();
       const label = e.target.options[e.target.selectedIndex]?.text || e.target.value;
       cvSetWatermark(label);
       renderNineColumns();
     });
   }
 
-if (f){
-  f.addEventListener('change', e => {
-    const val = String(e.target.value || 'all').toLowerCase();
-    state.filtre =
-      (val === 'tous') ? 'all' :
-      (val === 'marché' || val === 'marche') ? 'market' :
-      (val === 'interdits' || val === 'interdit') ? 'forbidden' :
-      val;
-    renderNineColumns();
-  });
+  if (f){
+    f.addEventListener('change', e=>{
+      const raw = String(e.target.value || 'all').toLowerCase();
+      state.filtre =
+        (raw === 'tous') ? 'all' :
+        (raw === 'marché' || raw === 'marche') ? 'market' :
+        (raw === 'interdits' || raw === 'interdit') ? 'forbidden' :
+        raw;
+      renderNineColumns();
+    });
+  }
 }
+
 function syncParamFields(){
-  const y=document.getElementById('param-annee');
-  const m=document.getElementById('param-mois');
+  const y = document.getElementById('param-annee');
+  const m = document.getElementById('param-mois');
   if (y) y.value = state.anchor.getFullYear();
   if (m) m.value = state.anchor.getMonth()+1;
 }
@@ -369,4 +357,3 @@ renderNineColumns();
 window.cvUpdateData = cvUpdateData;
 window.cvSetWatermark = cvSetWatermark;
 window.cvSetVillageMeta = cvSetVillageMeta;
-``
