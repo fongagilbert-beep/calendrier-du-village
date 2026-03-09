@@ -207,3 +207,27 @@ body {
 .month{
   grid-template-columns: var(--date-col) minmax(var(--greg-min), var(--text-fr)) minmax(var(--trad-min), var(--text-fr));
 }
+
+.info-bottom {
+  max-width: 1600px;
+  margin: 12px auto 20px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#calendar-9cols,
+.info-bottom {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.filtered-out .cell {
+  opacity: 0.35;
+  filter: grayscale(0.3);
+}
+
+
