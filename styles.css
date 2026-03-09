@@ -716,3 +716,51 @@ body.motif-strong::after {
 .row.market .greg[data-day="dimanche"]::before{
   content: "";
 }
+
+/* === Filtrage en mode "grisage" (pas de masquage) === */
+.row.filtered-out{
+  opacity: .35 !important;        /* atténuation visuelle */
+  filter: grayscale(55%) !important;
+  transition: opacity .15s ease, filter .15s ease;
+}
+
+/* Laisse l'interaction si tu veux (sinon ajoute pointer-events:none) */
+/* .row.filtered-out { pointer-events: none; } */
+``
+
+/* Centrage exact des icônes dans la cellule "Jour grégorien" */
+.row .greg{ position: relative; padding-left: 0 !important; }
+
+.row.forbidden .greg::before{
+  content: "🛇";
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem; opacity: .9;
+}
+
+.row.market:not(.forbidden) .greg::before{
+  content: "🛒";
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem; opacity: .9;
+}
+
+/* cas interdit + marché : une de chaque côté du centre */
+.row.forbidden.market .greg::before{
+  content: "🛇"; left: calc(50% - .7rem); top: 50%;
+  transform: translate(-50%, -50%);
+}
+.row.forbidden.market .greg::after{
+  content: "🛒";
+  position: absolute; left: calc(50% + .7rem); top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem; opacity: .9;
+}
+
+/* Aujourd'hui : marqueur discret à droite */
+.row.today .greg::after{
+  content: "📍";
+  position: absolute; right: .2rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: .95rem; opacity: .9;
+}
