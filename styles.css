@@ -87,6 +87,7 @@ body {
 /* --------------------------
    GRILLE 3 MOIS
 --------------------------- */
+/* ====== GRILLE 3 MOIS (inchangé) ====== */
 #calendar-9cols {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -95,115 +96,109 @@ body {
   position: relative;
 }
 
-/* --------------------------
-   BLOC MOIS
---------------------------- */
+/* ====== BLOC MOIS avec grille à 3 colonnes alignées ====== */
 .month {
-  background: white;
+  background: #ffffff;
   border: 1px solid #d0d8e8;
   border-radius: 6px;
   padding: .8rem;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: .4rem;
+  /* ⚠️ C’est la clé : on définit la même grille pour tout le contenu du mois */
+  grid-template-columns: 50px 1fr 1fr;   /* Date | Jour grégorien | Jour traditionnel */
+  grid-auto-rows: auto;
+  row-gap: .35rem;
 }
 
-/* HEADER MOIS — bleu clair */
+/* En‑tête du mois : BLEU FONCÉ et sur toute la largeur (3 colonnes) */
 .month-header {
-  background: #e8efff;
-  border: 1px solid #c9d5ff;
-  padding: .5rem;
+  grid-column: 1 / -1;                  /* Étend l’en‑tête sur les 3 colonnes */
+  background: #004aad;                  /* bleu foncé */
+  color: #ffffff;
+  border: 1px solid #003c8f;
+  padding: .55rem;
   border-radius: 4px;
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
-  color: #003080;
 }
 
-/* --------------------------
-   TITRES DES 3 COLONNES
---------------------------- */
+/* ====== LES 3 ENTÊTES DE COLONNES ====== */
+/* Place chaque .col-title dans SA colonne, juste sous le header */
 .col-title {
-  background: #f0f4ff;
+  background: #eef3ff;
   border: 1px solid #d8dff7;
   border-radius: 4px;
-  font-weight: bold;
+  font-weight: 700;
   padding: .35rem;
   text-align: center;
 }
 
-/* --------------------------
-   UNE LIGNE DE JOUR
---------------------------- */
+/* Positionnement des 3 titres dans la grille du mois */
+.month > .col-title:nth-of-type(1) { grid-column: 1; } /* "Date" */
+.month > .col-title:nth-of-type(2) { grid-column: 2; } /* "Jour grégorien" */
+.month > .col-title:nth-of-type(3) { grid-column: 3; } /* "Jour traditionnel" */
+
+/* ====== LES LIGNES (JOURS) ALIGNÉES SOUS LES BONS TITRES ====== */
+/* On laisse .row créer une sous-grille IDENTIQUE pour garder l’alignement visuel */
 .row {
   display: grid;
-  grid-template-columns: 50px 1fr 1fr;  /* ← Alignement stable */
-  padding: .25rem;
+  grid-template-columns: 50px 1fr 1fr;  /* Même découpe que .month */
+  align-items: center;
   border-bottom: 1px solid #eee;
   border-radius: 4px;
+  padding: .15rem .2rem;
 }
 
-/* cellules internes */
-.cell { padding: .2rem .25rem; font-size: .9rem; }
+/* Cellules */
+.cell { padding: .2rem .25rem; font-size: .92rem; }
 .zebra { background: #fafafa; }
 
-/* --------------------------
-   ÉTATS
---------------------------- */
-.today {
-  background: #fff2cc !important;
-  border-left: 4px solid #ffbf00;
-}
-
-.forbidden {
-  background: #ffe5e5 !important;
-  color: #a70000;
-}
-
-.market {
-  background: #e3ffe3 !important;
-  color: #007023;
-}
-
+/* États */
+.today     { background: #fff2cc !important; border-left: 4px solid #ffbf00; }
+.forbidden { background: #ffe5e5 !important; color: #a70000; }
+.market    { background: #e3ffe3 !important; color: #007023; }
 .filtered-out { opacity: .3; }
 
-/* --------------------------
-   INFO BAS
---------------------------- */
-.info-bottom {
-  background: white;
-  padding: 1rem;
-  border-top: 1px solid #ddd;
-}
+/* ====== NAVIGATION : couleurs demandées ====== */
+.nav-row { display: flex; justify-content: center; background: #e9f1ff; padding: .6rem; gap: .5rem; }
+.btn { padding: .45rem .9rem; border-radius: 4px; border: none; cursor: pointer; color: #fff; font-weight: 600; }
 
-.legend {
-  display: flex; gap: .8rem;
-  justify-content: center;
-  margin-bottom: .8rem;
-}
+/* -3M / +3M = même coloris bleu moyen */
+.btn[data-action="prev3"], .btn[data-action="next3"] { background: #006af5; }
+.btn[data-action="prev3"]:hover, .btn[data-action="next3"]:hover { background: #0053c7; }
 
-.chip {
-  padding: .25rem .5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: .85rem;
-}
+/* Aujourd'hui = bleu foncé DISTINCT */
+.btn[data-action="today"] { background: #004aad; }
+.btn[data-action="today"]:hover { background: #003c8f; }
+
+/* -1 an / +1 an = GHOST (fond blanc, contour bleu) */
+.btn.ghost { background: #ffffff; color: #006af5; border: 1px solid #006af5; }
+.btn.ghost:hover { background: #e8f0ff; }
+
+/* ====== PARAMS / LÉGENDE / FOOTER (inchangés ou légères retouches) ====== */
+.params-row { background: #fff; padding: .8rem; border-bottom: 1px solid #ddd; }
+.params { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.params label { display: flex; gap: .4rem; }
+
+/* Légende / bas de page */
+.info-bottom { background: #fff; padding: 1rem; border-top: 1px solid #ddd; }
+.legend { display: flex; gap: .8rem; justify-content: center; margin-bottom: .8rem; }
+.chip { padding: .25rem .5rem; border-radius: 4px; border: 1px solid #ccc; font-size: .85rem; }
 .chip.forbid { background:#ffeaea; border-color:#ff9a9a; }
 .chip.market { background:#eaffea; border-color:#91e691; }
 .chip.today  { background:#fff4d6; border-color:#ffd87a; }
 
-/* FOOTER */
-.footer {
-  text-align: center;
-  padding: .8rem;
-  color: #888;
+.footer { text-align: center; padding: .8rem; color: #888; }
+
+/* ====== WATERMARK ====== */
+#calendar-9cols::after {
+  content: attr(data-watermark);
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6rem; color: rgba(0,0,0,0.06);
+  pointer-events: none; white-space: nowrap; text-transform: uppercase;
 }
 
-/* --------------------------
-   RESPONSIVE
---------------------------- */
-@media(max-width: 900px){
-  #calendar-9cols {
-    grid-template-columns: 1fr;
-  }
+/* ====== RESPONSIVE ====== */
+@media (max-width: 900px) {
+  #calendar-9cols { grid-template-columns: 1fr; }
 }
-``
