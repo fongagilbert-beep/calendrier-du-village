@@ -149,3 +149,102 @@ body { margin:0; font-family: Segoe UI, Roboto, Arial, "Noto Sans"; background:v
 .filtered-out {
   display: none;
 }
+
+/* ===============================
+   Grille globale compacte (A..K)
+   =============================== */
+#calendar-9cols {
+  display: grid;
+
+  /* Colonnes hyper compactes : 
+     A=4px, B=4px, puis 3×3 blocs serrés */
+  grid-template-columns:
+    4px     /* A : marge minuscule */
+    4px     /* B */
+    minmax(180px, 1fr) /* C */
+    minmax(180px, 1fr) /* D */
+    minmax(180px, 1fr) /* E */
+    minmax(180px, 1fr) /* F */
+    minmax(180px, 1fr) /* G */
+    minmax(180px, 1fr) /* H */
+    minmax(180px, 1fr) /* I */
+    minmax(180px, 1fr) /* J */
+    minmax(180px, 1fr) /* K */;
+
+  column-gap: 4px;   /* gouttières minimales */
+  padding: 0;
+  margin: 0;
+}
+
+/* Ancrage strict des 3 blocs */
+.month.mL { grid-column: 3 / span 3; } /* C D E */
+.month.mC { grid-column: 6 / span 3; } /* F G H */
+.month.mR { grid-column: 9 / span 3; } /* I J K */
+
+/* ===============================
+   Mois compact
+   =============================== */
+.month {
+  display: grid;
+  grid-template-columns: 48px 1fr 1fr; /* Date + Greg + Tradi (compact) */
+  background: #ffffff;
+  border: 1px solid #c4c8d0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* En-tête compact */
+.month-header {
+  grid-column: 1 / -1;
+  background: #1f4b87;
+  color: #fff;
+  padding: 4px 6px;  /* réduit */
+  font-size: 13px;   /* réduit */
+  font-weight: 600;
+  border-bottom: 1px solid #163a67;
+}
+
+/* Titres */
+.col-title {
+  background: #e7edf7;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #d5ddec;
+}
+
+/* Lignes */
+.row { display: contents; }
+
+/* Cellules compactes */
+.cell {
+  padding: 3px 4px;
+  font-size: 12px;
+  border-bottom: 1px solid #eef2f7;
+  min-height: 22px; /* Ultra compact */
+  display: flex;
+  align-items: center;
+}
+
+.cell.date  { justify-content: center; }
+.cell.greg  { text-align: left; }
+.cell.tradi { text-align: left; }
+
+/* Zébrage */
+.zebra { background: #fafcff; }
+
+/* Etats */
+.row.today .cell   { background: #fff9d6; }
+.row.market .cell  { color: #0a6300; font-weight: 600; }
+.row.forbidden .cell { color: #a40000; font-weight: 600; }
+.filtered-out { display: none; }
+
+/* Responsive : empile en mobile */
+@media (max-width: 1100px) {
+  #calendar-9cols {
+    grid-template-columns: 1fr;
+  }
+  .month.mL, .month.mC, .month.mR {
+    grid-column: 1 / -1;
+  }
+}
