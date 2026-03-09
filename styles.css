@@ -91,7 +91,6 @@ body {
   flex: 1 1 0;
   min-width: 260px;
 
-  /* 🔥 Nouvelle grille interne (Date réduite + 2 colonnes légèrement resserrées) */
   display: grid;
   grid-template-columns:
       var(--date-col)
