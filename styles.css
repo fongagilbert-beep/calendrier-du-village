@@ -214,3 +214,32 @@ body {
   background: #fff8e6 !important;
 }
 ``
+
+/* 🔒 HOTFIX ALIGNEMENT COLONNES — à coller en bas du CSS */
+.month{
+  /* On garde tes réglages de largeur (Date étroite, Greg/Trad légèrement resserrés) */
+  grid-template-columns:
+    var(--date-col)
+    minmax(var(--greg-min,156px), var(--text-fr,0.95fr))
+    minmax(var(--trad-min,156px), var(--text-fr,0.95fr)) !important;
+
+  /* On force une ligne pour l'entête + une ligne pour les 3 titres */
+  grid-auto-rows: var(--row-h);
+  grid-template-areas:
+    "hdr hdr hdr"
+    "hdate hgreg htrad";
+}
+
+/* Entête du mois sur toute la largeur */
+.month-header{ grid-area: hdr !important; }
+
+/* Les trois titres de colonnes sur la même ligne */
+.month > .col-title:nth-of-type(1){ grid-area: hdate !important; display:block; }
+.month > .col-title:nth-of-type(2){ grid-area: hgreg !important; display:block; }
+.month > .col-title:nth-of-type(3){ grid-area: htrad !important; display:block; }
+
+/* 🌟 Verrouillage des cellules par colonne (empêche tout glissement) */
+.row{ display: contents; }
+.row > .cell.date  { grid-column: 1 !important; }
+.row > .cell.greg  { grid-column: 2 !important; }
+.row > .cell.tradi { grid-column: 3 !important; }
