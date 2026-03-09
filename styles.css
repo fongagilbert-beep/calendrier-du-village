@@ -1,6 +1,6 @@
 /* =====================================================
-   CALENDRIER DU VILLAGE — CSS OFFICIEL 2026
-   Version stabilisée pour app.js (structure fixe)
+   CALENDRIER DU VILLAGE — CSS FINAL 2026
+   Alignements parfaits — Watermark par mois — 3 colonnes
    ===================================================== */
 
 /* --------------------------
@@ -39,10 +39,10 @@ body {
   border: none;
   cursor: pointer;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* -3M / +3M = bleu normal */
+/* -3M / +3M */
 .btn[data-action="prev3"],
 .btn[data-action="next3"] {
   background: #006af5;
@@ -52,7 +52,7 @@ body {
   background: #0053c7;
 }
 
-/* Aujourd'hui = bleu foncé */
+/* Aujourd'hui */
 .btn[data-action="today"] {
   background: #004aad;
 }
@@ -60,9 +60,9 @@ body {
   background: #003c8f;
 }
 
-/* -1an / +1an = mode ghost */
+/* -1 an / +1 an */
 .btn.ghost {
-  background: white;
+  background: #ffffff;
   color: #006af5;
   border: 1px solid #006af5;
 }
@@ -71,7 +71,7 @@ body {
 }
 
 /* --------------------------
-   PARAMÈTRES
+   PARAMETRES
 --------------------------- */
 .params-row {
   background: white;
@@ -82,12 +82,10 @@ body {
   display: flex; flex-wrap: wrap;
   gap: 1rem; justify-content: center;
 }
-.params label { display: flex; gap: .4rem; }
 
 /* --------------------------
-   GRILLE 3 MOIS
+   GRILLE DES 3 MOIS
 --------------------------- */
-/* ====== GRILLE 3 MOIS (inchangé) ====== */
 #calendar-9cols {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -96,144 +94,136 @@ body {
   position: relative;
 }
 
-/* ====== BLOC MOIS avec grille à 3 colonnes alignées ====== */
+/* --------------------------
+   BLOC MOIS — grille interne 3 colonnes
+--------------------------- */
 .month {
   background: #ffffff;
   border: 1px solid #d0d8e8;
   border-radius: 6px;
   padding: .8rem;
+
   display: grid;
-  /* ⚠️ C’est la clé : on définit la même grille pour tout le contenu du mois */
-  grid-template-columns: 50px 1fr 1fr;   /* Date | Jour grégorien | Jour traditionnel */
+  /* colonnes compactes */
+  grid-template-columns: 30px 0.8fr 0.9fr;
   grid-auto-rows: auto;
   row-gap: .35rem;
+
+  position: relative;
+  overflow: hidden;   /* pour watermark */
 }
 
-/* En‑tête du mois : BLEU FONCÉ et sur toute la largeur (3 colonnes) */
+/* --------------------------
+   WATERMARK PAR MOIS
+--------------------------- */
+.month::before {
+  content: attr(data-watermark);
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: rgba(0,0,0,0.08);
+
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 0;
+}
+
+/* Tout le contenu au-dessus du watermark */
+.month > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------
+   HEADER MOIS
+--------------------------- */
 .month-header {
-  grid-column: 1 / -1;                  /* Étend l’en‑tête sur les 3 colonnes */
-  background: #004aad;                  /* bleu foncé */
-  color: #ffffff;
-  border: 1px solid #003c8f;
-  padding: .55rem;
+  grid-column: 1 / -1;
+  background: #004aad;
+  color: white;
   border-radius: 4px;
+  padding: .55rem;
   font-weight: 700;
   text-align: center;
 }
 
-/* ====== LES 3 ENTÊTES DE COLONNES ====== */
-/* Place chaque .col-title dans SA colonne, juste sous le header */
+/* --------------------------
+   ENTÊTES DE COLONNES
+--------------------------- */
 .col-title {
   background: #eef3ff;
   border: 1px solid #d8dff7;
   border-radius: 4px;
-  font-weight: 700;
+  font-weight: bold;
   padding: .35rem;
   text-align: center;
 }
 
-/* Positionnement des 3 titres dans la grille du mois */
-.month > .col-title:nth-of-type(1) { grid-column: 1; } /* "Date" */
-.month > .col-title:nth-of-type(2) { grid-column: 2; } /* "Jour grégorien" */
-.month > .col-title:nth-of-type(3) { grid-column: 3; } /* "Jour traditionnel" */
+/* placer dans bonnes colonnes */
+.month > .col-title:nth-of-type(1) { grid-column: 1; }
+.month > .col-title:nth-of-type(2) { grid-column: 2; }
+.month > .col-title:nth-of-type(3) { grid-column: 3; }
 
-/* ====== LES LIGNES (JOURS) ALIGNÉES SOUS LES BONS TITRES ====== */
-/* On laisse .row créer une sous-grille IDENTIQUE pour garder l’alignement visuel */
+/* --------------------------
+   LIGNE JOUR
+--------------------------- */
 .row {
   display: grid;
-  grid-template-columns: 50px 1fr 1fr;  /* Même découpe que .month */
+  grid-template-columns: 30px 0.8fr 0.9fr;
   align-items: center;
   border-bottom: 1px solid #eee;
   border-radius: 4px;
   padding: .15rem .2rem;
 }
 
-/* Cellules */
 .cell { padding: .2rem .25rem; font-size: .92rem; }
 .zebra { background: #fafafa; }
 
 /* États */
 .today     { background: #fff2cc !important; border-left: 4px solid #ffbf00; }
-.forbidden { background: #ffe5e5 !important; color: #a70000; }
+.forbidden { background: #ffe5e5 !important; color: #b30000; }
 .market    { background: #e3ffe3 !important; color: #007023; }
 .filtered-out { opacity: .3; }
 
-/* ====== NAVIGATION : couleurs demandées ====== */
-.nav-row { display: flex; justify-content: center; background: #e9f1ff; padding: .6rem; gap: .5rem; }
-.btn { padding: .45rem .9rem; border-radius: 4px; border: none; cursor: pointer; color: #fff; font-weight: 600; }
+/* --------------------------
+   INFO BAS
+--------------------------- */
+.info-bottom {
+  background: white;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+}
 
-/* -3M / +3M = même coloris bleu moyen */
-.btn[data-action="prev3"], .btn[data-action="next3"] { background: #006af5; }
-.btn[data-action="prev3"]:hover, .btn[data-action="next3"]:hover { background: #0053c7; }
+.legend {
+  display: flex;
+  gap: .8rem;
+  justify-content: center;
+  margin-bottom: .8rem;
+}
 
-/* Aujourd'hui = bleu foncé DISTINCT */
-.btn[data-action="today"] { background: #004aad; }
-.btn[data-action="today"]:hover { background: #003c8f; }
-
-/* -1 an / +1 an = GHOST (fond blanc, contour bleu) */
-.btn.ghost { background: #ffffff; color: #006af5; border: 1px solid #006af5; }
-.btn.ghost:hover { background: #e8f0ff; }
-
-/* ====== PARAMS / LÉGENDE / FOOTER (inchangés ou légères retouches) ====== */
-.params-row { background: #fff; padding: .8rem; border-bottom: 1px solid #ddd; }
-.params { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-.params label { display: flex; gap: .4rem; }
-
-/* Légende / bas de page */
-.info-bottom { background: #fff; padding: 1rem; border-top: 1px solid #ddd; }
-.legend { display: flex; gap: .8rem; justify-content: center; margin-bottom: .8rem; }
 .chip { padding: .25rem .5rem; border-radius: 4px; border: 1px solid #ccc; font-size: .85rem; }
 .chip.forbid { background:#ffeaea; border-color:#ff9a9a; }
 .chip.market { background:#eaffea; border-color:#91e691; }
 .chip.today  { background:#fff4d6; border-color:#ffd87a; }
 
-.footer { text-align: center; padding: .8rem; color: #888; }
-
-/* ====== WATERMARK ====== */
-#calendar-9cols::after {
-  content: attr(data-watermark);
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 6rem; color: rgba(0,0,0,0.06);
-  pointer-events: none; white-space: nowrap; text-transform: uppercase;
+/* --------------------------
+   FOOTER
+--------------------------- */
+.footer {
+  text-align: center;
+  padding: .8rem;
+  color: #888;
 }
 
-/* ====== RESPONSIVE ====== */
-@media (max-width: 900px) {
-  #calendar-9cols { grid-template-columns: 1fr; }
-}
-
-/* =======================================
-   FIX WATERMARK — STOP LAYOUT BREAKING
-   ======================================= */
-
-/* Le conteneur doit servir d’ancre de position */
-#calendar-9cols {
-  position: relative;
-  overflow: hidden;     /* Empêche le watermark de déborder */
-}
-
-/* Version stable du watermark (non intrusif) */
-#calendar-9cols::after {
-  content: attr(data-watermark);
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 9rem;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.05);
-
-  pointer-events: none;    /* Ne perturbe jamais le layout */
-  user-select: none;
-  z-index: 0;              /* Derrière tout */
-}
-
-/* Tous les mois passent AU-DESSUS du watermark */
-.month {
-  position: relative;
-  z-index: 1;
-  background: white;
+/* --------------------------
+   RESPONSIVE
+--------------------------- */
+@media(max-width: 900px){
+  #calendar-9cols {
+    grid-template-columns: 1fr;
+  }
 }
