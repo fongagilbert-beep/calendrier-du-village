@@ -338,14 +338,17 @@ function wireParams(){
     });
   }
 
-  if (f){
-    f.addEventListener('change', e=>{
-      state.filtre = e.target.value;
-      renderNineColumns();
-    });
-  }
+if (f){
+  f.addEventListener('change', e => {
+    const val = String(e.target.value || 'all').toLowerCase();
+    state.filtre =
+      (val === 'tous') ? 'all' :
+      (val === 'marché' || val === 'marche') ? 'market' :
+      (val === 'interdits' || val === 'interdit') ? 'forbidden' :
+      val;
+    renderNineColumns();
+  });
 }
-
 function syncParamFields(){
   const y=document.getElementById('param-annee');
   const m=document.getElementById('param-mois');
