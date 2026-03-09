@@ -90,8 +90,14 @@ body {
 .month {
   flex: 1 1 0;
   min-width: 260px;
+
+  /* 🔥 Nouvelle grille interne (Date réduite + 2 colonnes légèrement resserrées) */
   display: grid;
-  grid-template-columns: var(--date-col) 1fr 1fr; /* Alignement parfait */
+  grid-template-columns:
+      var(--date-col)
+      minmax(var(--greg-min), var(--text-fr))
+      minmax(var(--trad-min), var(--text-fr));
+
   border: 1px solid #c4c8d0;
   border-radius: 6px;
   background: #fff;
@@ -157,28 +163,25 @@ body {
 
 /* ===================== */
 /* SECTION BAS DE PAGE   */
+/* (VERSION CORRECTE, UNIQUE ET CENTRÉE) */
 /* ===================== */
 .info-bottom {
   max-width: 1600px;
-  margin: 8px auto 18px;
+  margin: 12px auto 20px;
   padding: 10px 12px;
   display: flex;
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.legend { display: flex; gap: 8px; flex-wrap: wrap; align-items:center; }
-.chip {
-  display: inline-flex; gap:6px;
-  padding:6px 10px; border-radius:14px; font-weight:700;
-  background:#ffe9b6; border:1px solid #f2cc7a;
+/* Harmonisation avec le calendrier */
+#calendar-9cols,
+.info-bottom {
+  padding-left: 12px;
+  padding-right: 12px;
 }
-.chip.forbid { background:#ffd6d6; color:#a10000; }
-.chip.market { background:#d6e9ff; color:#0a3f80; }
-.chip.today { background:#d9f1df; color:#1b5e20; }
-
-.village-meta { display:flex; flex-direction:column; gap:3px; }
 
 /* ===================== */
 /* RESPONSIVE MOBILE     */
@@ -192,42 +195,10 @@ body {
   }
 }
 
-
-/* ——— Réglage fin des colonnes internes (Date | Grégorien | Traditionnel) ——— */
-:root{
-  /* planchers de sécurité : ajuste si besoin */
-  --greg-min: 156px;
-  --trad-min: 156px;
-
-  /* facteur d’élasticité : 1fr (actuel), 0.95fr (-5%), 0.92fr (-8%), 0.90fr (-10%) */
-  --text-fr: 0.95fr; /* ← commence à -5%, très doux */
-}
-
-/* Grille interne d’un mois : on garde Date = 50px, on resserre légèrement les 2 autres */
-.month{
-  grid-template-columns: var(--date-col) minmax(var(--greg-min), var(--text-fr)) minmax(var(--trad-min), var(--text-fr));
-}
-
-.info-bottom {
-  max-width: 1600px;
-  margin: 12px auto 20px;
-  padding: 10px 12px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-#calendar-9cols,
-.info-bottom {
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
+/* ===================== */
+/* FILTRE VISUEL (GRISAGE)
+/* ===================== */
 .filtered-out .cell {
   opacity: 0.35;
   filter: grayscale(0.3);
 }
-
-
