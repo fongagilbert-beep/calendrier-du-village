@@ -1,48 +1,42 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>Calendrier du Village</title>
 
-  <!-- CSS (versionné pour casser le cache) -->
-  <link rel="stylesheet" href="./styles.v3.css?v=202sionné) -->
-  <link rel="manifest" href="./manifest.v3.web-- Couleur de thème (barres du navigateur / OS) -->
-  <meta name="theme-color" content="#0053c9">
+  <!-- CSS – versionné pour casser le cache -->
+  ./styles.css?v=20260310-1
 
-  <!-- iOS : mode web-app -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="apple-touch-icon" href="./ <!-- ===========================
-       ENTÊTE / PARAMÈTRES
-       =========================== -->
+  <!-- Manifest – versionné -->
+  ./manifest.webmanifest?v=20260310-1
+
+  <!-- iOS / Android -->
+  <meta name="theme-color" content="#0053c9"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  ./icons/icon-192.png
+</head>
+
+<body>
+
   <header class="site-header">
     <h1>Calendrier du Village</h1>
   </header>
 
   <nav class="nav-vibrant">
     <div class="params-row">
-      <div class="nav-group">
-        <!-- Exemple: sélecteur de village -->
-        <label for="param-village">Village :</label>
-        <select id="param-village"></select>
-      </div>
+      <label for="param-village">Village : </label>
+      <select id="param-village"></select>
 
-      <!-- Bouton Installer (Android) -->
-      <button id="btnInstall" class="btn install" style="display:none;">Installer l’app</button>
+      <button id="btnInstall" class="btn install" style="display:none;">
+        Installer l’app
+      </button>
     </div>
   </nav>
 
-  <!-- ===========================
-       CALENDRIER
-       =========================== -->
-  <main id="calendar-9cols" data-watermark="">
-    <!-- Le contenu est injecté par app.v3.js -->
-  </main>
+  <main id="calendar-9cols" data-watermark=""></main>
 
-  <!-- ===========================
-       LÉGENDE / INFOS BAS
-       =========================== -->
   <section class="info-bottom">
     <div class="legend">
       <span class="chip market">Jour de marché</span>
@@ -56,56 +50,47 @@
     </div>
   </section>
 
-  <!-- ===========================
-       TIP iOS (facultatif)
-       =========================== -->
+  <!-- Tip iOS -->
   <div id="ios-tip" style="display:none;
-       background:#fff9d6;border:1px dashed #ffb300;padding:8px 10px;
-       border-radius:8px;color:#6a4a00;font-weight:600;max-width:780px;
-       margin:10px auto;">
-    Sur iPhone : touche « Partager » → « Ajouter à l’écran d’accueil » pour l’avoir comme une app (auto‑mise à jour).
+        background:#fff9d6;border:1px dashed #ffb300;
+        padding:8px 10px;border-radius:8px;color:#6a4a00;
+        font-weight:600;max-width:780px;margin:10px auto;">
+      Sur iPhone : “Partager” → “Ajouter à l’écran d’accueil”
   </div>
 
-  <!-- ===========================
-       SCRIPT PRINCIPAL (versionné)
-       =========================== -->
-  ./app.v3.js?v=20260309-3</script>
+  <!-- JS – versionné -->
+  ./app.js?v=20260310-1</script>
 
-  <!-- ===========================
-       ENREGISTREMENT SW (zéro cache)
-       =========================== -->
+  <!-- SW minimal (aucun cache figé) -->
   <script>
-  (function(){
-    // Bouton "Installer l’app" (Android)
-    let deferredPrompt=null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      const btn = document.getElementById('btnInstall');
-      if (btn) btn.style.display = 'inline-block';
-    });
-    document.getElementById('btnInstall')?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      try { await deferredPrompt.userChoice; } catch(e) {}
-      deferredPrompt = null;
-      document.getElementById('btnInstall').style.display = 'none';
-    });
+    (function(){
+      // Android : bouton Installer
+      let deferredPrompt=null;
+      window.addEventListener('beforeinstallprompt',(e)=>{
+        e.preventDefault(); deferredPrompt=e;
+        document.getElementById('btnInstall').style.display='inline-block';
+      });
+      document.getElementById('btnInstall')?.addEventListener('click',async()=>{
+        if(!deferredPrompt) return;
+        deferredPrompt.prompt();
+        try{ await deferredPrompt.userChoice; }catch(e){}
+        deferredPrompt=null;
+      });
 
-    // iOS : tip si pas en standalone
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if (isIOS && !isStandalone) {
-      const tip = document.getElementById('ios-tip');
-      if (tip) tip.style.display = 'block';
-      setTimeout(()=> tip && (tip.style.display = 'none'), 8000);
-    }
+      // iOS : tip si pas standalone
+      const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+      if(isIOS && !isStandalone){
+        document.getElementById('ios-tip').style.display='block';
+        setTimeout(()=>document.getElementById('ios-tip').style.display='none',8000);
+      }
 
-    // Service Worker minimal (pas de cache offline agressif)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw-v3.js?v=20260309-3').catch(console.error);
-    }
-  })();
+      // Service Worker (zéro cache)
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.register('./sw.js?v=20260310-1').catch(console.error);
+      }
+    })();
   </script>
+
 </body>
 </html>
