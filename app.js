@@ -74,7 +74,35 @@ function isMarketByRoot(d){
   return list.includes(wd);
 }
 
+// J1..J8 par village
+if (data?.traditional_days_8){
+  const out = {};
+  for (const [vill, map] of Object.entries(data.traditional_days_8)){
+    const vKey = (vill || 'ALL').toUpperCase();
+    out[vKey] = {};
+    for (const [k,val] of Object.entries(map || {})){
+      const n = Number(k);
+      if (n>=1 && n<=8) out[vKey][String(n)] = String(val||'').trim();
+    }
+  }
+  state.j8 = out;
+}
 
+// Anchor { date, j }
+if (data?.traditional_days_anchor){
+  const out = {};
+  for (const [vill, payload] of Object.entries(data.traditional_days_anchor)){
+    const vKey = (vill || 'ALL').toUpperCase();
+    if (typeof payload === 'string') {
+      // rétro-compat: parfois on n’envoyait qu’une date
+      out[vKey] = { date: payload, j: 1 };
+    } else if (payload && /^\d{4}-\d{2}-\d{2}$/.test(String(payload.date))) {
+      const jj = Math.min(8, Math.max(1, parseInt(payload.j ?? 1, 10) || 1));
+      out[vKey] = { date: String(payload.date), j: jj };
+    }
+  }
+  state.j8Anchor = out;
+}
 
 // Normalisation déjà effectuée au chargement
 function getTraditionalMonthName(year, monthIndex, village) {
@@ -168,6 +196,11 @@ async function loadDataJSON() {
       state.tmonths = out;
     }
 
+// dans const state = { ... }
+  j8: {},                 // { VILLAGE: {"1":..., ..."8":...}, ALL:{...} }
+  j8Anchor: {},           // { ALL: { date:"YYYY-MM-DD", j:1..8 }, VILLAGE? ... }
+
+    
     if (Array.isArray(data?.entries)) cvUpdateData(data.entries);
     cvSetVillageMeta({
       roi: data.roi,
