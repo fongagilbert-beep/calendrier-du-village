@@ -76,3 +76,38 @@
   <script src="./app.js" type="module"></script>
 </body>
 </html>
+
+<script>
+  // --- Android (Chrome) : bouton "Installer l’app"
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const btn = document.getElementById('btnInstall');
+    if (btn) btn.style.display = 'inline-block';
+  });
+
+  document.getElementById('btnInstall')?.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    try { await deferredPrompt.userChoice; } catch(e) {}
+    deferredPrompt = null;
+    document.getElementById('btnInstall').style.display = 'none';
+  });
+
+  window.addEventListener('appinstalled', () => {
+    console.log('PWA installed');
+  });
+
+  // --- iPhone (Safari) : affiche une aide "Ajouter à l’écran d’accueil"
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isIOS && !isStandalone) {
+    const tip = document.createElement('div');
+    tip.id = 'ios-tip';
+    tip.textContent = "Sur iPhone : touche Partager → ‘Ajouter à l’écran d’accueil’";
+    const paramsBar = document.querySelector('.params-row') || document.body;
+    paramsBar.appendChild(tip);
+    tip.style.display = 'block';
+  }
+</script>
