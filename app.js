@@ -184,7 +184,7 @@ function cvSetVillageMeta({ roi, marche, info }) {
 
 async function loadDataJSON() {
   try {
-    const res = await fetch('./data.json', { cache: 'no-store' });
+    const res = await fetch(`./data.v2.json?v=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) return;
     const data = await res.json();
 
