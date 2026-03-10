@@ -1,133 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Calendrier du Village</title>
-  <link rel="manifest" href="./manifest.webmanifest">
 
- <!-- CSS -->
-<link rel="stylesheet" href="./styles.css-->
-<link rel="manifest" href="./manifest.webmanifest de thème pour iOS/Android -->
-<meta name="theme-color" content="#0b3c8d">
+  <!-- CSS (versionné pour casser le cache) -->
+  <link rel="stylesheet" href="./styles.v3.css?v=202sionné) -->
+  <link rel="manifest" href="./manifest.v3.web-- Couleur de thème (barres du navigateur / OS) -->
+  <meta name="theme-color" content="#0053c9">
 
-<!-- JS (de préférence juste avant </body>, sinon tu peux le laisser ici en defer) -->
-./app.js?v=20260309-2</script>
-  
-  
-  <link rel="stylesheet" href="./styles.css">
-
-  <!-- Couleur de thème pour les barres du navigateur / OS -->
-<meta name="theme-color" content="#0b3c8d">
-
-<!-- iOS : activer le mode web app plein écran et l’icône -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Calendrier du Village">
-icons/icon-192.png
-  
-</head>
-<body>
+  <!-- iOS : mode web-app -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="./ <!-- ===========================
+       ENTÊTE / PARAMÈTRES
+       =========================== -->
   <header class="site-header">
     <h1>Calendrier du Village</h1>
   </header>
 
-  <!-- NAV HAUT -->
-  <nav class="nav-row nav-vibrant">
-    <div class="nav-group">
-      <button class="btn" data-action="prev3">−3 mois</button>
-      <button class="btn" data-action="next3">+3 mois</button>
-      <button class="btn" data-action="today">Aujourd’hui</button>
-      <button class="btn ghost" data-action="prevY">−1 an</button>
-      <button class="btn ghost" data-action="nextY">+1 an</button>
+  <nav class="nav-vibrant">
+    <div class="params-row">
+      <div class="nav-group">
+        <!-- Exemple: sélecteur de village -->
+        <label for="param-village">Village :</label>
+        <select id="param-village"></select>
+      </div>
+
+      <!-- Bouton Installer (Android) -->
+      <button id="btnInstall" class="btn install" style="display:none;">Installer l’app</button>
     </div>
   </nav>
 
-  <!-- PARAMS (sous la nav) : M = mois central -->
+  <!-- ===========================
+       CALENDRIER
+       =========================== -->
+  <main id="calendar-9cols" data-watermark="">
+    <!-- Le contenu est injecté par app.v3.js -->
+  </main>
 
-  <button id="btnInstall" class="btn install" style="display:none;">Installer l’app</button>
-  
-  <section class="params-row">
-    <div class="params">
-      <label>Année (M) : <input type="number" id="param-annee" min="1900" max="2100" step="1" /></label>
-      <label>Mois (M) : <input type="number" id="param-mois" min="1" max="12" step="1" /></label>
-      <label>Village :
-        <select id="param-village">
-          <option value="ALL">TOUS</option>
-          <option value="BALENGOU">BALENGOU</option>
-          <option value="ZEUGNIA">ZEUGNIA</option>
-          <option value="TIZOUEU">TIZOUEU</option>
-        </select>
-      </label>
-      <label>Filtre :
-        <select id="param-filtre">
-          <option value="all">Tous</option>
-          <option value="forbidden">Jours interdits</option>
-          <option value="market">Jours de marché</option>
-        </select>
-      </label>
-    </div>
-  </section>
-
-    <!-- CALENDRIER : M-1 | M | M+1 -->
-  <main id="calendar-9cols" class="c9" aria-live="polite" aria-busy="false" data-watermark="VILLAGE"></main>
-
-  <!-- BLOC D’INFOS EN BAS -->
-  <section id="info-bottom" class="info-bottom">
+  <!-- ===========================
+       LÉGENDE / INFOS BAS
+       =========================== -->
+  <section class="info-bottom">
     <div class="legend">
-      <span class="chip forbid">Jour interdit</span>
       <span class="chip market">Jour de marché</span>
+      <span class="chip forbid">Jour interdit</span>
       <span class="chip today">Aujourd’hui</span>
     </div>
     <div class="village-meta">
-      <div><strong>C42 – Roi du village :</strong> <span id="roi-village">—</span></div>
-      <div><strong>C43 – Jours de marché :</strong> <span id="marche-village">—</span></div>
-      <div><strong>C44 – Info :</strong> <span id="info-village">—</span></div>
+      <strong id="meta-roi">Roi : —</strong>
+      <span id="meta-marche">Jours de marché : —</span>
+      <span id="meta-info">Informations : —</span>
     </div>
   </section>
 
-  <footer class="footer"><small>Proposé par <strong>Gilbert FONGA</strong></small></footer>
+  <!-- ===========================
+       TIP iOS (facultatif)
+       =========================== -->
+  <div id="ios-tip" style="display:none;
+       background:#fff9d6;border:1px dashed #ffb300;padding:8px 10px;
+       border-radius:8px;color:#6a4a00;font-weight:600;max-width:780px;
+       margin:10px auto;">
+    Sur iPhone : touche « Partager » → « Ajouter à l’écran d’accueil » pour l’avoir comme une app (auto‑mise à jour).
+  </div>
 
+  <!-- ===========================
+       SCRIPT PRINCIPAL (versionné)
+       =========================== -->
+  ./app.v3.js?v=20260309-3</script>
+
+  <!-- ===========================
+       ENREGISTREMENT SW (zéro cache)
+       =========================== -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+  (function(){
+    // Bouton "Installer l’app" (Android)
+    let deferredPrompt=null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('btnInstall');
+      if (btn) btn.style.display = 'inline-block';
+    });
+    document.getElementById('btnInstall')?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch(e) {}
+      deferredPrompt = null;
+      document.getElementById('btnInstall').style.display = 'none';
+    });
+
+    // iOS : tip si pas en standalone
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isIOS && !isStandalone) {
+      const tip = document.getElementById('ios-tip');
+      if (tip) tip.style.display = 'block';
+      setTimeout(()=> tip && (tip.style.display = 'none'), 8000);
     }
+
+    // Service Worker minimal (pas de cache offline agressif)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw-v3.js?v=20260309-3').catch(console.error);
+    }
+  })();
   </script>
-  <script src="./app.js" type="module"></script>
 </body>
 </html>
-
-<script>
-  // --- Android (Chrome) : bouton "Installer l’app"
-  let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btn = document.getElementById('btnInstall');
-    if (btn) btn.style.display = 'inline-block';
-  });
-
-  document.getElementById('btnInstall')?.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    try { await deferredPrompt.userChoice; } catch(e) {}
-    deferredPrompt = null;
-    document.getElementById('btnInstall').style.display = 'none';
-  });
-
-  window.addEventListener('appinstalled', () => {
-    console.log('PWA installed');
-  });
-
-  // --- iPhone (Safari) : affiche une aide "Ajouter à l’écran d’accueil"
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if (isIOS && !isStandalone) {
-    const tip = document.createElement('div');
-    tip.id = 'ios-tip';
-    tip.textContent = "Sur iPhone : touche Partager → ‘Ajouter à l’écran d’accueil’";
-    const paramsBar = document.querySelector('.params-row') || document.body;
-    paramsBar.appendChild(tip);
-    tip.style.display = 'block';
-  }
-</script>
