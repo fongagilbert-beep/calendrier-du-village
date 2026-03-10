@@ -59,6 +59,18 @@ function formatDayLabel(d) {
   return wd.charAt(0).toUpperCase() + wd.slice(1);
 }
 
+function normalizeDay(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+}
+function isMarketByRoot(d){
+  // Utilise state.marche qui est déjà alimenté depuis data.market_info via cvSetVillageMeta
+  const wd = normalizeDay(formatDayLabel(d));
+  const list = Array.isArray(state.marche) ? state.marche.map(normalizeDay) : [];
+  return list.includes(wd);
+}
+
+
+
 // Normalisation déjà effectuée au chargement
 function getTraditionalMonthName(year, monthIndex, village) {
   const vKey = (village || 'ALL').toUpperCase();
@@ -82,6 +94,12 @@ function resolveTraditionalAndTags(d, village) {
     isMarket: !!rec?.tags?.has('market')
   };
 }
+
+return {
+  trad: rec?.trad || 'Trad · Général',
+  isForbidden: !!rec?.tags?.has('forbidden'),
+  isMarket: ( !!rec?.tags?.has('market') || isMarketByRoot(d) )
+};
 
 // =====================================================
 //  API (exposée via window.* en bas du fichier)
