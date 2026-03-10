@@ -134,6 +134,14 @@ return {
   isMarket: ( !!rec?.tags?.has('market') || isMarketByRoot(d) )
 };
 
+const autoJ8 = getJ8LabelForDate(d, village);
+return {
+  trad: rec?.trad || autoJ8 || 'Trad · Général',
+  isForbidden: !!rec?.tags?.has('forbidden'),
+  isMarket: !!rec?.tags?.has('market')
+};
+
+
 // =====================================================
 //  API (exposée via window.* en bas du fichier)
 // =====================================================
