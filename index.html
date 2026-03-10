@@ -6,10 +6,12 @@
   <title>Calendrier du Village</title>
 
   <!-- CSS versionné (casse le cache) -->
-  ./styles.v3.css?v=20260310-1
+  ./styles.v3.css?v=20260310-2
 
   <!-- Manifest versionné -->
-  <link rel="manifest" href="./manifest.v3.webmanifest barre navigateur / iOS PWA -->
+  ./manifest.v3.webmanifest?v=20260310-2
+
+  <!-- Thème / iOS PWA -->
   <meta name="theme-color" content="#0053c9" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -51,37 +53,35 @@
   </div>
 
   <!-- JS principal versionné -->
-  ./app.v3.js?v=20260310-1</script>
-
-  <!-- SW minimal (zéro cache agressif) + bouton Installer -->
+  <script defer src="./app.v3.js?v=20260310-2nregistrement SW minimal (zéro cache agressif) + bouton Installer -->
   <script>
-  (function(){
+  (function () {
     // Bouton "Installer l’app" (Android)
-    let deferredPrompt=null;
+    let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault(); deferredPrompt=e;
-      const btn=document.getElementById('btnInstall');
-      if(btn) btn.style.display='inline-block';
+      e.preventDefault(); deferredPrompt = e;
+      const btn = document.getElementById('btnInstall');
+      if (btn) btn.style.display = 'inline-block';
     });
-    document.getElementById('btnInstall')?.addEventListener('click', async ()=>{
-      if(!deferredPrompt) return;
+    document.getElementById('btnInstall')?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      try{ await deferredPrompt.userChoice; }catch(e){}
-      deferredPrompt=null;
-      document.getElementById('btnInstall').style.display='none';
+      try { await deferredPrompt.userChoice; } catch(e) {}
+      deferredPrompt = null;
+      document.getElementById('btnInstall').style.display = 'none';
     });
 
-    // iOS : montrer un tip si pas en standalone
-    const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isStandalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if(isIOS && !isStandalone){
-      const tip=document.getElementById('ios-tip');
-      if(tip) { tip.style.display='block'; setTimeout(()=>tip.style.display='none',8000); }
+    // iOS : tip si pas en standalone
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isIOS && !isStandalone) {
+      const tip = document.getElementById('ios-tip');
+      if (tip) { tip.style.display = 'block'; setTimeout(() => tip.style.display = 'none', 8000); }
     }
 
-    // Enregistrer le Service Worker minimal (pas de cache figé)
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.v3.js?v=20260310-1').catch(console.error);
+    // Service Worker minimal (pas de cache figé)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.v3.js?v=20260310-2').catch(console.error);
     }
   })();
   </script>
