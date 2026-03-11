@@ -1,63 +1,64 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calendrier du Village</title>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
 
-  <!-- CSS principal -->
-  ./styles.v3.css?v=20260311
-</head>
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;Calendrier du Village&lt;/title&gt;
 
-<body>
+  &lt;!-- CSS principal --&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;./styles.v3.css?v=20260311&quot;&gt;
+&lt;/head&gt;
 
-  <!-- BANDEAU BLEU TITRE -->
-  <div class="site-header">Calendrier du Village</div>
+&lt;body&gt;
 
-  <!-- BOUTONS DE NAVIGATION -->
-  <div class="nav-row">
-    prev3‹ 3 mois</button>
-    next33 mois ›</button>
-    todayAujourd’hui</button>
-    <revY‹ 1 an</button>
-    nextY1 an ›</button>
-  </div>
+  &lt;!-- BANDEAU BLEU TITRE --&gt;
+  &lt;div class=&quot;site-header&quot;&gt;Calendrier du Village&lt;/div&gt;
 
-  <!-- PARAMÈTRES -->
-  <div class="params">
-    <label>Année (M) :
-      <input id="param-annee" type="number" min="1900" max="2500">
-    </label>
+  &lt;!-- BOUTONS DE NAVIGATION --&gt;
+  &lt;div class=&quot;nav-row&quot;&gt;
+    &lt;button class=&quot;btn&quot; data-action=&quot;prev3&quot;&gt;&lsaquo; 3 mois&lt;/button&gt;
+    &lt;button class=&quot;btn&quot; data-action=&quot;next3&quot;&gt;3 mois &rsaquo;&lt;/button&gt;
+    &lt;button class=&quot;btn btn-today&quot; data-action=&quot;today&quot;&gt;Aujourd’hui&lt;/button&gt;
+    &lt;button class=&quot;btn&quot; data-action=&quot;prevY&quot;&gt;&lsaquo; 1 an&lt;/button&gt;
+    &lt;button class=&quot;btn&quot; data-action=&quot;nextY&quot;&gt;1 an &rsaquo;&lt;/button&gt;
+  &lt;/div&gt;
 
-    <label>Mois (M) :
-      <input id="param-mois" type="number" min="1" max="12">
-    </label>
+  &lt;!-- PARAMÈTRES --&gt;
+  &lt;div class=&quot;params&quot;&gt;
+    &lt;label&gt;Année (M) :
+      &lt;input id=&quot;param-annee&quot; type=&quot;number&quot; min=&quot;1900&quot; max=&quot;2500&quot;&gt;
+    &lt;/label&gt;
 
-    <label>Village :
-      <select id="param-village">
-        <option value="ALL">Tous</option>
-      </select>
-    </label>
+    &lt;label&gt;Mois (M) :
+      &lt;input id=&quot;param-mois&quot; type=&quot;number&quot; min=&quot;1&quot; max=&quot;12&quot;&gt;
+    &lt;/label&gt;
 
-    <label>Filtre :
-      <select id="param-filtre">
-        <option value="tous">Tous</option>
-        <option value="marché">Marchés</option>
-        <option value="interdits">Interdits</option>
-      </select>
-    </label>
-  </div>
+    &lt;label&gt;Village :
+      &lt;select id=&quot;param-village&quot;&gt;
+        &lt;option value=&quot;ALL&quot;&gt;Tous&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
 
-  <!-- CALENDRIER -->
-  <div id="calendar-9cols"></div>
+    &lt;label&gt;Filtre :
+      &lt;select id=&quot;param-filtre&quot;&gt;
+        &lt;option value=&quot;tous&quot;&gt;Tous&lt;/option&gt;
+        &lt;option value=&quot;marché&quot;&gt;Marchés&lt;/option&gt;
+        &lt;option value=&quot;interdits&quot;&gt;Interdits&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
 
-  <!-- BLOC INFOS -->
-  <h2>Roi : <span id="roi-village">—</span></h2>
-  <p>Jours de marché : <span id="marche-village">—</span></p>
-  <p>Informations : <span id="motif-village">—</span></p>
+  &lt;!-- CALENDRIER --&gt;
+  &lt;div id=&quot;calendar-9cols&quot;&gt;&lt;/div&gt;
 
-  <!-- SCRIPT -->
-  ./app.v3.js</script>
+  &lt;!-- BLOC INFOS --&gt;
+  &lt;h2&gt;Roi : &lt;span id=&quot;roi-village&quot;&gt;—&lt;/span&gt;&lt;/h2&gt;
+  &lt;p&gt;Jours de marché : &lt;span id=&quot;marche-village&quot;&gt;—&lt;/span&gt;&lt;/p&gt;
+  &lt;p&gt;Informations : &lt;span id=&quot;motif-village&quot;&gt;—&lt;/span&gt;&lt;/p&gt;
 
-</body>
-</html>
+  &lt;!-- SCRIPT --&gt;
+  &lt;script src=&quot;./app.v3.js&quot;&gt;&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
