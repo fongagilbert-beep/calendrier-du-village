@@ -28,43 +28,47 @@
   gap:0.5rem;
   background:#e9f1ff;
   padding:0.8rem;
+  margin-top:1rem;
 ">
-  <button type="button" data-action="prev3"ton>
-  <buttonjourd’hui</button>
-  <button type="button" data-action="utton>
+  prev3-3 mois</button>
+  next3+3 mois</button>
+  todayAujourd’hui</button>
+  prevY-1 an</button>
+  nextY+1 an</button>
 </div>
-``
+
+<!-- PARAMÈTRES (doivent être EN DESSOUS de la ligne de commande) -->
+<div class="params" style="
+    display:flex;
+    gap:1rem;
+    justify-content:center;
+    align-items:center;
+    padding:1rem;
+    background:#fff;">
+  
+  <label>Année (M) :
+    <input id="param-annee" type="number" min="1900" max="2500" style="padding:0.3rem;text-align:center;">
+  </label>
+
+  <label>Mois (M) :
+    <input id="param-mois" type="number" min="1" max="12" style="padding:0.3rem;text-align:center;">
+  </label>
+
+  <label>Village :
+    <select id="param-village" style="padding:0.3rem;">
+      <option value="ALL">Tous</option>
+    </select>
+  </label>
+
+  <label>Filtre :
+    <select id="param-filtre" style="padding:0.3rem;">
+      <option value="tous">Tous</option>
+      <option value="marché">Marchés</option>
+      <option value="interdits">Interdits</option>
+    </select>
+  </label>
+</div>
    
-  <!-- PARAMÈTRES -->
-  <div class="params" style="
-      display:flex;
-      gap:1rem;
-      justify-content:center;
-      align-items:center;
-      padding:1rem;
-      background:#fff;">
-    <label>Année (M) :
-      <input id="param-annee" type="number" min="1900" max="2500" style="padding:0.3rem;text-align:center;">
-    </label>
-
-    <label>Mois (M) :
-      <input id="param-mois" type="number" min="1" max="12" style="padding:0.3rem;text-align:center;">
-    </label>
-
-    <label>Village :
-      <select id="param-village" style="padding:0.3rem;">
-        <option value="ALL">Tous</option>
-      </select>
-    </label>
-
-    <label>Filtre :
-      <select id="param-filtre" style="padding:0.3rem;">
-        <option value="tous">Tous</option>
-        <option value="marché">Marchés</option>
-        <option value="interdits">Interdits</option>
-      </select>
-    </label>
-  </div>
   <!-- CALENDRIER -->
   <div id="calendar-9cols"></div>
 
