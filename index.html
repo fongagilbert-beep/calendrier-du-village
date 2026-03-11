@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calendrier du Village</title>
 
-  <!-- CSS (ne pas modifier la syntaxe) -->
-  <link rel="stylesheet" href="./styles.v3.css?v=20260311tionnel) -->
+  <!-- CSS -->
+  ./styles.v3.css?v=20260311-8
+
+  <!-- Manifest + PWA -->
   <link rel="manifest" href="./manifest.v3theme-color" content="#008000">
 </head>
 
@@ -39,13 +41,14 @@
     </label>
   </div>
 
-  <!-- NAVIGATION -->
+  <!-- NAVIGATION (version correcte, comme sur PC) -->
   <div class="nav-row">
-    <buttonAnnée -1</button>
     prev3◀ -3 mois</button>
+    next3+3 mois ▶</button>
     todayAujourd’hui</button>
-    <button data-actionton>
-    <button data-action="nextY </div>
+    prevY⏮ -1 an</button>
+    nextY⏭ +1 an</button>
+  </div>
 
   <!-- META VILLAGE -->
   <h2>Roi : <span id="roi-village">—</span></h2>
@@ -56,57 +59,19 @@
   <div id="calendar-9cols" data-watermark="VILLAGE"></div>
 
   <!-- SCRIPT PRINCIPAL -->
-  <script src="./app.v3.js?v=cript>
+  </app.v3.js?v=20260311-8</script>
 
-  <!-- DEBUG OVERLAY (temporaire) : à enlever quand tout marche -->
-  <div id="debug" style="
-    position:fixed;left:0;bottom:0;width:100%;max-height:45%;
-    background:rgba(10,10,10,.88);color:#0f0;font:12px/1.3 monospace;
-    padding:8px;overflow:auto;z-index:99999;white-space:pre-wrap; display:none;">
-  </div>
+  <!-- Debug (facultatif) -->
+  <!--
+  <div id="debug" style="position:fixed;left:0;bottom:0;width:100%;max-height:45%;
+    background:rgba(10,10,10,.88);color:#0f0;font:12px monospace;
+    padding:8px;overflow:auto;z-index:99999;white-space:pre-wrap;"></div>
   <script>
-  (function(){
     const box = document.getElementById('debug');
-    function log(msg){ box.style.display='block'; box.textContent += msg + "\n"; }
-    log("📱 Debug mobile activé — " + new Date().toISOString());
-
-    window.addEventListener('error', (e)=>{
-      log("❌ ERREUR: " + e.message + " @ " + e.filename + ":" + e.lineno + ":" + e.colno);
-    });
-    window.addEventListener('unhandledrejection', (e)=>{
-      log("❌ PROMESSE NON GÉRÉE: " + (e.reason && e.reason.message ? e.reason.message : e.reason));
-    });
-
-    (async ()=>{
-      try {
-        const css = document.querySelector('link[rel="stylesheet"]')?.href;
-        log("🧩 CSS: " + (css || "introuvable"));
-        const js = [...document.scripts].map(s=>s.src).filter(Boolean);
-        log("🧩 SCRIPTS: " + (js.length? js.join(", ") : "aucun"));
-      } catch(err){ log("⚠️ Check ressources: " + err); }
-
-      try {
-        const u = "./data.v3.json?v="+Date.now();
-        const r = await fetch(u, {cache:"no-store"});
-        log("📥 data.v3.json status = " + r.status);
-        if(!r.ok){ log("⚠️ data.v3.json inaccessible"); }
-      } catch(err){ log("❌ fetch data.v3.json: " + err); }
-    })();
-  })();
+    function d(msg){ box.textContent += msg + "\n"; }
+    window.onerror = (m,u,l,c) => d("ERR: " + m + " @ " + u + ":" + l);
   </script>
-
-  <!-- BYPASS SW (temporaire) : désinstalle tout service worker -->
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(rs => {
-      rs.forEach(r => r.unregister());
-      if (window.caches && caches.keys) {
-        caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
-      }
-      console.log('SW désinstallé + caches vidés');
-    });
-  }
-  </script>
+  -->
 
 </body>
 </html>
