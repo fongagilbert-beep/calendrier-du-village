@@ -183,6 +183,7 @@ function renderOneMonth(root, start, village, place){
 
   const wrap = document.createElement("div");
   wrap.className = "month " + place;
+  wrap.setAttribute('data-watermark', village.toUpperCase());
 
   const head = document.createElement("div");
   head.className = "month-header";
