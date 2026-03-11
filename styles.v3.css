@@ -248,3 +248,10 @@ body{
 @media (max-width: 900px){
   .params{ flex-wrap:wrap; }
 }
+
+.cell.date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
