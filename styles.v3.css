@@ -164,3 +164,72 @@ body{
 .col-title{
   background: linear-gradient(var(--head-grad1), var(--head-grad2));
   border:1px solid var(--head-border);
+  border-radius:4px;
+  padding:.4rem .45rem;
+  font-weight:700;
+  color: var(--head-text);
+  text-align:center;
+}
+
+/* ---------- Lignes (jours) ---------- */
+.row{
+  display:grid;
+  grid-template-columns: var(--date-col) 1fr 1fr;
+  gap:6px;
+  align-items:center;
+  padding:.2rem 0;
+  border-bottom:1px solid var(--border);
+}
+.cell{
+  min-height:28px;
+  display:flex;
+  align-items:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  background:#fff;
+  border-radius:6px;
+  padding:.25rem .4rem;
+}
+.cell.date{ justify-content:center; }
+
+.row:nth-child(even) .cell{ background:#fafafa; }
+
+/* ---------- États ---------- */
+.row.today .cell     { background: var(--today-bg); }
+.row.market .cell    { background: var(--market-bg); }
+.row.forbidden .cell { background: var(--forbid-bg); }
+
+.row.filtered-out{ opacity:.35; filter: grayscale(55%); }
+
+/* Icônes (dans la cellule grégorienne) */
+.cell.greg{ position:relative; justify-content:center; }
+.row.forbidden .cell.greg::before{
+  content:"🛇"; position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
+}
+.row.market:not(.forbidden) .cell.greg::before{
+  content:"🛒"; position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
+}
+.row.forbidden.market .cell.greg::before{
+  content:"🛇"; position:absolute; left:calc(50% - .8rem); top:50%;
+  transform:translate(-50%,-50%);
+}
+.row.forbidden.market .cell.greg::after{
+  content:"🛒"; position:absolute; left:calc(50% + .8rem); top:50%;
+  transform:translate(-50%,-50%);
+}
+.row.today .cell.greg::after{
+  content:"📍"; position:absolute; right:.25rem; top:50%;
+  transform:translateY(-50%); font-size:.95rem; opacity:.85;
+}
+
+/* Week-end (si data-day posé par JS) */
+.greg[data-day="samedi"]   { color: #0b4bd6; font-weight:600; }
+.greg[data-day="dimanche"] { color: #b00000; font-weight:700; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px){
+  .params{ flex-wrap:wrap; }
+}
