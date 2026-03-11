@@ -1,857 +1,232 @@
 /* =====================================================
-   CALENDRIER DU VILLAGE — STYLE FINAL (lisible)
+   CALENDRIER DU VILLAGE — styles.v3.css (mobile-safe)
+   v2026-03-11
    - Grille 3 mois stable
-   - Entêtes séparées (month-head-row)
-   - Colonnes compactes
-   - Watermark vertical (village) centré
-   - Couleurs vives (week-end, interdit, marché, aujourd’hui)
+   - Entêtes claires (month-head-row)
+   - États: today / market / forbidden
+   - Fond "papier" optionnel (SVG encodé correctement)
    ===================================================== */
 
-/* --------------------------
-   RESET
---------------------------- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ---------- Reset / Base ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* =====================================================
-   FOND "ÉCRU + MOTIF BAMILÉKÉ"
-   - 3 couches : base écru + grain + motif géométrique
-   - aucun asset externe, tout inline data:SVG
-   ===================================================== */
+:root{
+  --bg: #f6f7f3;
+  --fg: #222;
+  --muted: #616673;
+  --border: #e4e7ee;
+
+  --brand: #004aad;    /* bandeau mois */
+  --accent: #2563eb;   /* boutons nav */
+  --today-bg: #fff6c4;
+  --market-bg: #e4ffe8;
+  --forbid-bg: #ffe0e0;
+
+  --date-col: 56px;    /* largeur col. date */
+}
+
+html, body {
+  height: 100%;
+}
 
 body {
-  font-family: system-ui, sans-serif;
-  color: #222;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  color: var(--fg);
   line-height: 1.42;
-
-  /* Couche 1 : fond écru uni (base) */
   background:
+    /* couche 1 : aplat écru */
     linear-gradient(#f3efe4, #f3efe4),
 
-    /* Couche 2 : grain papier (points irréguliers) */
-    url("data:image/svg+xml;utf8,\
-      <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'>\
-        <rect width='200' height='200' fill='none'/>\
-        <circle cx='18' cy='14' r='1' fill='%23ccc5b5' opacity='0.22'/>\
-        <circle cx='68' cy='40' r='1.2' fill='%23ccc5b5' opacity='0.18'/>\
-        <circle cx='120' cy='72' r='1' fill='%23ccc5b5' opacity='0.20'/>\
-        <circle cx='170' cy='110' r='1.1' fill='%23ccc5b5' opacity='0.24'/>\
-        <circle cx='42' cy='150' r='1.2' fill='%23ccc5b5' opacity='0.19'/>\
-        <circle cx='105' cy='178' r='1.1' fill='%23ccc5b5' opacity='0.17'/>\
-      </svg>"
-    ),
+    /* couche 2 : grain papier (SVG encodé) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='none'/%3E%3Ccircle cx='18' cy='14' r='1' fill='%23ccc5b5' opacity='0.22'/%3E%3Ccircle cx='68' cy='40' r='1.2' fill='%23ccc5b5' opacity='0.18'/%3E%3Ccircle cx='120' cy='72' r='1' fill='%23ccc5b5' opacity='0.20'/%3E%3Ccircle cx='170' cy='110' r='1.1' fill='%23ccc5b5' opacity='0.24'/%3E%3Ccircle cx='42' cy='150' r='1.2' fill='%23ccc5b5' opacity='0.19'/%3E%3Ccircle cx='105' cy='178' r='1.1' fill='%23ccc5b5' opacity='0.17'/%3E%3C/svg%3E"),
 
-    /* Couche 3 : motif géométrique bamiléké (discret) */
-    url("data:image/svg+xml;utf8,\
-      <svg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'>\
-        <defs>\
-          <!-- Trame de lignes diagonales (tissage) -->\
-          <pattern id='ndop' patternUnits='userSpaceOnUse' width='26' height='26' patternTransform='rotate(45)'>\
-            <path d='M0 13 H26' stroke='%239c8f77' stroke-width='1' stroke-linecap='square' opacity='0.10'/>\
-            <path d='M0 6.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/>\
-            <path d='M0 19.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/>\
-          </pattern>\
-          <!-- Rosace/losange très léger au centre de la tuile -->\
-          <g id='rosace'>\
-            <path d='M130 105 L155 130 L130 155 L105 130 Z' fill='none' stroke='%239c8f77' stroke-width='1' opacity='0.08'/>\
-            <circle cx='130' cy='130' r='6' fill='%239c8f77' opacity='0.08'/>\
-          </g>\
-        </defs>\
-        <rect width='260' height='260' fill='url(%23ndop)'/>\
-        %23rosace\
-      </svg>"
-    );
+    /* couche 3 : motif très discret (SVG encodé) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cdefs%3E%3Cpattern id='ndop' patternUnits='userSpaceOnUse' width='26' height='26' patternTransform='rotate(45)'%3E%3Cpath d='M0 13 H26' stroke='%239c8f77' stroke-width='1' stroke-linecap='square' opacity='0.10'/%3E%3Cpath d='M0 6.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/%3E%3Cpath d='M0 19.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/%3E%3C/pattern%3E%3Cg id='rosace'%3E%3Cpath d='M130 105 L155 130 L130 155 L105 130 Z' fill='none' stroke='%239c8f77' stroke-width='1' opacity='0.08'/%3E%3Ccircle cx='130' cy='130' r='6' fill='%239c8f77' opacity='0.08'/%3E%3C/g%3E%3C/defs%3E%3Crect width='260' height='260' fill='url(%23ndop)'/%3E%3Cuse href='%23rosace'/%3E%3C/svg%3E");
 
-  /* Échelles des 3 couches : base auto, grain 260px, motif 520px (plus large = plus discret) */
   background-size: auto, 260px 260px, 520px 520px;
-  background-attachment: fixed; /* effet papier fixe au scroll */
+  background-attachment: scroll, scroll, scroll; /* fallback mobile */
+  padding: 12px;
 }
 
-/* ---------------------------------------------
-   Variantes d’intensité (facultatif)
-   Ajoute sur <body> la classe :
-   - motif-soft (défaut)
-   - motif-medium
-   - motif-strong
-----------------------------------------------*/
-
-/* Soft (défaut) : rien à faire, les opacités sont déjà faibles */
-
-/* Medium : on renforce légèrement la 3e couche via mix-blend overlay sur un voile */
-body.motif-medium::after,
-body.motif-strong::after {
-  content: '';
-  position: fixed; inset: 0;
-  pointer-events: none;
-  z-index: 0;
+/* iOS/desktop fluide seulement si pas sensible au motion */
+@media (hover: hover) and (pointer: fine) {
+  body { background-attachment: scroll, fixed, fixed; }
 }
 
-/* Medium : voile très léger */
-body.motif-medium::after {
-  background:
-    radial-gradient(1200px 1200px at 30% 20%, rgba(156,143,119,0.05), transparent 60%),
-    radial-gradient(1000px 1000px at 80% 70%, rgba(156,143,119,0.04), transparent 55%);
-  mix-blend-mode: multiply;
-}
+/* ---------- Header simple ---------- */
+h1 { font-size: 1.6rem; margin: 0 0 .6rem; }
 
-/* Strong : un peu plus visible, toujours respectueux de la lisibilité */
-body.motif-strong::after {
-  background:
-    radial-gradient(1200px 1200px at 30% 20%, rgba(156,143,119,0.08), transparent 60%),
-    radial-gradient(1000px 1000px at 80% 70%, rgba(156,143,119,0.07), transparent 55%);
-  mix-blend-mode: multiply;
-}
-
-/* --------------------------
-   HEADER
---------------------------- */
-.site-header {
-  background: #004aad;
-  color: #fff;
-  padding: 1rem;
-  text-align: center;
-}
-.site-header h1 { font-size: 1.7rem; }
-
-/* --------------------------
-   NAVIGATION
---------------------------- */
-.nav-row {
-  display: flex; justify-content: center;
-  background: #e9f1ff;
-  padding: .6rem; gap: .5rem;
-}
-.btn {
-  padding: .45rem .9rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 600;
-}
-/* -3M / +3M */
-.btn[data-action="prev3"],
-.btn[data-action="next3"] { background: #006af5; }
-.btn[data-action="prev3"]:hover,
-.btn[data-action="next3"]:hover { background: #0053c7; }
-
-/* Aujourd’hui */
-.btn[data-action="today"] { background: #004aad; }
-.btn[data-action="today"]:hover { background: #003c8f; }
-
-/* -1 an / +1 an (ghost) */
-.btn.ghost {
-  background: #fff; color: #006af5; border: 1px solid #006af5;
-}
-.btn.ghost:hover { background: #e8f0ff; }
-
-/* --------------------------
-   PARAMÈTRES
---------------------------- */
-.params-row {
-  background: #fff; padding: .8rem; border-bottom: 1px solid #ddd;
-}
-.params {
-  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
-}
-
-/* --------------------------
-   GRILLE PRINCIPALE : 3 MOIS
---------------------------- */
-#calendar-9cols {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.2rem;
-  padding: 1.2rem;
-}
-
-/* --------------------------
-   BLOC MOIS (structure verticale)
---------------------------- */
-.month {
-  position: relative;           /* ancre watermark */
-  overflow: hidden;             /* coupe watermark si besoin */
-  background: #fff;
-  border: 1px solid #d0d8e8;
-  border-radius: 6px;
-  padding: .7rem .8rem;
-  min-height: 420px;            /* réserve visuelle pour watermark */
-}
-
-/* --------------------------
-   WATERMARK PAR MOIS (VILLAGE)
-   - vertical, centré, plus visible
---------------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bamum:wght@400;700;800;900&display=swap');
-
-.month::before {
-  content: attr(data-watermark);                     /* ex: BALENGOU */
-  font-family: "Noto Sans Bamum", system-ui, sans-serif;
-  font-size: 4.6rem;                                 /* + grand */
-  font-weight: 900;                                  /* + massif */
-  color: rgba(0,0,0,0.18);                           /* + visible mais discret */
-
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotate(-90deg);   /* vertical, bas→haut */
-  pointer-events: none;
-  white-space: nowrap;
-  z-index: 0;
-}
-/* tout le contenu au-dessus du watermark */
-.month > * { position: relative; z-index: 1; }
-
-/* --------------------------
-   EN-TÊTE DU MOIS
---------------------------- */
-.month-header {
-  background: #004aad;
-  color: #fff;
-  border-radius: 4px;
-  padding: .55rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: .4rem;
-}
-
-/* --------------------------
-   ENTÊTES DE COLONNES (ligne unique)
---------------------------- */
-/* Réduit encore la part des colonnes 2 et 3 */
-.month-head-row,
-.row {
-  grid-template-columns: 55px 0.55fr 0.55fr; /* ← 0.55 au lieu de 0.7 */
-}
-
-/* Empêche les cellules texte de s’étirer trop / coupe proprement */
-.cell.greg,
-.cell.tradi {
-  max-width: 15ch;              /* ~15 caractères visibles */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-/* --------------------------
-   LIGNES (JOURS)
---------------------------- */
-.row {
-  display: grid;
-  grid-template-columns: 55px 0.7fr 0.7fr;   /* même découpe que month-head-row */
-  align-items: center;
-  gap: .2rem;
-  padding: .15rem .2rem;
-  border-bottom: 1px solid #eee;
-  border-radius: 4px;      /* doux au survol */
-}
-.cell { padding: .2rem .25rem; font-size: .94rem; }
-.zebra { background: #fafafa; }
-
-/* --------------------------
-   MISE EN VALEUR VISUELLE (couleurs vives)
---------------------------- */
-/* Aujourd’hui */
-.today {
-  background: #fff6c4 !important;
-  border-left: 5px solid #ffca00;
-  color: #5a4600 !important;
-  font-weight: 700;
-}
-
-/* Jour interdit */
-.forbidden {
-  background: #ffe0e0 !important;
-  border-left: 5px solid #ff4b4b;
-  color: #8f0000 !important;
-  font-weight: 600;
-}
-
-/* Jour de marché */
-.market {
-  background: #e4ffe8 !important;
-  border-left: 5px solid #21a33f;
-  color: #00581f !important;
-  font-weight: 600;
-}
-
-/* =====================================================
-   ICÔNES (pseudo-éléments) — pas de JS nécessaire
-   ===================================================== */
-
-/* Base : petit badge avant la 2e cellule (.greg) pour laisser le chiffre à gauche propre */
-.row .greg {
-  position: relative;
-  padding-left: 1.45rem; /* place pour l’icône */
-}
-
-/* Jour interdit → 🛇 */
-.row.forbidden .greg::before {
-  content: "🛇";
-  position: absolute;
-  left: 0.35rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  filter: drop-shadow(0 0 0 transparent);
-}
-
-/* Jour de marché → 🛒 */
-.row.market .greg::before {
-  content: "🛒";
-  position: absolute;
-  left: 0.35rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-}
-
-/* Aujourd’hui → 📍 (se cumule avec interdit/market si présent) */
-.row.today .greg::after {
-  content: "📍";
-  position: absolute;
-  right: -0.2rem;           /* petit repère côté droit de la cellule */
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.95rem;
-  opacity: .85;
-}
-
-/* Option : icône week-end (🎉) — si tu veux un marqueur doux pour samedi/dimanche */
-.row .greg[data-day="samedi"]::after,
-.row .greg[data-day="dimanche"]::after {
-  /* désactive si already today ; sinon place à droite */
-  content: "🎉";
-  position: absolute;
-  right: -0.2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: .95rem;
-  opacity: .6;
-}
-.row.today .greg[data-day="samedi"]::after,
-.row.today .greg[data-day="dimanche"]::after {
-  /* si c’est aujourd’hui + week-end, on laisse l’épingle 📍 seulement */
-  content: "";
-}
-
-
-/* Week‑end : on cible la 2e cellule (.greg) par l’attribut data-day
-   (déjà posé dans app.js : c2.setAttribute('data-day', 'samedi' | 'dimanche')) */
-.greg[data-day="samedi"]   { color: #004fc5; font-weight: 600; }
-.greg[data-day="dimanche"] { color: #c00000; font-weight: 700; }
-
-/* Filtre masqué (déjà géré côté JS) */
-.filtered-out { opacity: .3; }
-
-/* --------------------------
-   INFO BAS DE PAGE
---------------------------- */
-.info-bottom {
-  background: #fff;
-  padding: 1rem;
-  border-top: 1px solid #ddd;
-}
-
-.legend {
-  display: flex; gap: .8rem; justify-content: center;
-  margin-bottom: .8rem;
-}
-.chip {
-  padding: .25rem .5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: .85rem;
-}
-.chip.forbid { background:#ffeaea; border-color:#ff9a9a; }
-.chip.market { background:#eaffea; border-color:#91e691; }
-.chip.today  { background:#fff4d6; border-color:#ffd87a; }
-
-.village-meta {
-  max-width: 980px;
-  margin: 0 auto;
-  display: grid;
-  gap: .35rem;
-  font-size: .96rem;
-}
-
-/* --------------------------
-   FOOTER
---------------------------- */
-.footer {
-  text-align: center;
-  padding: .8rem;
-  color: #888;
-}
-
-/* --------------------------
-   RESPONSIVE
---------------------------- */
-@media (max-width: 900px) {
-  #calendar-9cols { grid-template-columns: 1fr; }
-}
-
-/* =====================================================
-   ICÔNES (pseudo-éléments) — pas de JS nécessaire
-   ===================================================== */
-
-/* Base : petit badge avant la 2e cellule (.greg) pour laisser le chiffre à gauche propre */
-.row .greg {
-  position: relative;
-  padding-left: 1.45rem; /* place pour l’icône */
-}
-
-/* Jour interdit → 🛇 */
-.row.forbidden .greg::before {
-  content: "🛇";
-  position: absolute;
-  left: 0.35rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  filter: drop-shadow(0 0 0 transparent);
-}
-
-/* Jour de marché → 🛒 */
-.row.market .greg::before {
-  content: "🛒";
-  position: absolute;
-  left: 0.35rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-}
-
-/* Aujourd’hui → 📍 (se cumule avec interdit/market si présent) */
-.row.today .greg::after {
-  content: "📍";
-  position: absolute;
-  right: -0.2rem;           /* petit repère côté droit de la cellule */
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.95rem;
-  opacity: .85;
-}
-
-/* Option : icône week-end (🎉) — si tu veux un marqueur doux pour samedi/dimanche */
-.row .greg[data-day="samedi"]::after,
-.row .greg[data-day="dimanche"]::after {
-  /* désactive si already today ; sinon place à droite */
-  content: "🎉";
-  position: absolute;
-  right: -0.2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: .95rem;
-  opacity: .6;
-}
-.row.today .greg[data-day="samedi"]::after,
-.row.today .greg[data-day="dimanche"]::after {
-  /* si c’est aujourd’hui + week-end, on laisse l’épingle 📍 seulement */
-  content: "";
-}
-
-/* ========= Centrage et harmonisation des champs Année / Mois ========= */
-
-/* Le conteneur de paramètres est déjà centré, on renforce l'alignement vertical */
-.params {
+/* ---------- Paramètres ---------- */
+.params, .nav-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;      /* centre horizontal */
-  align-items: center;           /* aligne verticalement les libellés et inputs */
+  gap: 8px 12px;
+  align-items: center;
+  margin: 8px 0 12px;
 }
 
-/* Les libellés et leurs inputs alignés en ligne */
 .params label {
   display: inline-flex;
   align-items: center;
-  gap: .4rem;
-  font-size: .95rem;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-/* Les deux inputs numériques centrés et de même largeur */
-.params input[type="number"] {
-  text-align: center;            /* centre le texte dans l’input */
-  width: 6ch;                    /* largeur compacte (6 caractères) */
-  min-width: 5.5rem;             /* garde une base confortable */
-  padding: .25rem .4rem;
-  border: 1px solid #cfd6e0;
-  border-radius: 4px;
+.params input[type="number"], .params select {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
   background: #fff;
-}
-
-/* (Option) enlever les flèches des champs number pour un rendu plus propre */
-/* Chrome / Edge */
-.params input[type="number"]::-webkit-outer-spin-button,
-.params input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-/* Firefox */
-.params input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-/* ========= Cohérence de centrage côté calendrier ========= */
-
-/* Colonne 1 "Date" : centre les chiffres pour une lecture nette */
-.cell.date {
+  color: var(--fg);
+  min-width: 72px;
   text-align: center;
 }
 
-/* (Sécurité) en-têtes "Date / Jour grégorien / Jour traditionnel" centrés */
-.month-head-row .col-title:nth-child(1) { text-align: center; }  /* Date */
-.month-head-row .col-title:nth-child(2) { text-align: center; }  /* Jour grégorien */
-.month-head-row .col-title:nth-child(3) { text-align: center; }  /* Jour traditionnel */
-
-/* === FIX CRITIQUE : remettre les 3 titres sur une seule ligne === */
-.month-head-row {
-  display: grid !important;
-  grid-template-columns: 55px 0.6fr 0.6fr !important; /* Date | Grégorien | Trad */
-  column-gap: .35rem !important;
-  margin-bottom: .3rem;
+/* ---------- Navigation ---------- */
+.nav-row button {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
 }
+.nav-row button:hover { background: #f0f7ff; }
 
-/* Les lignes jours utilisent la MÊME grille, pour un alignement parfait */
-.row {
-  display: grid !important;
-  grid-template-columns: 55px 0.6fr 0.6fr !important;
-  align-items: center;
-  gap: .2rem;
-}
+/* ---------- Méta village ---------- */
+h2 { font-size: 16px; margin: 4px 0; }
+p  { margin: 4px 0; color: var(--muted); }
+#roi-village, #marche-village, #motif-village { color: var(--fg); font-weight: 600; }
 
-/* === FIX : rétablir l'apparence (couleur) de la ligne d'en‑têtes === */
-.month-head-row {
-  display: grid !important;
-  grid-template-columns: 55px 0.6fr 0.6fr !important;
-  column-gap: .35rem !important;
-  margin-bottom: .3rem;
-}
-
-/* Style visuel des 3 entêtes, avec plus de spécificité et !important pour contrer un override */
-.month .month-head-row .col-title {
-  background: #e6efff !important;        /* fond bleu clair */
-  border: 1px solid #d8dff7 !important;  /* liseré */
-  border-radius: 4px !important;
-  padding: .35rem !important;
-  text-align: center !important;
-  font-weight: 700 !important;
-  color: #0d2a6b;                        /* texte bleu foncé lisible */
-}
-
-/* === ROLLBACK SAUF-GARDE CALENDRIER — À COLLER EN BAS === */
-
-/* Conteneur : 3 colonnes stables */
+/* ---------- Grille 3 mois ---------- */
 #calendar-9cols {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(320px, 1fr)) !important;
-  gap: 1.2rem !important;
-  padding: 1.2rem !important;
-  justify-content: center !important; /* centre si plus large */
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;   /* mobile: 1 colonne */
+  gap: 12px;
+  margin-top: 10px;
+}
+@media (min-width: 900px){
+  #calendar-9cols { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* Un mois = carte blanche simple, visible */
+/* watermark optionnel (village) */
+#calendar-9cols::before {
+  content: attr(data-watermark);
+  position: absolute;
+  top: 6px; right: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* ---------- Carte mois ---------- */
 .month {
-  background: #fff !important;
-  border: 1px solid #d0d8e8 !important;
-  border-radius: 6px !important;
-  padding: .8rem !important;
-  min-height: 380px !important;  /* laisse de la place au watermark */
-  position: relative !important;
-  overflow: hidden !important;
-  max-width: none !important;    /* ⛔ annule la limite max-width qui a pu cacher le contenu */
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: clip;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
 }
 
-/* Bandeau mois (bleu foncé) */
 .month-header {
-  background: #004aad !important;
-  color: #fff !important;
-  border-radius: 4px !important;
-  padding: .55rem !important;
-  font-weight: 700 !important;
-  text-align: center !important;
-  margin-bottom: .4rem !important;
+  background: var(--brand);
+  color: #fff;
+  padding: 10px 12px;
+  font-weight: 700;
+  text-align: center;
 }
 
-/* Ligne d’entêtes : 3 colonnes sur UNE SEULE LIGNE */
+/* ---------- Ligne d’entêtes (3 colonnes) ---------- */
 .month-head-row {
-  display: grid !important;
-  grid-template-columns: 55px 0.6fr 0.6fr !important; /* Date | Grégorien | Trad */
-  column-gap: .35rem !important;
-  margin-bottom: .3rem !important;
+  display: grid;
+  grid-template-columns: var(--date-col) 1fr 1.1fr; /* Date | Greg | Trad */
+  gap: 4px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: #f3f6ff;
+  color: #243b7b;
+  font-size: 13px;
+  font-weight: 700;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
+.col-title { text-align: center; }
 
-/* Les 3 cartouches d’entête (bleu clair) */
-.month .month-head-row .col-title {
-  background: #eef3ff !important;
-  border: 1px solid #d8dff7 !important;
-  border-radius: 4px !important;
-  padding: .35rem !important;
-  text-align: center !important;
-  font-weight: 700 !important;
-  color: #0d2a6b !important;
-}
-
-/* Chaque ligne de jour = même grille que la ligne d’entêtes */
+/* ---------- Lignes jours ---------- */
 .row {
-  display: grid !important;
-  grid-template-columns: 55px 0.6fr 0.6fr !important;
-  align-items: center !important;
-  gap: .2rem !important;
-  padding: .15rem .2rem !important;
-  border-bottom: 1px solid #eee !important;
-  border-radius: 4px !important;
+  display: grid;
+  grid-template-columns: var(--date-col) 1fr 1.1fr;
+  gap: 4px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
 }
 
-/* Cellules, centrage de la date */
-.cell { padding: .2rem .25rem !important; font-size: .94rem !important; }
-.cell.date { text-align: center !important; }
-
-/* Limiter visuellement l’étirement des colonnes 2/3 (sans empiler) */
-.cell.greg, .cell.tradi {
-  max-width: 18ch !important;    /* ajuste 14–18ch selon ton œil */
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-/* === WIDTH LOCK pour les colonnes === */
-:root{
-  --w-date: 52px;     /* assez grand pour "Date" centré */
-  --w-greg: 150px;    /* largeur visible compactée */
-  --w-trad: 170px;    /* un peu plus large si tes libellés sont longs */
-}
-
-/* La ligne d'entêtes et les lignes jours utilisent la même découpe */
-.month-head-row,
-.row{
-  display: grid !important;
-  grid-template-columns: var(--w-date) var(--w-greg) var(--w-trad) !important;
-  column-gap: .35rem;
-}
-
-/* Empêcher l'étirement et couper proprement si trop long */
-.cell.greg,
-.cell.tradi{
-  max-width: calc(var(--w-greg)); /* la bonne cellule prendra sa var, l'autre sera rognée */
+.cell {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* Responsive : sur grands écrans, on garde compact */
-@media (min-width: 1280px){
-  :root{
-    --w-greg: 140px;
-    --w-trad: 160px;
-  }
-}
+.cell.date { justify-content: center; }
 
-/* On ne met plus de padding-left; l'icône sera vraiment centrée */
-.row .greg{
-  position: relative;
-  padding-left: 0 !important;
-}
+.row:nth-child(even) .cell { background: #fafafa; border-radius: 6px; }
 
-/* Interdit — icône centrée */
-.row.forbidden .greg::before{
-  content: "🛇";
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1rem;
-  opacity: .9;
-}
+/* ---------- États ---------- */
+.row.today .cell     { background: var(--today-bg); }
+.row.market .cell    { background: var(--market-bg); }
+.row.forbidden .cell { background: var(--forbid-bg); }
 
-/* Marché — icône centrée (si seul) */
-.row.market:not(.forbidden) .greg::before{
-  content: "🛒";
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1rem;
-  opacity: .9;
-}
+.row.filtered-out { opacity: .35; filter: grayscale(55%); }
 
-/* Si un jour est à la fois interdit ET marché : on en met deux, côte à côte */
-.row.forbidden.market .greg::before{
-  content: "🛇";
-  left: calc(50% - .7rem); top: 50%;
-  transform: translate(-50%, -50%);
-}
-.row.forbidden.market .greg::after{
-  content: "🛒";
-  position: absolute;
-  left: calc(50% + .7rem); top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1rem;
-  opacity: .9;
-}
+/* ---------- Icônes (sur la cellule grégorienne) ---------- */
+.cell.greg { position: relative; justify-content: center; }
 
-/* Aujourd'hui : petit repère à droite de la cellule grégorienne */
-.row.today .greg::after{
-  content: "📍";
-  position: absolute;
-  right: .2rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: .95rem;
-  opacity: .9;
-}
-
-/* (Option) Week-end : icône centrée, mais désactivée si déjà interdit/marché */
-.row .greg[data-day="samedi"]::before{
-  content: "🎉";
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: .95rem; opacity: .55;
-}
-.row .greg[data-day="dimanche"]::before{
-  content: "🎉";
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: .95rem; opacity: .55;
-}
-/* Si interdit ou marché, on garde l’icône principale et on supprime 🎉 */
-.row.forbidden .greg[data-day="samedi"]::before,
-.row.forbidden .greg[data-day="dimanche"]::before,
-.row.market .greg[data-day="samedi"]::before,
-.row.market .greg[data-day="dimanche"]::before{
-  content: "";
-}
-
-/* === Filtrage en mode "grisage" (pas de masquage) === */
-.row.filtered-out{
-  opacity: .35 !important;        /* atténuation visuelle */
-  filter: grayscale(55%) !important;
-  transition: opacity .15s ease, filter .15s ease;
-}
-
-/* Laisse l'interaction si tu veux (sinon ajoute pointer-events:none) */
-/* .row.filtered-out { pointer-events: none; } */
-``
-
-/* Centrage exact des icônes dans la cellule "Jour grégorien" */
-.row .greg{ position: relative; padding-left: 0 !important; }
-
-.row.forbidden .greg::before{
+.row.forbidden .cell.greg::before {
   content: "🛇";
   position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%);
   font-size: 1rem; opacity: .9;
 }
 
-.row.market:not(.forbidden) .greg::before{
+.row.market:not(.forbidden) .cell.greg::before {
   content: "🛒";
   position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%);
   font-size: 1rem; opacity: .9;
 }
 
-/* cas interdit + marché : une de chaque côté du centre */
-.row.forbidden.market .greg::before{
-  content: "🛇"; left: calc(50% - .7rem); top: 50%;
-  transform: translate(-50%, -50%);
-}
-.row.forbidden.market .greg::after{
-  content: "🛒";
-  position: absolute; left: calc(50% + .7rem); top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1rem; opacity: .9;
-}
-
-/* Aujourd'hui : marqueur discret à droite */
-.row.today .greg::after{
-  content: "📍";
-  position: absolute; right: .2rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: .95rem; opacity: .9;
-}
-
-/* =========================================================
-   LAYOUT ÉQUILIBRÉ — rétablit l'étalement harmonieux
-   - Date compacte fixe
-   - Colonnes 2 & 3 flexibles mais bornées (minmax)
-   - Coupe proprement les textes trop longs
-   ========================================================= */
-
-.month .month-head-row,
-.month .row {
-  display: grid !important;
-  grid-template-columns:
-    56px                          /* Date compacte mais lisible */
-    minmax(140px, 1fr)            /* Jour grégorien : s'étire de min à 1fr */
-    minmax(150px, 1.1fr)          /* Jour traditionnel : un poil plus large */
-    !important;
-  column-gap: .35rem !important;
-}
-
-/* coupe proprement si le libellé dépasse */
-.cell.greg,
-.cell.tradi {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-/* garde les chiffres centrés (esthétique) */
-.cell.date { text-align: center !important; }
-
-/* Cellule grégorienne = zone de centrage pour les icônes */
-.cell.greg{
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Interdit centré */
-.row.forbidden .cell.greg::before{
+.row.forbidden.market .cell.greg::before {
   content: "🛇";
-  position: absolute; left: 50%; top: 50%;
+  position: absolute; left: calc(50% - .8rem); top: 50%;
   transform: translate(-50%, -50%);
 }
-
-/* Marché centré (si pas interdit) */
-.row.market:not(.forbidden) .cell.greg::before{
-  content: "🛒";
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Cas interdit + marché => côte à côte autour du centre */
-.row.forbidden.market .cell.greg::before{
-  content: "🛇"; left: calc(50% - .8rem); top: 50%; transform: translate(-50%, -50%);
-}
-.row.forbidden.market .cell.greg::after{
+.row.forbidden.market .cell.greg::after {
   content: "🛒";
   position: absolute; left: calc(50% + .8rem); top: 50%;
   transform: translate(-50%, -50%);
 }
 
-/* Équilibre 1:1 pour Grégorien/Trad • Date compacte */
-.month .month-head-row,
-.month .row {
-  display: grid !important;
-  grid-template-columns: 56px 1fr 1fr !important;
-  column-gap: .35rem !important;
-}
-.cell.date { text-align: center !important; }
-.cell.greg, .cell.tradi {
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+/* Aujourd’hui: repère à droite */
+.row.today .cell.greg::after {
+  content: "📍";
+  position: absolute; right: .25rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: .95rem; opacity: .85;
 }
 
-.btn.install {
-  background: #2e7d32;         /* vert Android */
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 18px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.btn.install:hover { filter: brightness(1.05); }
-#ios-tip {
-  display:none; background:#fff9d6; border:1px dashed #ffb300;
-  padding:6px 10px; border-radius:8px; color:#6a4a00; font-weight:600;
-}
+/* Week-end (si tu utilises data-day="samedi|dimanche") */
+.greg[data-day="samedi"]   { color: #0b4bd6; font-weight: 600; }
+.greg[data-day="dimanche"] { color: #b00000; font-weight: 700; }
 
-
-
+/* ---------- Accessibilité & tactile ---------- */
+button, select, input { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
+``
