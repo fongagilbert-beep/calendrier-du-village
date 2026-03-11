@@ -258,3 +258,36 @@ body{
 
 .cell.greg, .cell.trad { justify-content: center; }
 
+/* --- Watermark vertical : village en MAJUSCULE, bas -> haut, gris 18% --- */
+.month{
+  position: relative;
+  overflow: hidden;
+}
+
+/* on garde ::before pour d'autres usages éventuels, on ajoute ::after pour le vertical */
+.month::after{
+  content: attr(data-watermark);               /* texte fourni par le JS */
+  position: absolute;
+  bottom: .6rem;                               /* point d’ancrage bas */
+  right: .4rem;                                /* bord droit (tu peux passer à left) */
+  writing-mode: vertical-rl;                   /* vertical (de haut en bas) */
+  transform: rotate(180deg);                   /* on inverse pour lire bas -> haut */
+  text-orientation: mixed;
+  color: rgba(0,0,0,.18);                      /* gris 18% */
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  pointer-events: none;
+  user-select: none;
+  /* Si tu ajoutes une police décorative bamiléké, remplace la ligne suivante : */
+  font-family: "BamilekeMotif", "Noto Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Ex. si tu as un WOFF2 décoratif (remplace l’URL) :
+@font-face {
+  font-family: "BamilekeMotif";
+  src: url("./fonts/bamileke-motif.woff2") format("woff2");
+  font-display: swap;
+}
+*/
+
