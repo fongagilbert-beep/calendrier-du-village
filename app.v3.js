@@ -27,6 +27,17 @@ const state = {
 };
 
 // ---------------------- Utils
+
+function normalizeName(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // sans accents
+    .replace(/['’`´]/g, '') // apostrophes
+    .replace(/\s+/g, ' ')   // espaces multiples
+    .trim();
+}
+
+
 function toISO(d) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2,'0');
