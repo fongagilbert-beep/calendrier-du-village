@@ -222,12 +222,17 @@ function renderOneMonth(root, start, village, place){
     cell1.textContent=d;
 
     const cell2=document.createElement("div");
-    cell2.className="cell greg";
-    cell2.textContent=formatDayLabel(cur);
-
+  cell2.className="cell greg";
+- cell2.textContent=formatDayLabel(cur);
+  + const wd = fmt.weekdayLong.format(cur).toLowerCase(); // "lundi"... "dimanche"
+  + cell2.setAttribute("data-day", wd);
+  + cell2.textContent = wd.charAt(0).toUpperCase() + wd.slice(1);
+    
     const cell3=document.createElement("div");
-    cell3.className="cell tradi";
-    cell3.textContent=trad;
+    const cell3=document.createElement("div");
+- cell3.className="cell tradi";
++ cell3.className="cell trad";
+  cell3.textContent=trad;
 
     row.appendChild(cell1);
     row.appendChild(cell2);
