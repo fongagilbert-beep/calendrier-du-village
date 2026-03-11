@@ -1,232 +1,166 @@
 /* =====================================================
-   CALENDRIER DU VILLAGE — styles.v3.css (mobile-safe)
-   v2026-03-11
-   - Grille 3 mois stable
-   - Entêtes claires (month-head-row)
-   - États: today / market / forbidden
-   - Fond "papier" optionnel (SVG encodé correctement)
+   CALENDRIER DU VILLAGE — styles.v3.css (final 2026-03-11)
+   - Bandeau bleu titre
+   - Boutons bleus nav
+   - Colonne Date étroite
+   - Motif sur les 3 entêtes
+   - Cartes mois propres
+   - Zebra + états (market/forbidden/today)
+   - Responsive mobile -> 1 colonne ; ≥900px -> 3 colonnes
    ===================================================== */
 
 /* ---------- Reset / Base ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root{
   --bg: #f6f7f3;
   --fg: #222;
   --muted: #616673;
   --border: #e4e7ee;
 
-  --brand: #004aad;    /* bandeau mois */
-  --accent: #2563eb;   /* boutons nav */
+  --brand: #004aad;    /* bleu bandeau & header mois */
+  --nav-blue: #006af5; /* bleu boutons nav */
+  --nav-blue-dark: #004aad;
+
+  --head-grad1: #e6efff; /* motif têtes colonnes */
+  --head-grad2: #dee7ff;
+  --head-border: #cfd9ff;
+  --head-text: #0d2a6b;
+
   --today-bg: #fff6c4;
   --market-bg: #e4ffe8;
   --forbid-bg: #ffe0e0;
 
-  --date-col: 56px;    /* largeur col. date */
+  --date-col: 60px; /* largeur fixe colonne Date */
 }
 
-html, body {
-  height: 100%;
-}
-
-body {
+html, body { height: 100%; }
+body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   color: var(--fg);
   line-height: 1.42;
-  background:
-    /* couche 1 : aplat écru */
-    linear-gradient(#f3efe4, #f3efe4),
-
-    /* couche 2 : grain papier (SVG encodé) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='none'/%3E%3Ccircle cx='18' cy='14' r='1' fill='%23ccc5b5' opacity='0.22'/%3E%3Ccircle cx='68' cy='40' r='1.2' fill='%23ccc5b5' opacity='0.18'/%3E%3Ccircle cx='120' cy='72' r='1' fill='%23ccc5b5' opacity='0.20'/%3E%3Ccircle cx='170' cy='110' r='1.1' fill='%23ccc5b5' opacity='0.24'/%3E%3Ccircle cx='42' cy='150' r='1.2' fill='%23ccc5b5' opacity='0.19'/%3E%3Ccircle cx='105' cy='178' r='1.1' fill='%23ccc5b5' opacity='0.17'/%3E%3C/svg%3E"),
-
-    /* couche 3 : motif très discret (SVG encodé) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cdefs%3E%3Cpattern id='ndop' patternUnits='userSpaceOnUse' width='26' height='26' patternTransform='rotate(45)'%3E%3Cpath d='M0 13 H26' stroke='%239c8f77' stroke-width='1' stroke-linecap='square' opacity='0.10'/%3E%3Cpath d='M0 6.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/%3E%3Cpath d='M0 19.5 H26' stroke='%239c8f77' stroke-width='0.6' stroke-linecap='square' opacity='0.07'/%3E%3C/pattern%3E%3Cg id='rosace'%3E%3Cpath d='M130 105 L155 130 L130 155 L105 130 Z' fill='none' stroke='%239c8f77' stroke-width='1' opacity='0.08'/%3E%3Ccircle cx='130' cy='130' r='6' fill='%239c8f77' opacity='0.08'/%3E%3C/g%3E%3C/defs%3E%3Crect width='260' height='260' fill='url(%23ndop)'/%3E%3Cuse href='%23rosace'/%3E%3C/svg%3E");
-
-  background-size: auto, 260px 260px, 520px 520px;
-  background-attachment: scroll, scroll, scroll; /* fallback mobile */
-  padding: 12px;
+  background: #f3efe4; /* fond beige sobre; tu peux remettre le papier texturé si tu veux */
 }
 
-/* iOS/desktop fluide seulement si pas sensible au motion */
-@media (hover: hover) and (pointer: fine) {
-  body { background-attachment: scroll, fixed, fixed; }
-}
-
-/* ---------- Header simple ---------- */
-h1 { font-size: 1.6rem; margin: 0 0 .6rem; }
-
-/* ---------- Paramètres ---------- */
-.params, .nav-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  align-items: center;
-  margin: 8px 0 12px;
-}
-
-.params label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.params input[type="number"], .params select {
-  padding: 6px 8px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: #fff;
-  color: var(--fg);
-  min-width: 72px;
+/* ---------- Bandeau bleu Titre ---------- */
+.site-header{
+  background: var(--brand);
+  color:#fff;
+  padding: 1.2rem;
   text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
 }
 
-/* ---------- Navigation ---------- */
-.nav-row button {
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--accent);
-  border-radius: 6px;
-  cursor: pointer;
+/* ---------- Nav (boutons bleus sous le titre) ---------- */
+.nav-row{
+  display:flex;
+  justify-content:center;
+  gap:.5rem;
+  background:#e9f1ff;
+  padding:.8rem;
 }
-.nav-row button:hover { background: #f0f7ff; }
+.nav-row button{
+  background: var(--nav-blue);
+  color:#fff;
+  border:none;
+  padding:.6rem 1rem;
+  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+}
+.nav-row button:nth-child(3),
+.nav-row button:nth-child(4),
+.nav-row button:nth-child(5){
+  background: var(--nav-blue-dark);
+}
+.nav-row button:hover{ filter: brightness(1.05); }
 
-/* ---------- Méta village ---------- */
-h2 { font-size: 16px; margin: 4px 0; }
-p  { margin: 4px 0; color: var(--muted); }
-#roi-village, #marche-village, #motif-village { color: var(--fg); font-weight: 600; }
+/* ---------- Paramètres (sous la nav) ---------- */
+.params{
+  display:flex;
+  gap:1rem;
+  justify-content:center;
+  align-items:center;
+  padding:1rem;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+}
+.params label{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  color: var(--muted);
+}
+.params input[type="number"], .params select{
+  padding:.35rem .5rem;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:#fff;
+  color:var(--fg);
+  min-width:72px;
+  text-align:center;
+}
 
 /* ---------- Grille 3 mois ---------- */
-#calendar-9cols {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;   /* mobile: 1 colonne */
-  gap: 12px;
-  margin-top: 10px;
+#calendar-9cols{
+  position:relative;
+  display:grid;
+  grid-template-columns: 1fr; /* mobile: 1 colonne */
+  gap:1.4rem;
+  padding:1.2rem;
 }
 @media (min-width: 900px){
-  #calendar-9cols { grid-template-columns: repeat(3, 1fr); }
+  #calendar-9cols{ grid-template-columns: repeat(3, 1fr); }
 }
 
-/* watermark optionnel (village) */
-#calendar-9cols::before {
+/* (Option) Watermark discret de la grille (global, facultatif)
+#calendar-9cols::before{
   content: attr(data-watermark);
-  position: absolute;
-  top: 6px; right: 12px;
-  font-size: 12px;
-  color: var(--muted);
-  opacity: .5;
-  pointer-events: none;
+  position:absolute; top:6px; right:12px;
+  font-size:12px; color: var(--muted); opacity:.5;
 }
+*/
 
 /* ---------- Carte mois ---------- */
-.month {
-  position: relative;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: clip;
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+.month{
+  background:#fff;
+  border:1px solid #d0d8e8;
+  border-radius:10px;
+  padding:.8rem;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+  position:relative;
+  overflow:clip; /* pour watermark */
 }
 
-.month-header {
+/* Watermark par mois (horizontal discret) */
+.month::before{
+  content: attr(data-watermark);
+  position:absolute;
+  top:10px; right:14px;
+  font-size:.78rem;
+  color:#7a86a6;
+  opacity:.35;
+  pointer-events:none;
+}
+
+/* Entête mois (bandeau bleu) */
+.month-header{
   background: var(--brand);
-  color: #fff;
-  padding: 10px 12px;
-  font-weight: 700;
-  text-align: center;
+  color:#fff;
+  font-weight:700;
+  text-align:center;
+  border-radius:6px;
+  margin-bottom:.6rem;
+  padding:.6rem;
 }
 
-/* ---------- Ligne d’entêtes (3 colonnes) ---------- */
-.month-head-row {
-  display: grid;
-  grid-template-columns: var(--date-col) 1fr 1.1fr; /* Date | Greg | Trad */
-  gap: 4px;
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border);
-  background: #f3f6ff;
-  color: #243b7b;
-  font-size: 13px;
-  font-weight: 700;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+/* ---------- Ligne d’entêtes (motif bleu clair) ---------- */
+.month-head-row{
+  display:grid;
+  grid-template-columns: var(--date-col) 1fr 1fr; /* Date | Greg | Trad */
+  gap:6px;
+  margin-bottom:.25rem;
 }
-.col-title { text-align: center; }
-
-/* ---------- Lignes jours ---------- */
-.row {
-  display: grid;
-  grid-template-columns: var(--date-col) 1fr 1.1fr;
-  gap: 4px;
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--border);
-  align-items: center;
-}
-
-.cell {
-  min-height: 28px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cell.date { justify-content: center; }
-
-.row:nth-child(even) .cell { background: #fafafa; border-radius: 6px; }
-
-/* ---------- États ---------- */
-.row.today .cell     { background: var(--today-bg); }
-.row.market .cell    { background: var(--market-bg); }
-.row.forbidden .cell { background: var(--forbid-bg); }
-
-.row.filtered-out { opacity: .35; filter: grayscale(55%); }
-
-/* ---------- Icônes (sur la cellule grégorienne) ---------- */
-.cell.greg { position: relative; justify-content: center; }
-
-.row.forbidden .cell.greg::before {
-  content: "🛇";
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1rem; opacity: .9;
-}
-
-.row.market:not(.forbidden) .cell.greg::before {
-  content: "🛒";
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1rem; opacity: .9;
-}
-
-.row.forbidden.market .cell.greg::before {
-  content: "🛇";
-  position: absolute; left: calc(50% - .8rem); top: 50%;
-  transform: translate(-50%, -50%);
-}
-.row.forbidden.market .cell.greg::after {
-  content: "🛒";
-  position: absolute; left: calc(50% + .8rem); top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Aujourd’hui: repère à droite */
-.row.today .cell.greg::after {
-  content: "📍";
-  position: absolute; right: .25rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: .95rem; opacity: .85;
-}
-
-/* Week-end (si tu utilises data-day="samedi|dimanche") */
-.greg[data-day="samedi"]   { color: #0b4bd6; font-weight: 600; }
-.greg[data-day="dimanche"] { color: #b00000; font-weight: 700; }
-
-/* ---------- Accessibilité & tactile ---------- */
-button, select, input { -webkit-tap-highlight-color: transparent; }
-:focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
-``
+.col-title{
+  background: linear-gradient(var(--head-grad1), var(--head-grad2));
+  border:1px solid var(--head-border);
