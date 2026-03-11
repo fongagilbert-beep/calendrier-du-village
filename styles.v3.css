@@ -52,28 +52,7 @@ body{
 }
 
 /* ---------- Nav (boutons bleus sous le titre) ---------- */
-.nav-row{
-  display:flex;
-  justify-content:center;
-  gap:.5rem;
-  background:#e9f1ff;
-  padding:.8rem;
-}
-.nav-row button{
-  background: var(--nav-blue);
-  color:#fff;
-  border:none;
-  padding:.6rem 1rem;
-  border-radius:6px;
-  font-weight:600;
-  cursor:pointer;
-}
-.nav-row button:nth-child(3),
-.nav-row button:nth-child(4),
-.nav-row button:nth-child(5){
-  background: var(--nav-blue-dark);
-}
-.nav-row button:hover{ filter: brightness(1.05); }
+
 
 /* ---------- Paramètres (sous la nav) ---------- */
 .params{
