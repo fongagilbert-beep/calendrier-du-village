@@ -291,3 +291,41 @@ body{
 }
 */
 
+/* on libère de la place à gauche dans la cellule traditionnelle */
+.cell.trad {
+  position: relative;
+  padding-left: 2rem;             /* pour l’icône */
+}
+
+/* marché seul */
+.row.market:not(.forbidden) .cell.trad::before{
+  content: "🛒";
+  position: absolute; left: .5rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.05rem; opacity: .9;
+}
+
+/* interdit seul */
+.row.forbidden:not(.market) .cell.trad::before{
+  content: "⛔"; /* ou 🛇 si tu préfères */
+  position: absolute; left: .5rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.05rem; opacity: .9;
+}
+
+/* marché + interdit (double icône) */
+.row.market.forbidden .cell.trad::before{
+  content: "⛔";
+  position: absolute; left: .35rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.05rem; opacity: .9;
+}
+.row.market.forbidden .cell.trad::after{
+  content: "🛒";
+  position: absolute; left: 1.35rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.05rem; opacity: .9;
+}
+
+
+
