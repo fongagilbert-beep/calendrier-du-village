@@ -2,19 +2,14 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendrier du Village</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="./styles.v3.css?v=202603/manifest.v3.webmanifest
-  <meta name="theme-color" content="#008000">
+  ./styles.v3.css?v=20260311-10
 </head>
-
 <body>
 
   <h1>Calendrier du Village</h1>
 
-  <!-- PARAMÈTRES -->
   <div class="params">
     <label>Année :
       <input id="param-annee" type="number" min="1900" max="2500">
@@ -39,7 +34,6 @@
     </label>
   </div>
 
-  <!-- NAVIGATION -->
   <div class="nav-row">
     prev3◀ -3 mois</button>
     next3+3 mois ▶</button>
@@ -48,28 +42,12 @@
     nextY⏭ +1 an</button>
   </div>
 
-  <!-- META VILLAGE -->
   <h2>Roi : <span id="roi-village">—</span></h2>
   <p>Jours de marché : <span id="marche-village">—</span></p>
   <p>Informations : <span id="motif-village">—</span></p>
 
-  <!-- CALENDRIER -->
   <div id="calendar-9cols" data-watermark="VILLAGE"></div>
 
-  <!-- SCRIPT -->
-  ./app.v3.js?v=20260311-9</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(r => r.unregister());
-    if (window.caches && caches.keys) {
-      caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
-    }
-    console.log("SW désinstallé + caches vidé");
-  });
-}
-</script>
-  
+  ./app.v3.js?v=20260311-10</script>
 </body>
 </html>
