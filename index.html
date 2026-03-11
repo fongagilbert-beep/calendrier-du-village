@@ -59,5 +59,17 @@
   <!-- SCRIPT -->
   ./app.v3.js?v=20260311-9</script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+    if (window.caches && caches.keys) {
+      caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+    }
+    console.log("SW désinstallé + caches vidé");
+  });
+}
+</script>
+  
 </body>
 </html>
