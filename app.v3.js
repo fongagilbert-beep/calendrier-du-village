@@ -44,7 +44,7 @@ function toISO(d){
 }
 function makeKey(iso, v){ return iso + '|' + v; }
 function daysInMonth(y,m){ return new Date(y, m+1, 0).getDate(); }
-function isSameDay(a,b){ return a.getFullYear()===b.getFullYear() &amp;&amp; a.getMonth()===b.getMonth() &amp;&amp; a.getDate()===b.getDate(); }
+function isSameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 function monthLabel(y,m){ return fmt.monthYear.format(new Date(y,m,1)); }
 function formatDayLabel(d){
   const wd = fmt.weekdayLong.format(d);
@@ -106,11 +106,11 @@ function resolveTraditionalAndTags(d, village){
 
   const jIdx = getJIndexForDate(d, vKey);
 
-  const isMarket    = jIdx &amp;&amp; listContainsJ(state.marketFromJ, vKey, jIdx);
-  const isForbidden = jIdx &amp;&amp; listContainsJ(state.forbiddenFromJ, vKey, jIdx);
+  const isMarket    = jIdx && listContainsJ(state.marketFromJ, vKey, jIdx);
+  const isForbidden = jIdx && listContainsJ(state.forbiddenFromJ, vKey, jIdx);
 
   let trad = rec?.trad;
-  if (!trad &amp;&amp; state.j8[vKey]){
+  if (!trad && state.j8[vKey]){
     const name = state.j8[vKey][String(jIdx)];
     if (name) trad = name;
   }
@@ -126,7 +126,7 @@ function cvUpdateData(entries){
     const k = makeKey(e.dateISO, vKey);
     const prev = state.dataMap.get(k) || { trad:'', tags:new Set() };
     const tags = new Set(prev.tags);
-    (e.tags || []).forEach(t =&gt; tags.add(String(t)));
+    (e.tags || []).forEach(t => tags.add(String(t)));
     state.dataMap.set(k, { trad: e.trad || prev.trad || '', tags });
   }
 }
@@ -178,7 +178,7 @@ function renderNineColumns(){
   const classes = ["mL","mC","mR"];
 
   const frag = document.createDocumentFragment();
-  months.forEach((start,i) =&gt; renderOneMonth(frag, start, state.village, classes[i]));
+  months.forEach((start,i) => renderOneMonth(frag, start, state.village, classes[i]));
   root.appendChild(frag);
 
   syncParamFields();
@@ -205,7 +205,7 @@ function renderOneMonth(root, start, village, place){
 
   const titles = document.createElement("div");
   titles.className = "month-head-row";
-  ["Date","Jour grégorien","Jour traditionnel"].forEach(t =&gt; {
+  ["Date","Jour grégorien","Jour traditionnel"].forEach(t => {
     const d = document.createElement("div");
     d.className = "col-title";
     d.textContent = t;
@@ -266,8 +266,8 @@ function shouldHideByFilter(x){
 }
 
 function wireNav(){
-  document.querySelectorAll(".nav-row [data-action]").forEach(btn =&gt; {
-    btn.addEventListener("click", () =&gt; {
+  document.querySelectorAll(".nav-row [data-action]").forEach(btn => {
+    btn.addEventListener("click", () => {
       if (!state || !state.anchor){
         console.error("wireNav: state.anchor manquant");
         return;
@@ -309,8 +309,8 @@ function wireParams(){
   const v = document.getElementById("param-village");
   const f = document.getElementById("param-filtre");
 
-  if (y &amp;&amp; m){
-    const up = () =&gt; {
+  if (y && m){
+    const up = () => {
       state.anchor = new Date(+y.value, take(m.value) - 1, 1);
       renderNineColumns();
     };
@@ -319,14 +319,14 @@ function wireParams(){
   }
 
   if (v){
-    v.addEventListener("change", e =&gt; {
+    v.addEventListener("change", e => {
       state.village = e.target.value.toUpperCase();
       renderNineColumns();
     });
   }
 
   if (f){
-    f.addEventListener("change", e =&gt; {
+    f.addEventListener("change", e => {
       const raw = e.target.value.toLowerCase();
       state.filtre =
         raw.includes("inter") ? "forbidden" :
@@ -348,7 +348,7 @@ function syncParamFields(){
 
 // ----------------------------- Init
 if (document.readyState === "loading"){
-  document.addEventListener("DOMContentLoaded", () =&gt; {
+  document.addEventListener("DOMContentLoaded", () => {
     wireNav();
     wireParams();
     loadDataJSON().then(renderNineColumns);
