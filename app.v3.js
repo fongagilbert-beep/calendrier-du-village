@@ -1,7 +1,5 @@
 // =====================================================
-//  CALENDRIER DU VILLAGE — VERSION MOBILE SAFE
-//  - Dépendances: data.v3.json (voir schéma proposé)
-//  - Dérivation marché/interdits depuis indices J1..J8
+// CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
 // =====================================================
 
 const today = new Date();
@@ -15,389 +13,298 @@ const state = {
   anchor: new Date(today.getFullYear(), today.getMonth(), 1),
   village: 'ALL',
   filtre: 'all',
-  dataMap: new Map(),      // carte dateISO|VILLAGE -> { trad, tags:Set }
+  dataMap: new Map(),
+
   roi: '—',
   motif: '—',
-  marche: [],              // texte lisible (facultatif pour affichage)
-  tmonths: {},             // { VILLAGE: { "1": "NomM1", ..., "12": "NomM12" } }
-  j8: {},                  // { VILLAGE: { "1":"NomJ1", ..., "8":"NomJ8" } }
-  j8Anchor: {},            // { VILLAGE: { date:"YYYY-MM-DD", j:1..8 } }
-  marketFromJ: {},         // { VILLAGE: [2,6] } (indices)
-  forbiddenFromJ: {}       // { VILLAGE: [3] }   (indices)
+  marche: [],
+
+  tmonths: {},
+  j8: {},
+  j8Anchor: {},
+
+  forbiddenNames: {},
+  marketNames: {},
+
+  forbiddenFromJ: {},
+  marketFromJ: {}
 };
 
-// ---------------------- Utils
-
-function normalizeName(s) {
+// ----------------------------- Utils
+function normalizeName(s){
   return String(s || '')
     .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // sans accents
-    .replace(/['’`´]/g, '') // apostrophes
-    .replace(/\s+/g, ' ')   // espaces multiples
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/['’`´]/g, '')
     .trim();
 }
 
-
-function toISO(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${day}`;
+function toISO(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function makeKey(dateISO, village) { return `${dateISO}|${village}`; }
-function daysInMonth(y, m) { return new Date(y, m+1, 0).getDate(); }
+function makeKey(iso, v){ return iso + '|' + v; }
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
 function isSameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 function monthLabel(y,m){ return fmt.monthYear.format(new Date(y,m,1)); }
-function formatDayLabel(d){ const wd = fmt.weekdayLong.format(d); return wd.charAt(0).toUpperCase()+wd.slice(1); }
+function formatDayLabel(d){ const wd=fmt.weekdayLong.format(d); return wd.charAt(0).toUpperCase()+wd.slice(1); }
 
-// ---------------------- J-cycle helpers
-function getAnchorForVillage(village){
-  const v = (village || 'ALL').toUpperCase();
-  return state.j8Anchor[v] || state.j8Anchor['ALL'] || null;
+// ----------------------------- J-cycle
+function buildJNameIndexForVillage(village){
+  const v = village.toUpperCase();
+  const map = state.j8[v] || state.j8["ALL"];
+  const out = {};
+  if (!map) return out;
+  for (let j=1; j<=8; j++){
+    const name = map[String(j)];
+    if (name) out[normalizeName(name)] = j;
+  }
+  return out;
 }
-// Calcule J (1..8) pour une date donnée en fonction de l’ancre {date, j}
+
+function computeIndicesFromNamesPerVillage(namesMap){
+  const out = {};
+  for (const [vill, arr] of Object.entries(namesMap || {})){
+    const v = vill.toUpperCase();
+    const ref = buildJNameIndexForVillage(v);
+    const list = [];
+    for (const nm of (arr || [])){
+      const norm = normalizeName(nm);
+      if (ref[norm]) list.push(ref[norm]);
+    }
+    out[v] = Array.from(new Set(list));
+  }
+  return out;
+}
+
+function getAnchorForVillage(v){
+  return state.j8Anchor[v] || state.j8Anchor["ALL"];
+}
+
 function getJIndexForDate(d, village){
   const anc = getAnchorForVillage(village);
-  if (!anc || !/^\d{4}-\d{2}-\d{2}$/.test(anc.date)) return null;
-  const start = new Date(anc.date + 'T00:00:00'); // local midnight
-  const dayDiff = Math.floor((d - start) / 86400000);
-  // Remettre dans le cycle 1..8 en partant de anc.j
-  const base = ((anc.j - 1 + ((dayDiff % 8) + 8) % 8) % 8) + 1;
-  return base; // 1..8
+  if (!anc) return null;
+  const start = new Date(anc.date+"T00:00:00");
+  const diff = Math.floor((d-start)/86400000);
+  return ((anc.j -1 + ((diff%8)+8)%8)%8)+1;
 }
 
-function listContainsJ(villageMap, village, jIdx){
-  const v = (village || 'ALL').toUpperCase();
-  const list = villageMap[v] || villageMap['ALL'] || [];
-  return Array.isArray(list) && list.includes(jIdx);
+function listContainsJ(map, village, j){
+  const arr = map[village] || map["ALL"] || [];
+  return arr.includes(j);
 }
 
-function getTraditionalMonthName(year, monthIndex, village) {
-  const vKey = (village || 'ALL').toUpperCase();
-  const map = state.tmonths[vKey] || state.tmonths['ALL'];
-  if (!map) return '—';
-  const oneBased = String(((monthIndex % 12) + 12) % 12 + 1);
-  return map[oneBased] || '—';
-}
-
-// Résout la donnée du jour courant (trad, tags) + dérivation marché/interdit par J
-function resolveTraditionalAndTags(d, village) {
+// ----------------------------- Résolution
+function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
-  const vKey = (village || 'ALL').toUpperCase();
-  let rec = state.dataMap.get(makeKey(iso, vKey));
-  if (!rec) rec = state.dataMap.get(makeKey(iso, 'ALL'));
+  const vKey = village.toUpperCase();
 
-  // J courant
+  let rec = state.dataMap.get(makeKey(iso, vKey));
+  if (!rec) rec = state.dataMap.get(makeKey(iso, "ALL"));
+
   const jIdx = getJIndexForDate(d, vKey);
 
-  // Dérivation marché/interdit via indices J
-  const derivedMarket   = (jIdx!=null) && listContainsJ(state.marketFromJ, vKey, jIdx);
-  const derivedForbidden= (jIdx!=null) && listContainsJ(state.forbiddenFromJ, vKey, jIdx);
+  const isMarket   = jIdx && listContainsJ(state.marketFromJ, vKey, jIdx);
+  const isForbidden = jIdx && listContainsJ(state.forbiddenFromJ, vKey, jIdx);
 
-  // Fusion: tags explicites (entries) priment, mais on “OR” avec dérivés
-  const tagMarket    = !!(rec?.tags?.has('market')   || derivedMarket);
-  const tagForbidden = !!(rec?.tags?.has('forbidden')|| derivedForbidden);
-
-  // Libellé J si pas de trad explicite
-  let tradLabel = rec?.trad;
-  if (!tradLabel && state.j8[vKey]) {
-    const nameJ = state.j8[vKey][String(jIdx || '')];
-    if (nameJ) tradLabel = nameJ;
+  let trad = rec?.trad;
+  if (!trad && state.j8[vKey]){
+    const name = state.j8[vKey][String(jIdx)];
+    if (name) trad = name;
   }
-  if (!tradLabel) tradLabel = 'Trad · Général';
+  if (!trad) trad = "Trad · Général";
 
-  return { trad: tradLabel, isMarket: tagMarket, isForbidden: tagForbidden };
+  return { trad, isMarket, isForbidden };
 }
 
-// ---------------------- Données
-function cvUpdateData(entries) {
-  for (const e of entries) {
-    const vKey = (e.village || 'ALL').toUpperCase();
+// ----------------------------- Données
+function cvUpdateData(entries){
+  for (const e of entries){
+    const vKey = (e.village || "ALL").toUpperCase();
     const k = makeKey(e.dateISO, vKey);
-    const prev = state.dataMap.get(k) || { trad: '', tags: new Set() };
-    const nextTags = new Set(prev.tags);
-    if (Array.isArray(e.tags)) for (const t of e.tags) nextTags.add(String(t));
-    state.dataMap.set(k, { trad: e.trad || prev.trad || '', tags: nextTags });
+    const prev = state.dataMap.get(k) || { trad:'', tags:new Set() };
+    const tags = new Set(prev.tags);
+    (e.tags||[]).forEach(t => tags.add(String(t)));
+    state.dataMap.set(k, { trad:e.trad || prev.trad || '', tags });
   }
-  renderNineColumns();
 }
 
-function cvSetWatermark(text) {
-  const el = document.getElementById('calendar-9cols');
-  if (el) el.setAttribute('data-watermark', (text || 'VILLAGE').toUpperCase());
-}
-
-function cvSetVillageMeta({ roi, marche, info }) {
-  if (roi) state.roi = roi;
-  if (Array.isArray(marche)) state.marche = marche; // lisible pour l’UI
-  if (info) state.motif = info;
-  renderVillageMeta();
-}
-
-// ---------------------- Chargement JSON
-async function loadDataJSON() {
+// ----------------------------- JSON Loader
+async function loadDataJSON(){
   try {
-    const res = await fetch('./data.v3.json?v=' + Date.now(), { cache: 'no-store' });
+    const res = await fetch("./data.v3.json?v="+Date.now(), {cache:"no-store"});
     if (!res.ok) return;
     const data = await res.json();
 
-    // Mois traditionnels 1..12
-    if (data?.traditional_months) {
-      const out = {};
-      for (const [villageRaw, months] of Object.entries(data.traditional_months)) {
-        const key = (villageRaw || 'ALL').toUpperCase();
-        out[key] = {};
-        for (const [k, name] of Object.entries(months || {})) {
-          const idx = Number(k);
-          const normalized = ((idx % 12) + 12) % 12; // 0..11
-          const oneBased = String(normalized + 1);   // 1..12
-          out[key][oneBased] = name || '—';
-        }
-      }
-      state.tmonths = out;
-    }
+    state.j8 = data.traditional_days_8 || {};
+    state.j8Anchor = data.traditional_days_anchor || {};
+    state.tmonths = data.traditional_months || {};
 
-    // J1..J8
-    if (data?.traditional_days_8) {
-      const out = {};
-      for (const [vill, map] of Object.entries(data.traditional_days_8)) {
-        const vKey = (vill || 'ALL').toUpperCase();
-        out[vKey] = {};
-        for (const [k, val] of Object.entries(map || {})) {
-          const n = Number(k);
-          if (n>=1 && n<=8) out[vKey][String(n)] = String(val||'').trim();
-        }
-      }
-      state.j8 = out;
-    }
+    state.forbiddenNames = data.forbidden_names || {};
+    state.marketNames = data.market_names || {};
 
-    // Anchor J
-    if (data?.traditional_days_anchor) {
-      const out = {};
-      for (const [vill, payload] of Object.entries(data.traditional_days_anchor)) {
-        const vKey = (vill || 'ALL').toUpperCase();
-        if (typeof payload === 'string') {
-          out[vKey] = { date: payload, j: 1 };
-        } else if (payload && /^\d{4}-\d{2}-\d{2}$/.test(String(payload.date))) {
-          const jj = Math.min(8, Math.max(1, parseInt(payload.j ?? 1, 10) || 1));
-          out[vKey] = { date: String(payload.date), j: jj };
-        }
-      }
-      state.j8Anchor = out;
-      // Option: synchroniser l’ancre du calendrier sur l’anchor global:
-      const g = out['ALL'];
-      if (g) state.anchor = new Date(g.date + 'T00:00:00');
-    }
+    state.forbiddenFromJ = computeIndicesFromNamesPerVillage(state.forbiddenNames);
+    state.marketFromJ = computeIndicesFromNamesPerVillage(state.marketNames);
 
-    // Dérivations J -> marché/interdit (indices)
-    if (data?.market_from_j) {
-      const out = {};
-      for (const [vill, list] of Object.entries(data.market_from_j)) {
-        const vKey = (vill || 'ALL').toUpperCase();
-        out[vKey] = (list || []).map(n => parseInt(n,10)).filter(n => n>=1 && n<=8);
-      }
-      state.marketFromJ = out;
-    }
-    if (data?.forbidden_from_j) {
-      const out = {};
-      for (const [vill, list] of Object.entries(data.forbidden_from_j)) {
-        const vKey = (vill || 'ALL').toUpperCase();
-        out[vKey] = (list || []).map(n => parseInt(n,10)).filter(n => n>=1 && n<=8);
-      }
-      state.forbiddenFromJ = out;
-    }
+    if (data.entries) cvUpdateData(data.entries);
 
-    // Entries spécifiques
-    if (Array.isArray(data?.entries)) cvUpdateData(data.entries);
+    state.roi = data.roi || '—';
+    state.motif = data.extra_info || '—';
+    state.marche = (data.market_info || []);
 
-    // Métadonnées lisibles pour l’UI
-    cvSetVillageMeta({
-      roi: data.roi,
-      marche: data.market_info || [],
-      info: data.extra_info
-    });
-
-  } catch (e) {
-    console.error('Erreur JSON:', e);
+  } catch(e){
+    console.error("Erreur JSON", e);
   }
 }
 
-// ---------------------- Filtre
-function getFilterValue(){
-  const sel = document.getElementById('param-filtre');
-  if (!sel) return 'all';
-  const raw = String(sel.value || sel.options[sel.selectedIndex]?.text || '').toLowerCase().trim();
-  if (raw.includes('interdit')) return 'forbidden';
-  if (raw.includes('march'))   return 'market';
-  return 'all';
-}
-function shouldHideByFilter({isForbidden, isMarket}){
-  const f = getFilterValue();
-  if (f === 'forbidden') return !isForbidden;
-  if (f === 'market')    return !isMarket;
-  return false;
-}
-
-// ---------------------- Rendu
-function renderNineColumns() {
-  const root = document.getElementById('calendar-9cols');
+// ----------------------------- Rendu
+function renderNineColumns(){
+  const root = document.getElementById("calendar-9cols");
   if (!root) return;
-  root.setAttribute('aria-busy','true');
-  root.innerHTML = '';
+  root.innerHTML = "";
+
+  const months = [
+    new Date(state.anchor.getFullYear(), state.anchor.getMonth()-1, 1),
+    new Date(state.anchor.getFullYear(), state.anchor.getMonth(), 1),
+    new Date(state.anchor.getFullYear(), state.anchor.getMonth()+1, 1)
+  ];
+  const classes = ["mL","mC","mR"];
 
   const frag = document.createDocumentFragment();
-  const months = [
-    new Date(state.anchor.getFullYear(), state.anchor.getMonth() - 1, 1),
-    new Date(state.anchor.getFullYear(), state.anchor.getMonth(), 1),
-    new Date(state.anchor.getFullYear(), state.anchor.getMonth() + 1, 1)
-  ];
-  const classes = ['mL','mC','mR'];
-
-  months.forEach((start, i) => renderOneMonth(frag, start, state.village, classes[i]));
-
+  months.forEach((start,i)=> renderOneMonth(frag,start,state.village,classes[i]));
   root.appendChild(frag);
+
   syncParamFields();
-  root.setAttribute('aria-busy','false');
   renderVillageMeta();
 }
 
-function renderOneMonth(root, startOfMonth, village, placeClass){
-  const y = startOfMonth.getFullYear();
-  const m = startOfMonth.getMonth();
-  const nDays = daysInMonth(y, m);
+function renderOneMonth(root, start, village, place){
+  const y=start.getFullYear(), m=start.getMonth();
+  const nDays = daysInMonth(y,m);
 
-  const wrap = document.createElement('div');
-  wrap.className = 'month ' + placeClass;
-  wrap.setAttribute('role','rowgroup');
+  const wrap = document.createElement("div");
+  wrap.className = "month " + place;
 
-  const header = document.createElement('div');
-  header.className = 'month-header';
-  const tradMonth = getTraditionalMonthName(y, m, village);
-  header.textContent = `${monthLabel(y,m)} — ${tradMonth}` + (placeClass==='mC' ? ' (M)' : '');
-  wrap.setAttribute('data-watermark', village);
-  wrap.appendChild(header);
-
-  const head = document.createElement('div');
-  head.className = 'month-head-row';
-  for (const t of ['Date','Jour grégorien','Jour traditionnel']) {
-    const el = document.createElement('div');
-    el.className = 'col-title';
-    el.textContent = t;
-    head.appendChild(el);
-  }
+  const head = document.createElement("div");
+  head.className = "month-header";
+  const tradMonth = state.tmonths[village.toUpperCase()]?.[String(m+1)]
+    || state.tmonths["ALL"]?.[String(m+1)]
+    || "—";
+  head.textContent = monthLabel(y,m) + " — " + tradMonth;
   wrap.appendChild(head);
 
-  const f = document.createDocumentFragment();
+  const titles = document.createElement("div");
+  titles.className = "month-head-row";
+  ["Date","Jour grégorien","Jour traditionnel"].forEach(t=>{
+    const d=document.createElement("div");
+    d.className="col-title";
+    d.textContent=t;
+    titles.appendChild(d);
+  });
+  wrap.appendChild(titles);
 
-  for (let d = 1; d <= nDays; d++){
-    const cur = new Date(y, m, d);
-    const { trad, isForbidden, isMarket } = resolveTraditionalAndTags(cur, village);
+  const frag = document.createDocumentFragment();
 
-    const row = document.createElement('div');
-    row.className = 'row'
-      + (isSameDay(cur, today) ? ' today' : '')
-      + (isForbidden ? ' forbidden' : '')
-      + (isMarket ? ' market' : '');
+  for (let d=1; d<=nDays; d++){
+    const cur=new Date(y,m,d);
+    const {trad,isMarket,isForbidden}=resolveTraditionalAndTags(cur,village);
 
-    if (shouldHideByFilter({ isForbidden, isMarket })) row.classList.add('filtered-out');
+    const row=document.createElement("div");
+    row.className="row"
+      + (isSameDay(cur,today)?" today":"")
+      + (isMarket?" market":"")
+      + (isForbidden?" forbidden":"");
 
-    const zebra = (d % 2 === 0);
+    if (shouldHideByFilter({isMarket,isForbidden})) row.classList.add("filtered-out");
 
-    const c1 = document.createElement('div');
-    c1.className = 'cell date' + (zebra ? ' zebra' : '');
-    c1.textContent = String(d);
+    const cell1=document.createElement("div");
+    cell1.className="cell date";
+    cell1.textContent=d;
 
-    const c2 = document.createElement('div');
-    c2.className = 'cell greg' + (zebra ? ' zebra' : '');
-    const lbl = formatDayLabel(cur);
-    c2.textContent = lbl;
-    c2.setAttribute('data-day', lbl.toLowerCase());
+    const cell2=document.createElement("div");
+    cell2.className="cell greg";
+    cell2.textContent=formatDayLabel(cur);
 
-    const c3 = document.createElement('div');
-    c3.className = 'cell tradi' + (zebra ? ' zebra' : '');
-    c3.textContent = trad;
+    const cell3=document.createElement("div");
+    cell3.className="cell tradi";
+    cell3.textContent=trad;
 
-    row.appendChild(c1); row.appendChild(c2); row.appendChild(c3);
-    f.appendChild(row);
+    row.appendChild(cell1);
+    row.appendChild(cell2);
+    row.appendChild(cell3);
+    frag.appendChild(row);
   }
 
-  wrap.appendChild(f);
+  wrap.appendChild(frag);
   root.appendChild(wrap);
 }
 
-// ---------------------- Métadonnées village
 function renderVillageMeta(){
-  const r = document.getElementById('roi-village');
-  const m = document.getElementById('motif-village');
-  const mk = document.getElementById('marche-village');
-  if (r) r.textContent = state.roi || '—';
-  if (m) m.textContent = state.motif || '—';
-  if (mk) mk.textContent = (state.marche || []).join(', ') || '—';
+  document.getElementById("roi-village").textContent = state.roi || "—";
+  document.getElementById("marche-village").textContent = state.marche.join(", ") || "—";
+  document.getElementById("motif-village").textContent = state.motif || "—";
 }
 
-// ---------------------- Navigation & paramètres
+// ----------------------------- Navigation & paramètres
+function shouldHideByFilter(x){
+  const f = state.filtre;
+  if (f==="market") return !x.isMarket;
+  if (f==="forbidden") return !x.isForbidden;
+  return false;
+}
+
 function wireNav(){
-  document.querySelectorAll('.nav-row [data-action]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const a = btn.dataset.action;
-      if (a==='prev3') state.anchor = new Date(state.anchor.getFullYear(), state.anchor.getMonth()-3, 1);
-      if (a==='next3') state.anchor = new Date(state.anchor.getFullYear(), state.anchor.getMonth()+3, 1);
-      if (a==='prevY') state.anchor = new Date(state.anchor.getFullYear()-1, state.anchor.getMonth(), 1);
-      if (a==='nextY') state.anchor = new Date(state.anchor.getFullYear()+1, state.anchor.getMonth(), 1);
-      if (a==='today') state.anchor = new Date(today.getFullYear(), today.getMonth(), 1);
-      syncParamFields();
+  document.querySelectorAll(".nav-row [data-action]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const a=btn.dataset.action;
+      if(a==="prev3") state.anchor=new Date(state.anchor.getFullYear(),state.anchor.getMonth()-3,1);
+      if(a==="next3") state.anchor=new Date(state.anchor.getFullYear(),state.anchor.getMonth()+3,1);
+      if(a==="prevY") state.anchor=new Date(state.anchor.getFullYear()-1,state.anchor.getMonth(),1);
+      if(a==="nextY") state.anchor=new Date(state.anchor.getFullYear()+1,state.anchor.getMonth(),1);
+      if(a==="today") state.anchor=new Date(today.getFullYear(),today.getMonth(),1);
       renderNineColumns();
     });
   });
 }
 
 function wireParams(){
-  const y = document.getElementById('param-annee');
-  const m = document.getElementById('param-mois');
-  const v = document.getElementById('param-village');
-  const f = document.getElementById('param-filtre');
+  const y=document.getElementById("param-annee");
+  const m=document.getElementById("param-mois");
+  const v=document.getElementById("param-village");
+  const f=document.getElementById("param-filtre");
 
-  if (y && m) {
-    const update = () => {
-      state.anchor = new Date(Number(y.value)||today.getFullYear(), (Number(m.value)||1)-1, 1);
-      renderNineColumns();
-    };
-    y.addEventListener('change', update);
-    m.addEventListener('change', update);
+  if(y&&m){
+    const up=()=>{ state.anchor=new Date(+y.value,take(m.value)-1,1); renderNineColumns(); };
+    y.addEventListener("change",up);
+    m.addEventListener("change",up);
   }
-  if (v) {
-    v.addEventListener('change', e => {
-      state.village = (e.target.value || 'ALL').toUpperCase();
-      const label = e.target.options[e.target.selectedIndex]?.text || e.target.value;
-      cvSetWatermark(label);
+  if(v){
+    v.addEventListener("change", e=>{
+      state.village=e.target.value.toUpperCase();
       renderNineColumns();
     });
   }
-  if (f) {
-    f.addEventListener('change', e => {
-      const raw = String(e.target.value || 'all').toLowerCase();
+  if(f){
+    f.addEventListener("change",e=>{
+      const raw=e.target.value.toLowerCase();
       state.filtre =
-        (raw==='tous') ? 'all' :
-        (raw==='marché' || raw==='marche') ? 'market' :
-        (raw==='interdits' || raw==='interdit') ? 'forbidden' :
-        raw;
+        raw.includes("inter") ? "forbidden" :
+        raw.includes("march") ? "market" :
+        "all";
       renderNineColumns();
     });
   }
 }
+
+function take(x){ return Number(x)||1; }
+
 function syncParamFields(){
-  const y = document.getElementById('param-annee');
-  const m = document.getElementById('param-mois');
-  if (y) y.value = state.anchor.getFullYear();
-  if (m) m.value = state.anchor.getMonth()+1;
+  const y=document.getElementById("param-annee");
+  const m=document.getElementById("param-mois");
+  if(y) y.value=state.anchor.getFullYear();
+  if(m) m.value=state.anchor.getMonth()+1;
 }
 
-// ---------------------- Init
+// ----------------------------- Init
 wireNav();
 wireParams();
-loadDataJSON().then(() => renderNineColumns());
-
-// Exposition API
-window.cvUpdateData = cvUpdateData;
-window.cvSetWatermark = cvSetWatermark;
-window.cvSetVillageMeta = cvSetVillageMeta;
+loadDataJSON().then(renderNineColumns);
