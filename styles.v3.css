@@ -327,5 +327,28 @@ body{
   font-size: 1.05rem; opacity: .9;
 }
 
+/* --- Fond jaune texturé type tissu --- */
+:root{
+  --fabric-yellow: #efe2b6; /* ajuste le jaune ici */
+}
+
+body{
+  background-color: var(--fabric-yellow);
+  background-image:
+    /* grain léger */
+    radial-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
+    /* trame oblique douce */
+    repeating-linear-gradient(45deg,
+      rgba(255,255,255,.05) 0 4px,
+      rgba(0,0,0,.05) 4px 8px),
+    /* voile subtil pour la profondeur */
+    linear-gradient(0deg, rgba(255,255,255,.04), rgba(0,0,0,.04));
+  background-size:
+    3px 3px,
+    10px 10px,
+    100% 100%;
+  background-blend-mode: multiply;
+}
+
 
 
