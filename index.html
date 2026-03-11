@@ -61,6 +61,42 @@
 
   <!-- SCRIPT -->
   <script src="./app.v3.js?v=fix-entities" defer></script>
+<!-- SCRIPT principal -->
+  ./app.v3.js?v=fix-entities</script>
 
+  <!-- ========= CONTournement provisoire : dés-échappe app.v3.js et l’exécute ========= -->
+  <script>
+  (async ()=>{
+    // 1) On récupère le JS tel qu’il est servi (avec &amp; etc.)
+    const res = await fetch('./app.v3.js?v=bypass_'+Date.now());
+    const txt = await res.text();
+
+    // 2) On dés-échappe TOUTES les entités HTML courantes dans l’ordre sûr
+    let de = txt;
+    de = de.replaceAll('&amp;amp;', '&');   // &amp;amp;  -> &
+    de = de.replaceAll('&amp;lt;',  '<');   // &amp;lt;   -> <
+    de = de.replaceAll('&amp;gt;',  '>');   // &amp;gt;   -> >
+    de = de.replaceAll('&amp;quot;','"');   // &amp;quot; -> "
+    de = de.replaceAll('&#39;',     '\'');  // &#39;     -> '
+    // Par sécurité : si l’éditeur a fait un 2ème passage
+    de = de.replaceAll('&amp;', '&');
+
+    // 3) On exécute la version "dés-échappée" via un blob URL
+    const blob = new Blob([de], {type:'text/javascript'});
+    const url  = URL.createObjectURL(blob);
+    const s    = document.createElement('script');
+    s.src = url; s.defer = true;
+    document.head.appendChild(s);
+
+    // 4) (Optionnel) Bouton pour télécharger la version corrigée et la remettre dans le dépôt
+    const saveBtn = document.createElement('a');
+    saveBtn.textContent = 'Télécharger app.v3.fixed.js';
+    saveBtn.style.cssText = 'position:fixed;right:10px;bottom:10px;z-index:9999;background:#1a365d;color:#fff;padding:.5rem .7rem;border-radius:8px;text-decoration:none;font-weight:700;font-family:system-ui';
+    saveBtn.href = URL.createObjectURL(new Blob([de], {type:'application/javascript'}));
+    saveBtn.download = 'app.v3.fixed.js';
+    document.body.appendChild(saveBtn);
+  })();
+  </script>
+  <!-- ========= FIN du contournement ========= -->
 </body>
 </html>
