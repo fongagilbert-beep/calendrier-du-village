@@ -4,34 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendrier du Village</title>
-  <link rel="stylesheet" href="./styles.v3body>
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="./styles.vdy>
 
   <!-- BANDEAU BLEU TITRE -->
-  <div class="site-header" 
-       style="background:#004aad;color:#fff;padding:1.2rem;text-align:center;font-size:2rem;font-weight:800;">
-    Calendrier du Village
+  <div class="site-header"
+       style="background:#004aad;color:#fff;padding:1.2rem;
+              text-align:center;font-size:2rem;font-weight:800;">
+      Calendrier du Village
   </div>
 
-<!-- BOUTONS DE NAVIGATION -->
-<div class="nav-row" style="
-  display:flex;
-  justify-content:center;
-  gap:0.5rem;
-  background:#e9f1ff;
-  padding:0.8rem;
-  margin-top:1rem;
-">
-  prev3-3 mois</button>
-  next3+3 mois</button>
-  todayAujourd’hui</button>
-  prevY-1 an</button>
-  nextY+1 an</button>
-</div>
-  
-
+  <!-- BOUTONS DE NAVIGATION -->
+  <div class="nav-row" style="
+      display:flex;
+      justify-content:center;
+      gap:0.5rem;
+      background:#e9f1ff;
+      padding:0.8rem;
+      margin-top:1rem;">
+      
+      <button id="btn-prev3"  class="btn-nav">‹ 3 mois</button>
+      <button id="btn-next3"  class="btn-nav">3 mois ›</button>
+      <button id="btn-today"  class="btn-nav">Aujourd’hui</button>
+      <button id="btn-prevY"  class="btn-nav">‹ 1 an</button>
+      <button id="btn-nextY"  class="btn-nav">1 an ›</button>
+  </div>
 
   <!-- PARAMÈTRES -->
-  <div class="params">
+  <div class="params" style="margin:1rem;">
     <label>Année (M) :
       <input id="param-annee" type="number" min="1900" max="2500">
     </label>
@@ -62,9 +63,6 @@
   <h2>Roi : <span id="roi-village">—</span></h2>
   <p>Jours de marché : <span id="marche-village">—</span></p>
   <p>Informations : <span id="motif-village">—</span></p>
-
-  <!-- SCRIPT PRINCIPAL -->
-  <link rel="stylesheet" href="./styles.v3.css?v=20260311">
 
 </body>
 </html>
