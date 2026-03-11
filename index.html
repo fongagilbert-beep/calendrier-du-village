@@ -8,11 +8,26 @@
 </head>
 <body>
 
-  <!-- BANDEAU BLEU TITRE -->
-  <div class="site-header">Calendrier du Village</div>
+ <body>
 
-  <!-- NAV (bleue) SOUS LE TITRE -->
-  <div class="nav-row">
+  <!-- BANDEAU BLEU TITRE -->
+  <div class="site-header" style="
+      background:#004aad;
+      color:#fff;
+      padding:1.2rem;
+      text-align:center;
+      font-size:2rem;
+      font-weight:800;">
+    Calendrier du Village
+  </div>
+
+  <!-- BOUTONS DE NAVIGATION -->
+  <div class="nav-row" style="
+      display:flex;
+      justify-content:center;
+      gap:0.5rem;
+      background:#e9f1ff;
+      padding:0.8rem;">
     -3 mois</button>
     +3 mois</button>
     todayAujourd’hui</button>
@@ -21,30 +36,35 @@
   </div>
 
   <!-- PARAMÈTRES -->
-  <div class="params">
+  <div class="params" style="
+      display:flex;
+      gap:1rem;
+      justify-content:center;
+      align-items:center;
+      padding:1rem;
+      background:#fff;">
     <label>Année (M) :
-      <input id="param-annee" type="number" min="1900" max="2500">
+      <input id="param-annee" type="number" min="1900" max="2500" style="padding:0.3rem;text-align:center;">
     </label>
 
     <label>Mois (M) :
-      <input id="param-mois" type="number" min="1" max="12">
+      <input id="param-mois" type="number" min="1" max="12" style="padding:0.3rem;text-align:center;">
     </label>
 
     <label>Village :
-      <select id="param-village">
+      <select id="param-village" style="padding:0.3rem;">
         <option value="ALL">Tous</option>
       </select>
     </label>
 
     <label>Filtre :
-      <select id="param-filtre">
+      <select id="param-filtre" style="padding:0.3rem;">
         <option value="tous">Tous</option>
         <option value="marché">Marchés</option>
         <option value="interdits">Interdits</option>
       </select>
     </label>
   </div>
-
   <!-- CALENDRIER -->
   <div id="calendar-9cols"></div>
 
