@@ -43,10 +43,13 @@ function toISO(d){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function makeKey(iso, v){ return iso + '|' + v; }
-function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+function daysInMonth(y,m){ return new Date(y, m+1, 0).getDate(); }
 function isSameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 function monthLabel(y,m){ return fmt.monthYear.format(new Date(y,m,1)); }
-function formatDayLabel(d){ const wd=fmt.weekdayLong.format(d); return wd.charAt(0).toUpperCase()+wd.slice(1); }
+function formatDayLabel(d){
+  const wd = fmt.weekdayLong.format(d);
+  return wd.charAt(0).toUpperCase() + wd.slice(1);
+}
 
 // ----------------------------- J-cycle
 function buildJNameIndexForVillage(village){
@@ -83,9 +86,9 @@ function getAnchorForVillage(v){
 function getJIndexForDate(d, village){
   const anc = getAnchorForVillage(village);
   if (!anc) return null;
-  const start = new Date(anc.date+"T00:00:00");
-  const diff = Math.floor((d-start)/86400000);
-  return ((anc.j -1 + ((diff%8)+8)%8)%8)+1;
+  const start = new Date(anc.date + "T00:00:00");
+  const diff = Math.floor((d - start) / 86400000);
+  return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1;
 }
 
 function listContainsJ(map, village, j){
@@ -103,7 +106,7 @@ function resolveTraditionalAndTags(d, village){
 
   const jIdx = getJIndexForDate(d, vKey);
 
-  const isMarket   = jIdx && listContainsJ(state.marketFromJ, vKey, jIdx);
+  const isMarket    = jIdx && listContainsJ(state.marketFromJ, vKey, jIdx);
   const isForbidden = jIdx && listContainsJ(state.forbiddenFromJ, vKey, jIdx);
 
   let trad = rec?.trad;
@@ -123,32 +126,32 @@ function cvUpdateData(entries){
     const k = makeKey(e.dateISO, vKey);
     const prev = state.dataMap.get(k) || { trad:'', tags:new Set() };
     const tags = new Set(prev.tags);
-    (e.tags||[]).forEach(t => tags.add(String(t)));
-    state.dataMap.set(k, { trad:e.trad || prev.trad || '', tags });
+    (e.tags || []).forEach(t => tags.add(String(t)));
+    state.dataMap.set(k, { trad: e.trad || prev.trad || '', tags });
   }
 }
 
 // ----------------------------- JSON Loader
 async function loadDataJSON(){
   try {
-    const res = await fetch("./data.v3.json?v="+Date.now(), {cache:"no-store"});
+    const res = await fetch("./data.v3.json?v=" + Date.now(), { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
 
-    state.j8 = data.traditional_days_8 || {};
+    state.j8       = data.traditional_days_8      || {};
     state.j8Anchor = data.traditional_days_anchor || {};
-    state.tmonths = data.traditional_months || {};
+    state.tmonths  = data.traditional_months      || {};
 
     state.forbiddenNames = data.forbidden_names || {};
-    state.marketNames = data.market_names || {};
+    state.marketNames    = data.market_names    || {};
 
     state.forbiddenFromJ = computeIndicesFromNamesPerVillage(state.forbiddenNames);
-    state.marketFromJ = computeIndicesFromNamesPerVillage(state.marketNames);
+    state.marketFromJ    = computeIndicesFromNamesPerVillage(state.marketNames);
 
     if (data.entries) cvUpdateData(data.entries);
 
-    state.roi = data.roi || '—';
-    state.motif = data.extra_info || '—';
+    state.roi    = data.roi        || '—';
+    state.motif  = data.extra_info || '—';
     state.marche = (data.market_info || []);
 
   } catch(e){
@@ -163,14 +166,14 @@ function renderNineColumns(){
   root.innerHTML = "";
 
   const months = [
-    new Date(state.anchor.getFullYear(), state.anchor.getMonth()-1, 1),
-    new Date(state.anchor.getFullYear(), state.anchor.getMonth(), 1),
-    new Date(state.anchor.getFullYear(), state.anchor.getMonth()+1, 1)
+    new Date(state.anchor.getFullYear(), state.anchor.getMonth() - 1, 1),
+    new Date(state.anchor.getFullYear(), state.anchor.getMonth(),     1),
+    new Date(state.anchor.getFullYear(), state.anchor.getMonth() + 1, 1)
   ];
   const classes = ["mL","mC","mR"];
 
   const frag = document.createDocumentFragment();
-  months.forEach((start,i)=> renderOneMonth(frag,start,state.village,classes[i]));
+  months.forEach((start,i) => renderOneMonth(frag, start, state.village, classes[i]));
   root.appendChild(frag);
 
   syncParamFields();
@@ -178,8 +181,8 @@ function renderNineColumns(){
 }
 
 function renderOneMonth(root, start, village, place){
-  const y=start.getFullYear(), m=start.getMonth();
-  const nDays = daysInMonth(y,m);
+  const y = start.getFullYear(), m = start.getMonth();
+  const nDays = daysInMonth(y, m);
 
   const wrap = document.createElement("div");
   wrap.className = "month " + place;
@@ -188,17 +191,17 @@ function renderOneMonth(root, start, village, place){
   const head = document.createElement("div");
   head.className = "month-header";
   const tradMonth = state.tmonths[village.toUpperCase()]?.[String(m+1)]
-    || state.tmonths["ALL"]?.[String(m+1)]
-    || "—";
-  head.textContent = monthLabel(y,m) + " — " + tradMonth;
+                 || state.tmonths["ALL"]?.[String(m+1)]
+                 || "—";
+  head.textContent = monthLabel(y, m) + " — " + tradMonth;
   wrap.appendChild(head);
 
   const titles = document.createElement("div");
   titles.className = "month-head-row";
-  ["Date","Jour grégorien","Jour traditionnel"].forEach(t=>{
-    const d=document.createElement("div");
-    d.className="col-title";
-    d.textContent=t;
+  ["Date","Jour grégorien","Jour traditionnel"].forEach(t => {
+    const d = document.createElement("div");
+    d.className = "col-title";
+    d.textContent = t;
     titles.appendChild(d);
   });
   wrap.appendChild(titles);
@@ -206,33 +209,30 @@ function renderOneMonth(root, start, village, place){
   const frag = document.createDocumentFragment();
 
   for (let d=1; d<=nDays; d++){
-    const cur=new Date(y,m,d);
-    const {trad,isMarket,isForbidden}=resolveTraditionalAndTags(cur,village);
+    const cur = new Date(y, m, d);
+    const { trad, isMarket, isForbidden } = resolveTraditionalAndTags(cur, village);
 
-    const row=document.createElement("div");
-    row.className="row"
-      + (isSameDay(cur,today)?" today":"")
-      + (isMarket?" market":"")
-      + (isForbidden?" forbidden":"");
+    const row = document.createElement("div");
+    row.className = "row"
+      + (isSameDay(cur, today) ? " today" : "")
+      + (isMarket ? " market" : "")
+      + (isForbidden ? " forbidden" : "");
 
-    if (shouldHideByFilter({isMarket,isForbidden})) row.classList.add("filtered-out");
+    if (shouldHideByFilter({ isMarket, isForbidden })) row.classList.add("filtered-out");
 
-    const cell1=document.createElement("div");
-    cell1.className="cell date";
-    cell1.textContent=d;
+    const cell1 = document.createElement("div");
+    cell1.className = "cell date";
+    cell1.textContent = d;
 
-    const cell2=document.createElement("div");
-  cell2.className="cell greg";
-- cell2.textContent=formatDayLabel(cur);
-  + const wd = fmt.weekdayLong.format(cur).toLowerCase(); // "lundi"... "dimanche"
-  + cell2.setAttribute("data-day", wd);
-  + cell2.textContent = wd.charAt(0).toUpperCase() + wd.slice(1);
-    
-    const cell3=document.createElement("div");
-    const cell3=document.createElement("div");
-- cell3.className="cell tradi";
-+ cell3.className="cell trad";
-  cell3.textContent=trad;
+    const cell2 = document.createElement("div");
+    cell2.className = "cell greg";
+    const wd = fmt.weekdayLong.format(cur).toLowerCase(); // "lundi"…"dimanche"
+    cell2.setAttribute("data-day", wd);
+    cell2.textContent = wd.charAt(0).toUpperCase() + wd.slice(1);
+
+    const cell3 = document.createElement("div");
+    cell3.className = "cell trad";
+    cell3.textContent = trad;
 
     row.appendChild(cell1);
     row.appendChild(cell2);
@@ -245,22 +245,22 @@ function renderOneMonth(root, start, village, place){
 }
 
 function renderVillageMeta(){
-  document.getElementById("roi-village").textContent = state.roi || "—";
-  document.getElementById("marche-village").textContent = state.marche.join(", ") || "—";
-  document.getElementById("motif-village").textContent = state.motif || "—";
+  document.getElementById("roi-village").textContent     = state.roi || "—";
+  document.getElementById("marche-village").textContent  = (state.marche || []).join(", ") || "—";
+  document.getElementById("motif-village").textContent   = state.motif || "—";
 }
 
 // ----------------------------- Navigation & paramètres
 function shouldHideByFilter(x){
   const f = state.filtre;
-  if (f==="market") return !x.isMarket;
-  if (f==="forbidden") return !x.isForbidden;
+  if (f === "market")   return !x.isMarket;
+  if (f === "forbidden")return !x.isForbidden;
   return false;
 }
 
 function wireNav(){
-  document.querySelectorAll(".nav-row [data-action]").forEach(btn=>{
-    btn.addEventListener("click",()=>{
+  document.querySelectorAll(".nav-row [data-action]").forEach(btn => {
+    btn.addEventListener("click", () => {
       if (!state || !state.anchor){
         console.error("wireNav: state.anchor manquant");
         return;
@@ -286,7 +286,7 @@ function wireNav(){
         state.anchor = new Date(anchor.getFullYear() + 1, anchor.getMonth(), 1);
 
       if (a === "today") {
-        const now = new Date();       // ⬅️ important : création locale, aucun conflit
+        const now = new Date();
         state.anchor = new Date(now.getFullYear(), now.getMonth(), 1);
       }
 
@@ -296,7 +296,6 @@ function wireNav(){
   });
 }
 
-
 function wireParams(){
   const y = document.getElementById("param-annee");
   const m = document.getElementById("param-mois");
@@ -304,7 +303,7 @@ function wireParams(){
   const f = document.getElementById("param-filtre");
 
   if (y && m){
-    const up = ()=>{
+    const up = () => {
       state.anchor = new Date(+y.value, take(m.value) - 1, 1);
       renderNineColumns();
     };
@@ -313,14 +312,14 @@ function wireParams(){
   }
 
   if (v){
-    v.addEventListener("change", e=>{
+    v.addEventListener("change", e => {
       state.village = e.target.value.toUpperCase();
       renderNineColumns();
     });
   }
 
   if (f){
-    f.addEventListener("change", e=>{
+    f.addEventListener("change", e => {
       const raw = e.target.value.toLowerCase();
       state.filtre =
         raw.includes("inter") ? "forbidden" :
@@ -331,9 +330,7 @@ function wireParams(){
   }
 }
 
-
 function take(x){ return Number(x) || 1; }
-
 
 function syncParamFields(){
   const y = document.getElementById("param-annee");
@@ -342,10 +339,9 @@ function syncParamFields(){
   if (m) m.value = state.anchor.getMonth() + 1;
 }
 
-
 // ----------------------------- Init
 if (document.readyState === "loading"){
-  document.addEventListener("DOMContentLoaded", ()=>{
+  document.addEventListener("DOMContentLoaded", () => {
     wireNav();
     wireParams();
     loadDataJSON().then(renderNineColumns);
