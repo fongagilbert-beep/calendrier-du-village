@@ -6,10 +6,8 @@
   <title>Calendrier du Village</title>
 
   <!-- CSS -->
-  ./styles.v3.css?v=20260311-8
-
-  <!-- Manifest + PWA -->
-  <link rel="manifest" href="./manifest.v3theme-color" content="#008000">
+  <link rel="stylesheet" href="./styles.v3.css?v=202603/manifest.v3.webmanifest
+  <meta name="theme-color" content="#008000">
 </head>
 
 <body>
@@ -41,7 +39,7 @@
     </label>
   </div>
 
-  <!-- NAVIGATION (version correcte, comme sur PC) -->
+  <!-- NAVIGATION -->
   <div class="nav-row">
     prev3◀ -3 mois</button>
     next3+3 mois ▶</button>
@@ -58,20 +56,8 @@
   <!-- CALENDRIER -->
   <div id="calendar-9cols" data-watermark="VILLAGE"></div>
 
-  <!-- SCRIPT PRINCIPAL -->
-  </app.v3.js?v=20260311-8</script>
-
-  <!-- Debug (facultatif) -->
-  <!--
-  <div id="debug" style="position:fixed;left:0;bottom:0;width:100%;max-height:45%;
-    background:rgba(10,10,10,.88);color:#0f0;font:12px monospace;
-    padding:8px;overflow:auto;z-index:99999;white-space:pre-wrap;"></div>
-  <script>
-    const box = document.getElementById('debug');
-    function d(msg){ box.textContent += msg + "\n"; }
-    window.onerror = (m,u,l,c) => d("ERR: " + m + " @ " + u + ":" + l);
-  </script>
-  -->
+  <!-- SCRIPT -->
+  ./app.v3.js?v=20260311-9</script>
 
 </body>
 </html>
