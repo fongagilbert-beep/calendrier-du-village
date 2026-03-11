@@ -250,6 +250,14 @@ function renderVillageMeta(){
   document.getElementById("motif-village").textContent   = state.motif || "—";
 }
 
+function watermarkForVillage(v){
+  return String(v || "ALL").toUpperCase(); // nom du village en MAJUSCULE
+}
+
+// ... dans renderOneMonth(...)
+wrap.setAttribute('data-watermark', watermarkForVillage(village));
+
+
 // ----------------------------- Navigation & paramètres
 function shouldHideByFilter(x){
   const f = state.filtre;
