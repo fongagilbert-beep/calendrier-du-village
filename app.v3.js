@@ -253,59 +253,132 @@ function shouldHideByFilter(x){
   return false;
 }
 
+// --- Variables globales attendues ---
+// Assure-toi que "state" existe globalement
+// Exemple minimal si besoin :
+// const state = state || {};
+// state.anchor = state.anchor || new Date();
+
+const today = new Date();
+
+// Utilitaire robuste pour convertir vers nombre (mois/année)
+function take(x){ return Number(x) || 1; }
+
+// Attache les clics sur les 5 boutons de navigation
 function wireNav(){
-  document.querySelectorAll(".nav-row [data-action]").forEach(btn=>{
+  const buttons = document.querySelectorAll(".nav-row [data-action]");
+  if (!buttons.length){
+    console.warn("wireNav: aucun bouton trouvé avec [data-action] dans .nav-row");
+  }
+
+  buttons.forEach(btn=>{
     btn.addEventListener("click",()=>{
-      const a=btn.dataset.action;
-      if(a==="prev3") state.anchor=new Date(state.anchor.getFullYear(),state.anchor.getMonth()-3,1);
-      if(a==="next3") state.anchor=new Date(state.anchor.getFullYear(),state.anchor.getMonth()+3,1);
-      if(a==="prevY") state.anchor=new Date(state.anchor.getFullYear()-1,state.anchor.getMonth(),1);
-      if(a==="nextY") state.anchor=new Date(state.anchor.getFullYear()+1,state.anchor.getMonth(),1);
-      if(a==="today") state.anchor=new Date(today.getFullYear(),today.getMonth(),1);
+      if (!state || !state.anchor){
+        console.error("wireNav: 'state' ou 'state.anchor' manquant");
+        return;
+      }
+      if (typeof renderNineColumns !== "function"){
+        console.error("wireNav: 'renderNineColumns' n'est pas défini");
+        return;
+      }
+
+      const a = btn.dataset.action;
+      const anchor = state.anchor;
+
+      if (a === "prev3") state.anchor = new Date(anchor.getFullYear(), anchor.getMonth() - 3, 1);
+      if (a === "next3") state.anchor = new Date(anchor.getFullYear(), anchor.getMonth() + 3, 1);
+      if (a === "prevY") state.anchor = new Date(anchor.getFullYear() - 1, anchor.getMonth(), 1);
+      if (a === "nextY") state.anchor = new Date(anchor.getFullYear() + 1, anchor.getMonth(), 1);
+      if (a === "today") state.anchor = new Date(today.getFullYear(), today.getMonth(), 1);
+
       renderNineColumns();
+      syncParamFields(); // tenir les champs en phase après navigation
     });
   });
 }
 
+// Attache les paramètres (année, mois, village, filtre)
 function wireParams(){
-  const y=document.getElementById("param-annee");
-  const m=document.getElementById("param-mois");
-  const v=document.getElementById("param-village");
-  const f=document.getElementById("param-filtre");
+  const y = document.getElementById("param-annee");
+  const m = document.getElementById("param-mois");
+  const v = document.getElementById("param-village");
+  const f = document.getElementById("param-filtre");
 
-  if(y&&m){
-    const up=()=>{ state.anchor=new Date(+y.value,take(m.value)-1,1); renderNineColumns(); };
-    y.addEventListener("change",up);
-    m.addEventListener("change",up);
+  if (y && m){
+    const up = ()=>{
+      if (!state) return;
+      state.anchor = new Date(+y.value, take(m.value) - 1, 1);
+      if (typeof renderNineColumns === "function") renderNineColumns();
+    };
+    y.addEventListener("change", up);
+    m.addEventListener("change", up);
   }
-  if(v){
+
+  if (v){
     v.addEventListener("change", e=>{
-      state.village=e.target.value.toUpperCase();
-      renderNineColumns();
+      if (!state) return;
+      state.village = String(e.target.value || "").toUpperCase();
+      if (typeof renderNineColumns === "function") renderNineColumns();
     });
   }
-  if(f){
-    f.addEventListener("change",e=>{
-      const raw=e.target.value.toLowerCase();
+
+  if (f){
+    f.addEventListener("change", e=>{
+      if (!state) return;
+      const raw = String(e.target.value || "").toLowerCase();
       state.filtre =
         raw.includes("inter") ? "forbidden" :
         raw.includes("march") ? "market" :
         "all";
-      renderNineColumns();
+      if (typeof renderNineColumns === "function") renderNineColumns();
     });
   }
 }
 
-function take(x){ return Number(x)||1; }
-
+// Met les champs (année/mois) en cohérence avec state.anchor
 function syncParamFields(){
-  const y=document.getElementById("param-annee");
-  const m=document.getElementById("param-mois");
-  if(y) y.value=state.anchor.getFullYear();
-  if(m) m.value=state.anchor.getMonth()+1;
+  const y = document.getElementById("param-annee");
+  const m = document.getElementById("param-mois");
+  if (!state || !state.anchor) return;
+  if (y) y.value = state.anchor.getFullYear();
+  if (m) m.value = state.anchor.getMonth() + 1;
 }
 
-// ----------------------------- Init
-wireNav();
-wireParams();
-loadDataJSON().then(renderNineColumns);
+// ----------------------------- Init sécurisée
+function boot(){
+  // Valeurs par défaut si non présentes
+  if (typeof state === "undefined") {
+    window.state = { anchor: new Date(), filtre: "all" };
+  } else {
+    state.anchor = state.anchor instanceof Date ? state.anchor : new Date();
+    state.filtre = state.filtre || "all";
+  }
+
+  wireNav();
+  wireParams();
+
+  // Charge les données puis premier rendu
+  // (si loadDataJSON existe, on l’utilise, sinon on rend directement)
+  if (typeof loadDataJSON === "function"){
+    loadDataJSON()
+      .then(()=>{
+        if (typeof renderNineColumns === "function") renderNineColumns();
+        syncParamFields();
+      })
+      .catch(err=>{
+        console.error("Erreur loadDataJSON:", err);
+        if (typeof renderNineColumns === "function") renderNineColumns();
+        syncParamFields();
+      });
+  } else {
+    if (typeof renderNineColumns === "function") renderNineColumns();
+    syncParamFields();
+  }
+}
+
+// Lance l'init quand le DOM est prêt
+if (document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
