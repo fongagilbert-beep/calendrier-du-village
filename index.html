@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendrier du Village</title>
-<link rel="stylesheet" href="./styles.v3.css?v=20260311-10">
+  <link rel="stylesheet" href="./styles.v3.css?v=20260311-10">
 </head>
 <body>
-
- <body>
 
   <!-- BANDEAU BLEU TITRE -->
   <div class="site-header" style="
@@ -21,66 +19,59 @@
     Calendrier du Village
   </div>
 
-<!-- BOUTONS DE NAVIGATION -->
-<div class="nav-row" style="
-  display:flex;
-  justify-content:center;
-  gap:0.5rem;
-  background:#e9f1ff;
-  padding:0.8rem;
-  margin-top:1rem;
-">
- <div class="nav-row" style="
-  display:flex;
-  justify-content:center;
-  gap:0.5rem;
-  background:#e9f1ff;
-  padding:0.8rem;
-">
-  <button type="button" data-action="prev3tton>
-  <button type="button" data-action="today" class="btn btn-today="button" data-action="nextY" class="
-</div>
-
-<!-- PARAMÈTRES (doivent être EN DESSOUS de la ligne de commande) -->
-<div class="params" style="
+  <!-- BOUTONS DE NAVIGATION -->
+  <div class="nav-row" style="
     display:flex;
-    gap:1rem;
     justify-content:center;
-    align-items:center;
-    padding:1rem;
-    background:#fff;">
-  
-  <label>Année (M) :
-    <input id="param-annee" type="number" min="1900" max="2500" style="padding:0.3rem;text-align:center;">
-  </label>
+    gap:0.5rem;
+    background:#e9f1ff;
+    padding:0.8rem;
+    margin-top:1rem;
+  ">
+    <button type="button" data<button type="button" data-action="next3"utton" data-action="todaype="button" data-action="prevY" class="a-action="nextRAMÈTRES -->
+  <div class="params" style="
+      display:flex;
+      gap:1rem;
+      justify-content:center;
+      align-items:center;
+      padding:1rem;
+      background:#fff;">
+    
+    <label>Année (M) :
+      <input id="param-annee" type="number" min="1900" max="2500"
+             style="padding:0.3rem;text-align:center;">
+    </label>
 
-  <label>Mois (M) :
-    <input id="param-mois" type="number" min="1" max="12" style="padding:0.3rem;text-align:center;">
-  </label>
+    <label>Mois (M) :
+      <input id="param-mois" type="number" min="1" max="12"
+             style="padding:0.3rem;text-align:center;">
+    </label>
 
-  <label>Village :
-    <select id="param-village" style="padding:0.3rem;">
-      <option value="ALL">Tous</option>
-    </select>
-  </label>
+    <label>Village :
+      <select id="param-village" style="padding:0.3rem;">
+        <option value="ALL">Tous</option>
+      </select>
+    </label>
 
-  <label>Filtre :
-    <select id="param-filtre" style="padding:0.3rem;">
-      <option value="tous">Tous</option>
-      <option value="marché">Marchés</option>
-      <option value="interdits">Interdits</option>
-    </select>
-  </label>
-</div>
-   
+    <label>Filtre :
+      <select id="param-filtre" style="padding:0.3rem;">
+        <option value="tous">Tous</option>
+        <option value="marché">Marchés</option>
+        <option value="interdits">Interdits</option>
+      </select>
+    </label>
+  </div>
+
   <!-- CALENDRIER -->
   <div id="calendar-9cols"></div>
 
-  <!-- BLOC INFOS (si tu veux le bas de page) -->
+  <!-- BLOC INFOS -->
   <h2>Roi : <span id="roi-village">—</span></h2>
   <p>Jours de marché : <span id="marche-village">—</span></p>
   <p>Informations : <span id="motif-village">—</span></p>
 
-  <script src="./app.v3.js?v=20260311-10" defer></script>
+  <!-- SCRIPT -->
+<script src="./app.v3.js?v=20260311-10" defer></script>
+
 </body>
 </html>
