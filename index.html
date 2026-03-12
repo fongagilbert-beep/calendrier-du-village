@@ -129,5 +129,84 @@
 </footer>
 ``
 
+  <script>
+(async () => {
+  // 1) DÉFINIR LE VILLAGE COURANT
+  //   - Option A : depuis l’URL (ex: ?village=BALENGOU)
+  const params = new URLSearchParams(location.search);
+  const villageFromUrl = params.get('village');
+
+  //   - Option B : valeur par défaut (à changer si besoin)
+  const villageCourant = villageFromUrl || 'BALENGOU';
+
+  // 2) CHARGER LE JSON EXPORTÉ PAR EXCEL (Param_Table -> data.v3.json)
+  const res = await fetch('data.v3.json?v=' + Date.now()); // anti-cache
+  if (!res.ok) throw new Error('Impossible de charger data.v3.json (HTTP ' + res.status + ')');
+  const json = await res.json();
+  const rows = Array.isArray(json) ? json : json.rows;
+  if (!rows || !rows.length) throw new Error('rows vide/absent dans data.v3.json');
+
+  // 3) RETROUVER LA LIGNE DU VILLAGE COURANT
+  //    (Colonnes Excel => clés JSON : "Village", "Informations:", "Roi du village:", "Jour du marché1", etc.)
+  const row = rows.find(r => (r.Village || '').trim().toLowerCase() === villageCourant.trim().toLowerCase());
+  if (!row) {
+    console.warn('Village non trouvé dans data.v3.json :', villageCourant);
+    document.querySelector('#info-bas').insertAdjacentHTML('beforeend',
+      `<p style="margin:0">Informations indisponibles pour <strong>${villageCourant}</strong>.</p>`);
+    return;
+  }
+
+  // 4) LIRE LES CHAMPS (exactement comme dans Param_Table)
+  //    ⚠️ Clés avec espaces/apostrophes/deux-points -> utiliser la notation crochets ["..."]
+  const infos           = row["Informations:"] || "";
+  const roi             = row["Roi du village:"] || row["Roi du village:2"] || "";
+  const jourInterdit1   = row["Jour interdit1"] || "";
+  const jourInterdit2   = row["Jour interdit2"] || "";
+  const jourInterdit3   = row["Jour interdit3"] || "";
+  const marche1         = row["Jour du marché1"] || "";
+  const marche2         = row["Jour du marché2"] || "";
+  const marche3         = row["Jour du marché3"] || "";
+
+  // 5) COMPOSER LE RENDU HTML DU BLOC
+  const lignes = [];
+
+  if (infos) lignes.push(`<p style="margin:.25rem 0 .5rem">${infos}</p>`);
+
+  // Sous-titres utiles si dispo
+  if (roi) {
+    lignes.push(`<p style="margin:.25rem 0"><strong>Roi&nbsp;:</strong> ${roi}</p>`);
+  }
+
+  const joursInterdits = [jourInterdit1, jourInterdit2, jourInterdit3].filter(Boolean).join(' • ');
+  if (joursInterdits) {
+    lignes.push(`<p style="margin:.25rem 0"><strong>Jours interdits&nbsp;:</strong> ${joursInterdits}</p>`);
+  }
+
+  const marches = [marche1, marche2, marche3].filter(Boolean).join(' • ');
+  if (marches) {
+    lignes.push(`<p style="margin:.25rem 0"><strong>Jour(s) de marché&nbsp;:</strong> ${marches}</p>`);
+  }
+
+  // Tu peux ajouter ici d’autres colonnes de Param_Table (J1..J8, M1..M12, etc.), exemple :
+  // const j1 = row["J1"] || ""; const m1 = row["M1"] || ""; ...
+  // lignes.push(`<p><strong>J1:</strong> ${j1} — <strong>M1:</strong> ${m1}</p>`);
+
+  // 6) INJECTER DANS LE RECTANGLE #info-bas
+  const container = document.querySelector('#info-bas');
+  container.insertAdjacentHTML('beforeend', lignes.join('\n'));
+
+  // 7) SIGNATURE : elle est déjà dans le HTML, centrée (".credit").
+  //    Si tu veux la manipuler dynamiquement, tu peux ici :
+  // document.querySelector('.credit').innerHTML = 'Proposé par <strong>Gilbert FONGA</strong>';
+
+})().catch(e => {
+  console.error('Erreur infos de bas de page :', e);
+  const c = document.querySelector('#info-bas');
+  if (c) c.insertAdjacentHTML('beforeend', `<p style="margin:0;color:#b00020">Erreur de chargement des informations.</p>`);
+});
+</script>
+``
+
+  
 </body>
 </html>
