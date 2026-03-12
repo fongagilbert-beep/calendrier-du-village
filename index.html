@@ -69,14 +69,16 @@
   <!-- CALENDRIER -->
   <div id="calendar-9cols"></div>
 
-  <!-- === Bloc informations final === -->
+<!-- === BLOC INFOS FINAL === -->
 <section id="bloc-infos-final" class="bloc-infos-final">
-    <h2 class="roi">Roi : <span id="roi-village"></span></h2>
-    <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
-    <p class="marche">Jours de marché : <span id="marche-village"></span></p>
-
-    <p class="credit">Proposé par <strong>Gilbert FONGA</strong></p>
+    <div class="infos-inner">
+        <p class="roi">Roi : <span id="roi-village"></span></p>
+        <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
+        <p class="marche">Jours de marché : <span id="marche-village"></span></p>
+    </div>
 </section>
+
+<p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
 
   <!-- SCRIPT -->
   <script src="./app.v3.js?v=fix-entities" defer></script>
@@ -288,9 +290,7 @@ function getVillageCourant() {
   }
 })();
 </script>
-  
-</body>
-</html>
+
 
 <script>
 // Charge les lignes depuis data.v3.json (accepte {rows:[…]} ou un tableau [])
@@ -363,4 +363,17 @@ function getVillageCourant() {
 </script>
 
 
+
+
+
+
+
+
+
+
+
+
+  
+</body>
+</html>
 
