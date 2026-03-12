@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendrier du Village</title>
 
-<!-- Le bon manifeste -->
-  /manifest.v3.webmanifest
 
-  <!-- La bonne couleur -->
-  <meta name="theme-color" content="#0b3c8d">
+<!-- Le bon manifeste -->
+<link rel="manifest" href="/manifest.v3.webmanifest">
+
+<!-- La bonne couleur -->
+<meta name="theme-color" content="#0b3c8d">
+
 
   <!-- CSS principal -->
   <link rel="stylesheet" href="./styles.v3.css?v=20260311">
@@ -71,15 +73,16 @@
   ./app.v3.js?v=fix-entities</script>
 
 
-<script>
+
+<script&gt;
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      // Enregistre sw.js à la racine
       navigator.serviceWorker.register('/sw.js')
         .catch(err => console.error('SW registration failed:', err));
     });
   }
 </script>
+
 
 
 </body>
