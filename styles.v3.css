@@ -147,22 +147,31 @@ body{
   overflow:visible; /* pour watermark */
 }
 
-/* Watermark par mois (Vertical par mois) */
+/* WATERMARK propre et centré dans chaque mois */
 .month .month-watermark{
-  position: absolute;
-  left: 50%;
-  top: 50%;  /* milieu du mois, ajuste si tu veux un peu plus haut : 45% */
-  transform: translate(-50%, -50%) rotate(-18deg);
+    position: absolute;
+    left: 50%;
+    top: 50%; /* centre naturel du mois */
+    transform: translate(-50%, -50%) rotate(-15deg);
 
-  font-size: clamp(50px, 12vw, 160px);   /* grand + responsive */
-  font-weight: 800;
-  letter-spacing: .1em;
-  opacity: .08;
-  color: #0b3c8d;
+    font-family: 'Akatab', sans-serif;
+    text-transform: uppercase;
+    font-size: clamp(60px, 12vw, 150px);
+    font-weight: 800;
 
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;    /* derrière ton calendrier */
+    color: rgba(120,120,120,0.25); /* gris visible */
+    letter-spacing: 0.1em;
+    opacity: 0.35;
+
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+/* Le contenu du mois passe AU-DESSUS */
+.month *:not(.month-watermark){
+    position: relative;
+    z-index: 1;
 }
 
 /* Pour que le calendrier reste lisible */
@@ -547,4 +556,10 @@ h2 > #roi-village{
     margin: 0.5rem 0 1rem;
     color: #0b3c8d;
     font-weight: 600;
+}
+
+/* Le conteneur du mois doit pouvoir contenir un watermark absolu */
+.month{
+    position: relative !important;
+    overflow: visible !important; /* jamais hidden */
 }
