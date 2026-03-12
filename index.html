@@ -207,6 +207,83 @@
 </script>
 ``
 
+  <script>
+// Charge data.v3.json (gère {rows:[...]} ou un tableau [])
+async function loadParamTable() {
+  const res = await fetch('data.v3.json?v=' + Date.now()); // anti-cache
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  const rows = Array.isArray(data) ? data : data.rows;
+  if (!rows || !rows.length) throw new Error('rows vide/absent dans data.v3.json');
+  return rows;
+}
+
+// Village courant : ?village=BALENGOU dans l’URL, sinon valeur par défaut
+function getVillageCourant() {
+  const qs = new URLSearchParams(location.search);
+  const fromUrl = qs.get('village');
+  return (fromUrl || 'BALENGOU').trim();
+}
+
+(async () => {
+  try {
+    const rows = await loadParamTable();
+    const village = getVillageCourant();
+    const key = village.toLowerCase();
+
+    // Cherche la ligne correspondante dans Param_Table exporté
+    const row = rows.find(r => (r?.Village || '').trim().toLowerCase() === key);
+
+    const elRoi   = document.getElementById('roi-village');
+    const elJM    = document.getElementById('marche-village');
+    const elInfos = document.getElementById('motif-village');
+    const elJI    = document.getElementById('interdits-village'); // présent seulement si tu ajoutes la ligne HTML
+
+    if (!row) {
+      elRoi.textContent   = '—';
+      elJM.textContent    = '—';
+      if (elInfos) elInfos.textContent = '—';
+      if (elJI)    elJI.textContent    = '—';
+      console.warn('Village non trouvé dans data.v3.json :', village);
+      return;
+    }
+
+    // Clés exactement comme tes en-têtes Excel (Param / Param_Table)
+    const roi = row["Roi du village:"] || row["Roi du village:2"] || "";
+
+    const ji1 = row["Jour interdit1"] || "";
+    const ji2 = row["Jour interdit2"] || "";
+    const ji3 = row["Jour interdit3"] || "";
+    const interdits = [ji1, ji2, ji3].filter(Boolean).join(" • ");
+
+    const jm1 = row["Jour du marché1"] || "";
+    const jm2 = row["Jour du marché2"] || "";
+    const jm3 = row["Jour du marché3"] || "";
+    const marches = [jm1, jm2, jm3].filter(Boolean).join(" • ");
+
+    const infos = row["Informations:"] || "";
+
+    // Remplissage selon tes consignes
+    elRoi.textContent = roi || '—';
+    elJM.textContent  = marches || '—';
+    if (elInfos) elInfos.textContent = infos || '—';
+    if (elJI)    elJI.textContent    = interdits || '—';
+
+  } catch (e) {
+    console.error('Bloc infos bas :', e);
+    // Valeurs neutres en cas d’échec
+    const elRoi   = document.getElementById('roi-village');
+    const elJM    = document.getElementById('marche-village');
+    const elInfos = document.getElementById('motif-village');
+    const elJI    = document.getElementById('interdits-village');
+
+    if (elRoi)   elRoi.textContent   = '—';
+    if (elJM)    elJM.textContent    = '—';
+    if (elInfos) elInfos.textContent = '—';
+    if (elJI)    elJI.textContent    = '—';
+  }
+})();
+</script>
   
 </body>
 </html>
