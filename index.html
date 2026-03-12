@@ -137,5 +137,17 @@
 })();
 </script>
 <!-- ========= FIN du contournement ========= -->
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // Enregistre sw.js à la racine
+      navigator.serviceWorker.register('/sw.js')
+        .catch(err => console.error('SW registration failed:', err));
+    });
+  }
+</script>
+
+
 </body>
 </html>
