@@ -387,5 +387,41 @@ body{
   font-weight: 600;
 }
 
+/* Bandeau infos plein large (sous le calendrier) */
+#calendar-9cols + h2,
+#calendar-9cols + h2 + p,
+#calendar-9cols + h2 + p + p {
+  margin-left: 0;   /* colle à gauche */
+}
+
+/* Roi : rouge, gras, 14 */
+h2 > #roi-village{
+  color: #b00020;       /* rouge lisible */
+  font-weight: 700;     /* gras */
+  font-size: 14px;      /* police 14 */
+}
+
+/* Jours interdits (si tu les ajoutes plus tard) : rouge, gras, 12 */
+#interdits-village{
+  color: #b00020;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Jours de marché : vert, gras, 12 */
+#marche-village{
+  color: #087f23;       /* vert lisible */
+  font-weight: 700;     /* gras */
+  font-size: 12px;      /* police 12 */
+}
+
+/* Informations (si tu l’affiches) – style neutre par défaut */
+#motif-village{
+  color: #0b3c8d;       /* ou #333 si tu préfères neutre */
+  font-weight: 500;
+  font-size: 12px;
+}
+
+
 
 
