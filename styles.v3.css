@@ -274,7 +274,7 @@ body{
 /* --- Watermark vertical : village en MAJUSCULE, bas -> haut, gris 18% --- */
 .month{
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* on garde ::before pour d'autres usages éventuels, on ajoute ::after pour le vertical */
