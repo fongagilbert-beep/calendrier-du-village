@@ -7,7 +7,7 @@
 
 
 <!-- Le bon manifeste -->
-<link rel="manifest" href="/manifest.v3.webmanifest">
+<link rel="manifest" href="manifest.v3.webmanifest">
 
 <!-- La bonne couleur -->
 <meta name="theme-color" content="#0b3c8d">
@@ -77,7 +77,7 @@
 <script&gt;
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('sw.js')
         .catch(err => console.error('SW registration failed:', err));
     });
   }
