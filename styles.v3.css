@@ -473,31 +473,37 @@ h2 > #roi-village{
   overflow: visible !important;
 }
 
-/* NOUVEAU WATERMARK grand et centré */
-.month-watermark{
+/* --- Watermark grand, centré, VISIBLE, style Bamileké --- */
+
+.month{
+  position: relative;
+  overflow: visible !important;   /* ESSENTIEL pour que le watermark ne soit pas coupé */
+}
+
+/* Watermark texte BAMILEKÉ (police + majuscule + gris) */
+.month .month-watermark{
   position: absolute;
   left: 50%;
-  top: 50%;    /* centre vertical - ajuste 45% si tu veux plus haut */
-  transform: translate(-50%, -50%) rotate(-15deg);
+  top: 50%; 
+  transform: translate(-50%, -50%) rotate(-18deg);
 
-  font-family: 'Akatab', sans-serif;    /* calligraphie africaine */
-  font-size: clamp(60px, 12vw, 160px);   /* très lisible */
-  font-weight: 700;
-  text-transform: uppercase;             /* MAJUSCULES */
+  font-family: 'Akatab', sans-serif;   /* police Bamileké */
+  text-transform: uppercase;           /* MAJUSCULE */
+  font-size: clamp(60px, 12vw, 160px); /* GRAND */
+  font-weight: 800;
 
-  color: rgba(120,120,120,0.25);         /* gris clair mais visible */
-  letter-spacing: 0.08em;
-  opacity: 0.35;                         /* plus visible que ton 0.06 */
+  color: rgba(120,120,120,0.35);       /* gris lisible */
+  letter-spacing: 0.1em;
+  opacity: 0.35;                       /* ajustable */
 
   pointer-events: none;
   user-select: none;
   z-index: 0;
 }
 
-/* S’assurer que ton calendrier reste au-dessus */
+/* Le contenu du mois reste AU-DESSUS */
 .month > *:not(.month-watermark){
   position: relative;
   z-index: 1;
 }
-
 
