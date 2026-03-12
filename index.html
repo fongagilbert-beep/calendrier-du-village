@@ -83,6 +83,36 @@
   }
 </script>
 
+  <div id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></div>
+<script>
+(async () => {
+  try {
+    // cache-buster pour éviter l’ancienne version
+    const res = await fetch('data.v3.json?v=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    console.log('DATA REÇUE =', data);
+
+    // Ta macro produit { rows: [...] }
+    const rows = Array.isArray(data) ? data : data.rows;
+    if (!rows || !rows.length) {
+      document.getElementById('debug').textContent =
+        '⚠️ Aucune donnée exploitable (rows vide ou absent).';
+      return;
+    }
+
+    // Affiche 1ère ligne pour vérification
+    const first = rows[0];
+    document.getElementById('debug').textContent =
+      '1er village: ' + (first.Village || '(inconnu)') +
+      '\nJ1=' + (first?.J1 || '') +
+      '\n"Roi du village:" = ' + (first?.["Roi du village:"] || '');
+  } catch (e) {
+    console.error('ERREUR CHARGEMENT DATA', e);
+    document.getElementById('debug').textContent = '❌ ' + e.message;
+  }
+})();
+</script>
 
 
 </body>
