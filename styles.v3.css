@@ -387,11 +387,43 @@ body{
   font-weight: 600;
 }
 
-/* Bandeau infos plein large (sous le calendrier) */
-#calendar-9cols + h2,
-#calendar-9cols + h2 + p,
-#calendar-9cols + h2 + p + p {
-  margin-left: 0;   /* colle à gauche */
+/* Bandeau pleine largeur */
+.cal-bottom-info{
+  margin-top: 16px;
+  padding: 10px 12px;
+  background: #fffaf3;          /* fond doux proche de ton thème */
+  border: 1px solid #e6d9c8;    /* fin séparateur */
+  border-radius: 8px;
+}
+
+/* Conteneur centré (facultatif) */
+.cal-bottom-inner{
+  max-width: 1200px;            /* ajuste si besoin */
+  margin: 0 auto;
+}
+
+/* Remets tout à gauche, sous le calendrier */
+#calendar-9cols + .cal-bottom-info .ligne{
+  margin-left: 0;
+}
+
+/* Typographies demandées */
+#roi-village{
+  color: #b00020;               /* rouge */
+  font-weight: 700;             /* gras */
+  font-size: 14px;              /* 14px */
+}
+
+#interdits-village{
+  color: #b00020;               /* rouge */
+  font-weight: 700;             /* gras */
+  font-size: 12px;              /* 12px */
+}
+
+#marche-village{
+  color: #087f23;               /* vert lisible */
+  font-weight: 700;             /* gras */
+  font-size: 12px;              /* 12px */
 }
 
 /* Roi : rouge, gras, 14 */
