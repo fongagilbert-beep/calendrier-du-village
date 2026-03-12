@@ -507,3 +507,51 @@ h2 > #roi-village{
   z-index: 1;
 }
 
+/* === Bloc infos plein largeur juste sous le calendrier === */
+#bloc-infos-final {
+    width: 100%;
+    max-width: 100%;        /* éviter qu'un conteneur limite la largeur */
+    padding: 1rem 1rem;
+    margin: 0;              /* PAS d'espace avant/après */
+    margin-top: 0.5rem !important;   /* colle juste au calendrier */
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid #ccc;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Corrige toutes les marges internes */
+#bloc-infos-final h2,
+#bloc-infos-final p {
+    margin: 0.2rem 0 !important;   /* réduit les espaces verticaux */
+}
+
+/* Spécial pour "Proposé par Gilbert FONGA" */
+#bloc-infos-final .credit {
+    font-size: 13px;
+    margin-top: 0.6rem !important;   /* colle juste sous les infos */
+    text-align: center;
+}
+
+/* Style des trois lignes */
+#bloc-infos-final .roi {
+    color: #b00020;
+    font-weight: 700;
+    font-size: 14px;
+}
+#bloc-infos-final .interdits {
+    color: #b00020;
+    font-weight: 700;
+    font-size: 12px;
+}
+#bloc-infos-final .marche {
+    color: #087f23;
+    font-weight: 700;
+    font-size: 12px;
+}
+
