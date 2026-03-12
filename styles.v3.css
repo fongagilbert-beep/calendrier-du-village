@@ -467,6 +467,37 @@ h2 > #roi-village{
   font-size: 12px;
 }
 
+/* Le conteneur mois doit pouvoir héberger un watermark absolu */
+.month{
+  position: relative;
+  overflow: visible !important;
+}
 
+/* NOUVEAU WATERMARK grand et centré */
+.month-watermark{
+  position: absolute;
+  left: 50%;
+  top: 50%;    /* centre vertical - ajuste 45% si tu veux plus haut */
+  transform: translate(-50%, -50%) rotate(-15deg);
+
+  font-family: 'Akatab', sans-serif;    /* calligraphie africaine */
+  font-size: clamp(60px, 12vw, 160px);   /* très lisible */
+  font-weight: 700;
+  text-transform: uppercase;             /* MAJUSCULES */
+
+  color: rgba(120,120,120,0.25);         /* gris clair mais visible */
+  letter-spacing: 0.08em;
+  opacity: 0.35;                         /* plus visible que ton 0.06 */
+
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* S’assurer que ton calendrier reste au-dessus */
+.month > *:not(.month-watermark){
+  position: relative;
+  z-index: 1;
+}
 
 
