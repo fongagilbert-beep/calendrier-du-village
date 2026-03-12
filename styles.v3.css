@@ -370,19 +370,8 @@ body{
   padding: 1rem 1rem 1.25rem;
 }
 
-/* Le rectangle d’infos (en bas à gauche) */
-.info-rect{
-  /* “rectangle” : fond doux + bordure + coins */
-  background: #fffaf3;          /* proche de ta palette */
-  border: 1.5px solid #0b3c8d;  /* bleu de ton thème */
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: #0b3c8d;
-  /* Ancrage en bas à gauche : on lui donne une largeur contenue */
-  max-width: min(72ch, 60%);
-  /* Si tu veux le coller totalement à gauche : */
-  margin-left: 0;
-}
+
+
 
 /* Titre optionnel dans le rectangle */
 .info-title{
