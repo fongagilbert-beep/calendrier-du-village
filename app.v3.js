@@ -365,7 +365,16 @@ if (document.readyState === "loading"){
   document.addEventListener("DOMContentLoaded", () => {
     wireNav();
     wireParams();
-    loadDataJSON().then(renderNineColumns);
+    loadDataJSON().then(() => {
+  // ICI on lit ton data.v3.json
+  fetch("./data.v3.json?v=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      const rows = Array.isArray(data) ? data : data.rows;
+      remplirListeVillages(rows);
+      renderNineColumns();
+    });
+});
   });
 } else {
   wireNav();
