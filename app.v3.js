@@ -375,7 +375,7 @@ if (document.readyState === "loading"){
       renderNineColumns();
     });
 });
-  });
+
 } else {
   wireNav();
   wireParams();
