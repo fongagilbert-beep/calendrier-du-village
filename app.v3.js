@@ -360,24 +360,21 @@ function syncParamFields(){
   if (m) m.value = state.anchor.getMonth() + 1;
 }
 
-// ----------------------------- Init
-if (document.readyState === "loading"){
-  document.addEventListener("DOMContentLoaded", () => {
+// ----------------------------- Init unifiée
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
     wireNav();
     wireParams();
-    loadDataJSON().then(() => {
-  // ICI on lit ton data.v3.json
-  fetch("./data.v3.json?v=" + Date.now())
-    .then(r => r.json())
-    .then(data => {
-      const rows = Array.isArray(data) ? data : data.rows;
-      remplirListeVillages(rows);
-      renderNineColumns();
-    });
+
+    // Chargement unique du JSON (peuple state.*)
+    const data = await loadDataJSON(); // peut retourner null si échec
+
+    // Remplit la liste des villages après le chargement
+    remplirListeVillagesDepuisData(data || {});
+
+    // Premier rendu
+    renderNineColumns();
+  } catch (e) {
+    console.error("[Init] Erreur pendant l'init:", e);
+  }
 });
-  });
-} else {
-  wireNav();
-  wireParams();
-  loadDataJSON().then(renderNineColumns);
-}
