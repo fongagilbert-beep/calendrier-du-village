@@ -1,4 +1,4 @@
-// =====================================================
+=====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
 // =====================================================
 
@@ -374,6 +374,7 @@ if (document.readyState === "loading"){
       remplirListeVillages(rows);
       renderNineColumns();
     });
+});
   });
 } else {
   wireNav();
