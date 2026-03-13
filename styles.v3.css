@@ -650,40 +650,55 @@ h2 > #roi-village{
 
 
 /* =========================
-   PATCH WATERMARK (XL, centré) + neutralisation anciens
+   WATERMARK XL – vertical, centré, lisible
    ========================= */
 
-/* Neutraliser tout ancien watermark */
-.month .month-watermark { display: none !important; }   /* div résiduelle */
-.month::after { content: none !important; background: none !important; background-image: none !important; } /* ancien mini watermark bas-droite */
-.month { background-image: none !important; }
+/* Neutralisation des anciens watermarks */
+.month .month-watermark {
+  display: none !important;
+}
+.month::after {
+  content: none !important;
+  background: none !important;
+  background-image: none !important;
+}
 
-/* Watermark officiel : vertical, centré, XXL lisible */
+/* Bloc principal du watermark */
 .month {
   position: relative;
-  overflow: hidden; /* contenu propre, watermark dessous */
+  overflow: hidden;
 }
+
 .month::before {
   content: attr(data-watermark);
   position: absolute;
   inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   writing-mode: vertical-rl;
-  transform: rotate(180deg);        /* bas -> haut */
+  transform: rotate(180deg);
   text-transform: uppercase;
 
-  font-size: clamp(70px, 18vw, 220px); /* XL */
+  font-size: clamp(70px, 18vw, 220px);
   font-weight: 900;
   letter-spacing: 0.12em;
-  color: rgba(0,0,0,0.28);
-  text-shadow: 0 2px 0 rgba(255,255,255,0.45),
-               0 4px 12px rgba(0,0,0,0.25);
 
-  pointer-events: none; user-select: none; z-index: 0;
+  color: rgba(0, 0, 0, 0.28);
+  text-shadow:
+    0 2px 0 rgba(255,255,255,0.45),
+    0 4px 12px rgba(0,0,0,0.25);
+
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
 }
 
-/* Le contenu du mois reste AU-DESSUS */
+/* Le contenu passe AU-DESSUS du watermark */
 .month .month-header,
 .month .month-head-row,
-.month .row { position: relative; z-index: 1; }
+.month .row {
+  position: relative;
+  z-index: 1;
+}
