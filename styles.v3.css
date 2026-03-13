@@ -600,7 +600,7 @@ h2 > #roi-village{
 
   font-weight: 800;
   letter-spacing: 0.08em;
-  font-size: clamp(28px, 10vw, 64px);
+  font-size: clamp(50px, 14vw, 160px);
   color: rgba(0,0,0,0.16);          /* gris ~16% */
   user-select: none;
   pointer-events: none;
