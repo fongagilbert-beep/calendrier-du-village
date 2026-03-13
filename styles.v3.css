@@ -157,7 +157,7 @@ body{
     font-family: 'Akatab', sans-serif;
     text-transform: uppercase;
     font-size: clamp(32px, 6vw, 80px);
-    font-weight: 800;
+    font-weight: 700;
 
     color: rgba(120,120,120,0.25); /* gris visible */
     letter-spacing: 0.1em;
