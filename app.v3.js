@@ -1,4 +1,4 @@
-=====================================================
+// =====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
 // =====================================================
 
@@ -245,9 +245,13 @@ function renderOneMonth(root, start, village, place){
 }
 
 function renderVillageMeta(){
-  document.getElementById("roi-village").textContent     = state.roi || "—";
-  document.getElementById("marche-village").textContent  = (state.marche || []).join(", ") || "—";
-  document.getElementById("motif-village").textContent   = state.motif || "—";
+  const elRoi = document.getElementById("roi-village");
+  const elMarche = document.getElementById("marche-village");
+  const elMotif = document.getElementById("motif-village");
+
+  if (elRoi) elRoi.textContent = state.roi || "—";
+  if (elMarche) elMarche.textContent = (state.marche || []).join(", ") || "—";
+  if (elMotif) elMotif.textContent = state.motif || "—";
 }
 
 // ----------------------------- Navigation & paramètres
@@ -259,7 +263,7 @@ function shouldHideByFilter(x){
 }
 
 // ----------------------------- Villages : remplissage du select
-function remplirListeVillages(rows) {
+function remplirListeVillages(rows){
   const sel = document.getElementById("param-village");
   if (!sel) return;
 
@@ -267,15 +271,36 @@ function remplirListeVillages(rows) {
 
   const uniques = new Set();
 
-  rows.forEach(r => {
-    const v = (r.Village || "").trim();
-    if (v && !uniques.has(v.toUpperCase())) {
-      uniques.add(v.toUpperCase());
-      const opt = document.createElement("option");
-      opt.value = v.toUpperCase();
-      opt.textContent = v;
-      sel.appendChild(opt);
-    }
+  // 1) Si rows est fourni (data entries, etc.)
+  if (Array.isArray(rows)) {
+    rows.forEach(r => {
+      const v = (r.Village || r.village || "").trim();
+      if (v && v.toUpperCase() !== "ALL") {
+        uniques.add(v.toUpperCase());
+      }
+    });
+  }
+
+  // 2) Fallbacks : puiser dans l'état
+  Object.keys(state.j8 || {}).forEach(v => {
+    if (v.toUpperCase() !== "ALL") uniques.add(v.toUpperCase());
+  });
+  for (const k of state.dataMap.keys()){
+    const v = k.split('|')[1];
+    if (v && v.toUpperCase() !== "ALL") uniques.add(v.toUpperCase());
+  }
+  Object.keys(state.marketNames || {}).forEach(v => {
+    if (v.toUpperCase() !== "ALL") uniques.add(v.toUpperCase());
+  });
+  Object.keys(state.forbiddenNames || {}).forEach(v => {
+    if (v.toUpperCase() !== "ALL") uniques.add(v.toUpperCase());
+  });
+
+  Array.from(uniques).sort().forEach(vu => {
+    const opt = document.createElement("option");
+    opt.value = vu;
+    opt.textContent = vu;
+    sel.appendChild(opt);
   });
 }
 
@@ -366,18 +391,17 @@ if (document.readyState === "loading"){
     wireNav();
     wireParams();
     loadDataJSON().then(() => {
-  // ICI on lit ton data.v3.json
-  fetch("./data.v3.json?v=" + Date.now())
-    .then(r => r.json())
-    .then(data => {
-      const rows = Array.isArray(data) ? data : data.rows;
-      remplirListeVillages(rows);
+      // On utilise les données déjà chargées par loadDataJSON
+      // Si tu veux, tu peux passer data.entries si tu l'as sous la main
+      remplirListeVillages(); 
       renderNineColumns();
     });
-});
-
+  });
 } else {
   wireNav();
   wireParams();
-  loadDataJSON().then(renderNineColumns);
+  loadDataJSON().then(() => {
+    remplirListeVillages();
+    renderNineColumns();
+  });
 }
