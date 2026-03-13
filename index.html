@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- IMPORTANT : Base pour GitHub Pages -->
-  <base href="/calendrier-du-vtitle>Calendrier du Village</title>
+  <!-- Base obligatoire pour GitHub Pages -->
+  /calendrier-du-village/
+
+  <title>Calendrier du Village</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com=Akatab:wght@400;700&amp;display=swap
+  <link
+    href="https://fonts.googleapis.com/css2?family=A00&amp;display=swap
 
   <!-- Manifest -->
-  manifest.v3.webmanifest
+  <link relv3.webmanifest
 
-  <!-- Couleur du navigateur -->
-  <meta name="theme-color" content="#0b3c8d">
+  <!-- Couleur navigateur -->
+  <meta name="theme-color" content="#0b3c8d" />
 
-  <!-- CSS du calendrier -->
-  styles.v3.css?v=20260311
-
-  <!-- favicon -->
-  <link rel="icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3</div>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href <!-- favicon SVG -->
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E🌞%3C/text%3E%="btn">
+  </div>
 
   <div class="params">
     <label>Année (M) :
-      <input id="param-annee" type="number" min="1900" max="2500">
+      <input id="param-annee" type="number" min="1900" max="2500" />
     </label>
 
     <label>Mois (M) :
-      <input id="param-mois" type="number" min="1" max="12">
+      <input id="param-mois" type="number" min="1" max="12" />
     </label>
 
     <label>Village :
@@ -37,10 +40,6 @@
         <option value="ALL">Tous</option>
       </select>
     </label>
-  </div>
-
-  <div class="month">
-    <div class="month-watermark">BALENGOU</div>
   </div>
 
   <label>Filtre :
@@ -64,27 +63,30 @@
   <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
 
   <!-- Script principal -->
-  <script src="app.v3.js?v=fix-entities"!-- Service Worker -->
+  <script src="app.v3.js?v=fixript>
+
+  <!-- Service Worker -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .catch(err => console.error('SW registration failed:', err));
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("sw.js")
+          .catch(err => console.error("SW registration failed:", err));
       });
     }
   </script>
 
-  <!-- Debug -->
-  <div id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></div>
+  <!-- Debug zone -->
+  <pre id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></pre>
 
-  <!-- Chargement des données -->
+  <!-- Chargement JSON -->
   <script>
   (async () => {
     try {
       const url = "data.v3.json?v=" + Date.now();
-      const res = await fetch(url, { cache: 'no-store' });
+      const res = await fetch(url, { cache: "no-store" });
 
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      if (!res.ok) throw new Error("HTTP " + res.status);
 
       const json = await res.json();
       const rows = Array.isArray(json) ? json : json.rows;
@@ -95,41 +97,35 @@
       }
 
       const params = new URLSearchParams(location.search);
-      const village = (params.get('village') || 'BALENGOU').trim().toLowerCase();
+      const village = (params.get("village") || "BALENGOU")
+        .trim()
+        .toLowerCase();
 
-      const row = rows.find(r => (r?.Village || '').trim().toLowerCase() === village);
-
-      const elRoi = document.getElementById('roi-village');
-      const elJI  = document.getElementById('interdits-village');
-      const elJM  = document.getElementById('marche-village');
+      const row = rows.find(
+        r => (r.Village || "").trim().toLowerCase() === village
+      );
 
       if (!row) {
-        elRoi.textContent = "—";
-        elJI.textContent  = "—";
-        elJM.textContent  = "—";
         debug.textContent = "⚠️ Village introuvable.";
         return;
       }
 
-      const roi  = row["Roi du village:"] || row["Roi du village:2"] || "";
-      const ji1  = row["Jour interdit1"] || "";
-      const ji2  = row["Jour interdit2"] || "";
-      const ji3  = row["Jour interdit3"] || "";
-      const jm1  = row["Jour du marché1"] || "";
-      const jm2  = row["Jour du marché2"] || "";
-      const jm3  = row["Jour du marché3"] || "";
+      document.getElementById("roi-village").textContent =
+        row["Roi du village:"] || row["Roi du village:2"] || "—";
 
-      elRoi.textContent = roi || "—";
-      elJI.textContent  = [ji1, ji2, ji3].filter(Boolean).join(" • ") || "—";
-      elJM.textContent  = [jm1, jm2, jm3].filter(Boolean).join(" • ") || "—";
+      document.getElementById("interdits-village").textContent =
+        [row["Jour interdit1"], row["Jour interdit2"], row["Jour interdit3"]]
+          .filter(Boolean)
+          .join(" • ") || "—";
 
-      debug.textContent = "Données OK 👍";
-    }
-    catch (err) {
+      document.getElementById("marche-village").textContent =
+        [row["Jour du marché1"], row["Jour du marché2"], row["Jour du marché3"]]
+          .filter(Boolean)
+          .join(" • ") || "—";
+
+      debug.textContent = "✔ Données OK";
+    } catch (err) {
       debug.textContent = "❌ " + err.message;
-      document.getElementById('roi-village').textContent = "—";
-      document.getElementById('interdits-village').textContent = "—";
-      document.getElementById('marche-village').textContent = "—";
     }
   })();
   </script>
