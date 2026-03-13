@@ -418,6 +418,7 @@ function renderOneMonth(root, start, village, place){
   root.appendChild(wrap);
 }
 
+
 function renderVillageMeta(){
   const vKey = String(state.village || 'ALL').toUpperCase();
 
