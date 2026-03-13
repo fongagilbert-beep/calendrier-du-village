@@ -419,32 +419,44 @@ function renderOneMonth(root, start, village, place){
 }
 
 
-function renderVillageMeta(){
-  const vKey = String(state.village || 'ALL').toUpperCase();
+function renderVillageMeta(state) {
+  // 1) Clé village
+  const vKey = String(state?.village ?? 'ALL').toUpperCase();
 
-  const roi = (state.roiByVillage && state.roiByVillage[vKey]) || state.roi || "—";
-  const marcheArr = (state.marcheByVillage && state.marcheByVillage[vKey]) || state.marche || [];
-  const motif = (state.motifByVillage && state.motifByVillage[vKey]) || state.motif || "—";
+  // 2) Données (remet bien "&&" si tu avais "amp;&amp;")
+  const roi       = state?.roiByVillage?.[vKey]    ?? state?.roi    ?? '—';
+  const marcheArr = state?.marcheByVillage?.[vKey] ?? state?.marche ?? [];
+  const motif     = state?.motifByVillage?.[vKey]  ?? state?.motif  ?? '—';
 
-  const elRoi = document.getElementById("roi-village");
-  if (elRoi) elRoi.textContent = roi || "—";
+  // 3) Références DOM (adapte les IDs si besoin)
+  const elRoi        = document.getElementById('roi-village');
+  const elMarche     = document.getElementById('marche-village');
+  const elMotif      = document.getElementById('motif-village');
+  const elInterdits  = document.getElementById('interdits-village'); // si tu en as un
+  const blocInfos    = document.getElementById('bloc-infos-village'); // le conteneur à cacher/afficher
 
-  const elMarche = document.getElementById("marche-village");
-  if (elMarche) elMarche.textContent = (marcheArr || []).join(", ") || "—";
+  // 4) Cas "ALL" → on masque le bloc + tirets
+  if (vKey === 'ALL') {
+    if (elRoi)        elRoi.textContent = '—';
+    if (elMarche)     elMarche.textContent = '—';
+    if (elMotif)      elMotif.textContent = '—';
+    if (elInterdits)  elInterdits.textContent = '—';
+    if (blocInfos)    blocInfos.style.display = 'none'; // on cache le bloc
+    return; // ← OK ici car on est DANS la fonction
+  }
 
-  const elMotif = document.getElementById("motif-village");
-  if (elMotif) elMotif.textContent = motif || "—";
-}
+  // 5) Cas village spécifique → on réaffiche et on remplit
+  if (blocInfos) blocInfos.style.display = '';
 
-if (vKey === 'ALL') {
-  if (elRoi)       elRoi.textContent = '—';
-  if (elMarche)    elMarche.textContent = '—';
-  if (elMotif)     elMotif.textContent = '—';
-  if (elInterdits) elInterdits.textContent = '—';
-  if (blocInfos)   blocInfos.style.display = 'none'; // ← on cache le bloc
-  return;
-} else {
-  if (blocInfos)   blocInfos.style.display = '';     // ← on le réaffiche sur un village
+  if (elRoi)   elRoi.textContent = roi || '—';
+
+  // Normaliser marché en tableau puis join
+  const marcheList = Array.isArray(marcheArr)
+    ? marcheArr
+    : (marcheArr != null ? [marcheArr] : []);
+  if (elMarche) elMarche.textContent = (marcheList.filter(Boolean).join(', ')) || '—';
+
+  if (elMotif) elMotif.textContent = motif || '—';
 }
 
 
