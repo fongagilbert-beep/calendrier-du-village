@@ -446,7 +446,6 @@ if (vKey === 'ALL') {
 } else {
   if (blocInfos)   blocInfos.style.display = '';     // ← on le réaffiche sur un village
 }
-``
 
 
 // ----------------------------- Navigation & paramètres
