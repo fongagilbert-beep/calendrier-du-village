@@ -374,7 +374,6 @@ if (document.readyState === "loading"){
       remplirListeVillages(rows);
       renderNineColumns();
     });
-});
   });
 } else {
   wireNav();
