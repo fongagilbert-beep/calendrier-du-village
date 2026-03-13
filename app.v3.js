@@ -37,7 +37,10 @@ const state = {
 
   // Indices J par village (ex. ALL:[2,5] veut dire J2 et J5)
   forbiddenFromJ: {},
-  marketFromJ: {}
+  marketFromJ: {},
+
+  // <<< MODIF: conserver les lignes brutes pour remplir la liste des villages
+  rowsRaw: null
 };
 
 // ----------------------------- Utils
@@ -215,14 +218,13 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       canonical.traditional_months[vUpper] = mMap;
     }
 
-    // Interdits : libellés FR d'abord
+    // Interdits : libellés FR d'abord, sinon colonnes V/W/X
     const forb = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour interdit${k}`];
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) forb.push(txt);
     }
-    // Si pas trouvés, colonnes lettres V/W/X
     if (forb.length === 0) {
       ["V","W","X"].forEach(col => {
         const v = (r[col] == null ? "" : String(r[col])).trim();
@@ -233,14 +235,13 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       canonical.forbidden_names[vUpper] = forb;
     }
 
-    // Marchés : libellés FR d'abord
+    // Marchés : libellés FR d'abord, sinon Z/AA/AB
     const mark = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour du marché${k}`];
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) mark.push(txt);
     }
-    // Sinon colonnes lettres Z/AA/AB
     if (mark.length === 0) {
       ["Z","AA","AB"].forEach(col => {
         const v = (r[col] == null ? "" : String(r[col])).trim();
@@ -294,7 +295,7 @@ async function loadDataJSON(){
           console.log("[DATA] Ancre globale injectée (canonique):", raw.traditional_days_anchor.ALL);
         }
       }
-      return hydrateStateFromCanonical(raw);
+      return hydrateStateFromCanonical(raw, /*rowsRaw*/ null); // <<< MODIF
     }
 
     // 2) Sinon, "rows" (table)
@@ -319,7 +320,7 @@ async function loadDataJSON(){
         }
       }
 
-      return hydrateStateFromCanonical(canonical);
+      return hydrateStateFromCanonical(canonical, /*rowsRaw*/ rows); // <<< MODIF
     }
 
     console.warn("[DATA] Structure inconnue (ni canonique, ni rows).");
@@ -332,7 +333,7 @@ async function loadDataJSON(){
 }
 
 // Hydrate 'state' depuis la structure canonique
-function hydrateStateFromCanonical(data) {
+function hydrateStateFromCanonical(data, rowsRaw) { // <<< MODIF (nouveau param)
   state.j8       = data.traditional_days_8      || {};
   state.j8Anchor = data.traditional_days_anchor || {};
   state.tmonths  = data.traditional_months      || {};
@@ -343,6 +344,9 @@ function hydrateStateFromCanonical(data) {
   state.roiByVillage    = data.roi_by_village    || {};
   state.motifByVillage  = data.motif_by_village  || {};
   state.marcheByVillage = data.marche_by_village || {};
+
+  // <<< MODIF: conserver les rows brutes pour remplir la liste villages
+  state.rowsRaw = Array.isArray(rowsRaw) ? rowsRaw : null;
 
   // Noms -> indices J par village
   state.forbiddenFromJ = computeIndicesFromNamesPerVillage(state.forbiddenNames);
@@ -479,26 +483,26 @@ function remplirListeVillagesDepuisData(data) {
     return;
   }
 
+  // <<< MODIF: vrai HTML, pas encodé
   sel.innerHTML = '<option value="ALL">Tous</option>';
 
   const uniques = new Set();
 
-  // Clés disponibles dans les structures canoniques
+  // 1) <<< MODIF: D’abord les rows brutes (montre tous les villages même si J/M vides)
+  if (Array.isArray(state.rowsRaw)) {
+    state.rowsRaw.forEach(r => {
+      const raw = (r.Village || r.village || '').toString().trim();
+      if (raw) uniques.add(raw.toUpperCase());
+    });
+  }
+
+  // 2) Compléter avec ce qui a été converti
   [state.j8, state.j8Anchor, state.tmonths, state.forbiddenNames, state.marketNames].forEach(obj => {
     Object.keys(obj || {}).forEach(k => {
       const v = String(k || '').trim().toUpperCase();
       if (v && v !== 'ALL') uniques.add(v);
     });
   });
-
-  // Fallback : depuis data.rows si fourni en table
-  const rows = Array.isArray(data?.rows) ? data.rows : (Array.isArray(data) ? data : []);
-  if (Array.isArray(rows)) {
-    rows.forEach(r => {
-      const raw = (r.Village || r.village || '').toString().trim();
-      if (raw) uniques.add(raw.toUpperCase());
-    });
-  }
 
   const list = Array.from(uniques).sort();
   if (list.length === 0) {
@@ -624,4 +628,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("[Init] Erreur pendant l'init:", e);
   }
 });
-``
