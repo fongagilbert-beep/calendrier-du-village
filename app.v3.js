@@ -1,6 +1,6 @@
 // =====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
-// Version intégrée : loader rows + ancre globale + M1..M12 + J1..J8 + V/W/X & Z/AA/AB
+// Loader rows + ancre globale + M1..M12 + J1..J8 + V/W/X & Z/AA/AB
 // =====================================================
 
 const today = new Date();
@@ -16,30 +16,24 @@ const state = {
   filtre: 'all',
   dataMap: new Map(),
 
-  // Métas globales (fallback)
   roi: '—',
   motif: '—',
   marche: [],
 
-  // Métas par village (prioritaires si présents)
   roiByVillage: {},
   motifByVillage: {},
   marcheByVillage: {},
 
-  // Données calcul / rendu
   tmonths: {},
   j8: {},
   j8Anchor: {},
 
-  // Noms saisis (interdits / marchés) -> indices J correspondants (par village)
   forbiddenNames: {},
   marketNames: {},
 
-  // Indices J par village (ex. ALL:[2,5] veut dire J2 et J5)
   forbiddenFromJ: {},
   marketFromJ: {},
 
-  // <<< MODIF: conserver les lignes brutes pour remplir la liste des villages
   rowsRaw: null
 };
 
@@ -58,12 +52,7 @@ function makeKey(iso, v){ return iso + '|' + v; }
 function daysInMonth(y,m){ return new Date(y, m+1, 0).getDate(); }
 function isSameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
 function monthLabel(y,m){ return fmt.monthYear.format(new Date(y,m,1)); }
-function formatDayLabel(d){
-  const wd = fmt.weekdayLong.format(d);
-  return wd.charAt(0).toUpperCase() + wd.slice(1);
-}
 
-// Convertit "28/02/2026" ou Date en "2026-02-28"
 function toISODateFromAny(x) {
   if (!x) return "";
   if (x instanceof Date && !isNaN(x)) {
@@ -98,7 +87,6 @@ function buildJNameIndexForVillage(village){
   }
   return out;
 }
-
 function computeIndicesFromNamesPerVillage(namesMap){
   const out = {};
   for (const [vill, arr] of Object.entries(namesMap || {})){
@@ -113,12 +101,10 @@ function computeIndicesFromNamesPerVillage(namesMap){
   }
   return out;
 }
-
 function getAnchorForVillage(v){
   const key = String(v || 'ALL').toUpperCase();
   return state.j8Anchor[key] || state.j8Anchor["ALL"];
 }
-
 function getJIndexForDate(d, village){
   const anc = getAnchorForVillage(village);
   if (!anc) return null;
@@ -126,7 +112,6 @@ function getJIndexForDate(d, village){
   const diff = Math.floor((d - start) / 86400000);
   return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1; // 1..8
 }
-
 function listContainsJ(map, village, j){
   const v = String(village || 'ALL').toUpperCase();
   const arr = map[v] || map["ALL"] || [];
@@ -147,8 +132,6 @@ function resolveTraditionalAndTags(d, village){
   const isForbidden = jIdx && listContainsJ(state.forbiddenFromJ, vKey, jIdx);
 
   let trad = rec?.trad;
-
-  // Nom du jour traditionnel (priorité village, fallback ALL)
   if (!trad && jIdx){
     trad = state.j8[vKey]?.[String(jIdx)] || state.j8.ALL?.[String(jIdx)] || null;
   }
@@ -172,7 +155,7 @@ function cvUpdateData(entries){
   }
 }
 
-// ----------------------------- Adaptateurs (rows[] -> structure canonique)
+// ----------------------------- Adaptateur rows -> canonique
 function adaptRowsToCanonical_FR_withLetters(rows) {
   const canonical = {
     traditional_days_8: {},
@@ -207,7 +190,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       canonical.traditional_days_8[vUpper] = jmap;
     }
 
-    // M1..M12 (Février=>M2 etc.)
+    // M1..M12
     const mMap = {};
     for (let m = 1; m <= 12; m++) {
       const val = r[`M${m}`];
@@ -218,22 +201,18 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       canonical.traditional_months[vUpper] = mMap;
     }
 
-    // Interdits : libellés FR d'abord, sinon colonnes V/W/X
+    // Interdits : libellés FR d'abord, sinon V/W/X
     const forb = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour interdit${k}`];
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) forb.push(txt);
     }
-    if (forb.length === 0) {
-      ["V","W","X"].forEach(col => {
-        const v = (r[col] == null ? "" : String(r[col])).trim();
-        if (v) forb.push(v);
-      });
-    }
-    if (forb.length > 0) {
-      canonical.forbidden_names[vUpper] = forb;
-    }
+    if (forb.length === 0) ["V","W","X"].forEach(col => {
+      const v = (r[col] == null ? "" : String(r[col])).trim();
+      if (v) forb.push(v);
+    });
+    if (forb.length > 0) canonical.forbidden_names[vUpper] = forb;
 
     // Marchés : libellés FR d'abord, sinon Z/AA/AB
     const mark = [];
@@ -242,12 +221,10 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) mark.push(txt);
     }
-    if (mark.length === 0) {
-      ["Z","AA","AB"].forEach(col => {
-        const v = (r[col] == null ? "" : String(r[col])).trim();
-        if (v) mark.push(v);
-      });
-    }
+    if (mark.length === 0) ["Z","AA","AB"].forEach(col => {
+      const v = (r[col] == null ? "" : String(r[col])).trim();
+      if (v) mark.push(v);
+    });
     if (mark.length > 0) {
       canonical.market_names[vUpper] = mark;
       canonical.marche_by_village[vUpper] = mark.slice();
@@ -269,10 +246,9 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
   return canonical;
 }
 
-// ----------------------------- JSON Loader (support canonique OU table rows + ancre globale)
+// ----------------------------- JSON Loader
 async function loadDataJSON(){
-  // 👉 Ajuste ici si ton fichier s’appelle data.json : "./data.json?v=..."
-  const url = "./data.v3.json?v=" + Date.now();
+  const url = "./data.v3.json?v=" + Date.now(); // <- si tu renommes le fichier, adapte ici
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
@@ -281,11 +257,11 @@ async function loadDataJSON(){
     }
     const raw = await res.json();
 
-    // 1) Si déjà "canonique"
+    // Déjà canonique ?
     if (raw && (raw.traditional_days_8 || raw.traditional_days_anchor || raw.traditional_months)) {
-      // Ancre globale au niveau racine (si fournie)
-      const ad = raw.AnchorDate || raw["AnchorDate (globale)"];
-      const aj = raw.AnchorJ || raw["AnchorJ (1..8)"];
+      // Ancre globale au racine éventuelle
+      let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
+      let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
       if (ad && aj && (!raw.traditional_days_anchor || !raw.traditional_days_anchor.ALL)) {
         const iso = toISODateFromAny(ad);
         const j = Number(aj);
@@ -295,19 +271,19 @@ async function loadDataJSON(){
           console.log("[DATA] Ancre globale injectée (canonique):", raw.traditional_days_anchor.ALL);
         }
       }
-      return hydrateStateFromCanonical(raw, /*rowsRaw*/ null); // <<< MODIF
+      return hydrateStateFromCanonical(raw, null);
     }
 
-    // 2) Sinon, "rows" (table)
+    // Table rows
     const rows = Array.isArray(raw?.rows) ? raw.rows : (Array.isArray(raw) ? raw : null);
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
 
-      // Ancre globale au niveau racine ou sur la 1ère ligne
-      let ad = raw.AnchorDate || raw["AnchorDate (globale)"];
-      let aj = raw.AnchorJ || raw["AnchorJ (1..8)"];
-      if (!ad && rows[0]) ad = rows[0]["AnchorDate (globale)"] || rows[0].AnchorDate;
-      if (!aj && rows[0]) aj = rows[0]["AnchorJ (1..8)"] || rows[0].AnchorJ;
+      // Ancre globale au racine ou dans rows[0]
+      let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
+      let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
+      if (!ad && rows[0]) ad = rows[0]["AnchorDate (globale)"] ?? rows[0].AnchorDate;
+      if (!aj && rows[0]) aj = rows[0]["AnchorJ (1..8)"]      ?? rows[0].AnchorJ;
 
       if (ad && aj) {
         const iso = toISODateFromAny(ad);
@@ -320,7 +296,7 @@ async function loadDataJSON(){
         }
       }
 
-      return hydrateStateFromCanonical(canonical, /*rowsRaw*/ rows); // <<< MODIF
+      return hydrateStateFromCanonical(canonical, rows);
     }
 
     console.warn("[DATA] Structure inconnue (ni canonique, ni rows).");
@@ -332,8 +308,8 @@ async function loadDataJSON(){
   }
 }
 
-// Hydrate 'state' depuis la structure canonique
-function hydrateStateFromCanonical(data, rowsRaw) { // <<< MODIF (nouveau param)
+// Hydrate 'state'
+function hydrateStateFromCanonical(data, rowsRaw) {
   state.j8       = data.traditional_days_8      || {};
   state.j8Anchor = data.traditional_days_anchor || {};
   state.tmonths  = data.traditional_months      || {};
@@ -345,10 +321,8 @@ function hydrateStateFromCanonical(data, rowsRaw) { // <<< MODIF (nouveau param)
   state.motifByVillage  = data.motif_by_village  || {};
   state.marcheByVillage = data.marche_by_village || {};
 
-  // <<< MODIF: conserver les rows brutes pour remplir la liste villages
   state.rowsRaw = Array.isArray(rowsRaw) ? rowsRaw : null;
 
-  // Noms -> indices J par village
   state.forbiddenFromJ = computeIndicesFromNamesPerVillage(state.forbiddenNames);
   state.marketFromJ    = computeIndicesFromNamesPerVillage(state.marketNames);
 
@@ -393,7 +367,6 @@ function renderOneMonth(root, start, village, place){
   wrap.className = "month " + place;
   wrap.setAttribute('data-watermark', String(village || '').toUpperCase());
 
-  // --- En‑tête : "Mois grégorien — M#"
   const head = document.createElement("div");
   head.className = "month-header";
   const tradMonth = state.tmonths[String(village || '').toUpperCase()]?.[String(m+1)]
@@ -432,7 +405,7 @@ function renderOneMonth(root, start, village, place){
 
     const cell2 = document.createElement("div");
     cell2.className = "cell greg";
-    const wd = fmt.weekdayLong.format(cur).toLowerCase(); // "lundi"…"dimanche"
+    const wd = fmt.weekdayLong.format(cur).toLowerCase();
     cell2.setAttribute("data-day", wd);
     cell2.textContent = wd.charAt(0).toUpperCase() + wd.slice(1);
 
@@ -475,7 +448,7 @@ function shouldHideByFilter(x){
   return false;
 }
 
-// ----------------------------- Villages : remplissage du select (robuste)
+// ----------------------------- Villages : remplissage du select
 function remplirListeVillagesDepuisData(data) {
   const sel = document.getElementById("param-village");
   if (!sel) {
@@ -483,12 +456,11 @@ function remplirListeVillagesDepuisData(data) {
     return;
   }
 
-  // <<< MODIF: vrai HTML, pas encodé
   sel.innerHTML = '<option value="ALL">Tous</option>';
 
   const uniques = new Set();
 
-  // 1) <<< MODIF: D’abord les rows brutes (montre tous les villages même si J/M vides)
+  // d'abord les rows brutes -> montre tous les villages même si J/M vides
   if (Array.isArray(state.rowsRaw)) {
     state.rowsRaw.forEach(r => {
       const raw = (r.Village || r.village || '').toString().trim();
@@ -496,7 +468,7 @@ function remplirListeVillagesDepuisData(data) {
     });
   }
 
-  // 2) Compléter avec ce qui a été converti
+  // compléter avec ce qui a été converti
   [state.j8, state.j8Anchor, state.tmonths, state.forbiddenNames, state.marketNames].forEach(obj => {
     Object.keys(obj || {}).forEach(k => {
       const v = String(k || '').trim().toUpperCase();
@@ -505,15 +477,13 @@ function remplirListeVillagesDepuisData(data) {
   });
 
   const list = Array.from(uniques).sort();
-  if (list.length === 0) {
-    console.warn("[Village] Aucun village détecté. Vérifie que tes champs 'Village' existent.");
-  }
+  if (list.length === 0) console.warn("[Village] Aucun village détecté.");
 
   const frag = document.createDocumentFragment();
   list.forEach(vUpper => {
     const opt = document.createElement("option");
     opt.value = vUpper;
-    opt.textContent = vUpper; // si tu veux une casse d'affichage: mappe ici
+    opt.textContent = vUpper;
     frag.appendChild(opt);
   });
   sel.appendChild(frag);
@@ -529,30 +499,17 @@ function remplirListeVillagesDepuisData(data) {
 function wireNav(){
   document.querySelectorAll(".nav-row [data-action]").forEach(btn => {
     btn.addEventListener("click", () => {
-      if (!state || !state.anchor){
-        console.error("wireNav: state.anchor manquant");
-        return;
-      }
-      if (typeof renderNineColumns !== "function"){
-        console.error("wireNav: renderNineColumns manquant");
-        return;
-      }
-
       const a = btn.dataset.action;
       const anchor = state.anchor;
 
       if (a === "prev3")
         state.anchor = new Date(anchor.getFullYear(), anchor.getMonth() - 3, 1);
-
       if (a === "next3")
         state.anchor = new Date(anchor.getFullYear(), anchor.getMonth() + 3, 1);
-
       if (a === "prevY")
         state.anchor = new Date(anchor.getFullYear() - 1, anchor.getMonth(), 1);
-
       if (a === "nextY")
         state.anchor = new Date(anchor.getFullYear() + 1, anchor.getMonth(), 1);
-
       if (a === "today") {
         const now = new Date();
         state.anchor = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -572,7 +529,7 @@ function wireParams(){
 
   if (y && m){
     const up = () => {
-      state.anchor = new Date(+y.value, take(m.value) - 1, 1);
+      state.anchor = new Date(+y.value, Number(m.value) - 1, 1);
       renderNineColumns();
     };
     y.addEventListener("change", up);
@@ -593,15 +550,11 @@ function wireParams(){
       state.filtre =
         raw.includes("inter") ? "forbidden" :
         raw.includes("march") ? "market" :
-        raw.includes("forbid") ? "forbidden" :
-        raw.includes("market") ? "market" :
         "all";
       renderNineColumns();
     });
   }
 }
-
-function take(x){ return Number(x) || 1; }
 
 function syncParamFields(){
   const y = document.getElementById("param-annee");
@@ -610,19 +563,14 @@ function syncParamFields(){
   if (m) m.value = String(state.anchor.getMonth() + 1);
 }
 
-// ----------------------------- Init unifiée
+// ----------------------------- Init
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     wireNav();
     wireParams();
 
-    // Chargement unique du JSON (peuple state.*)
-    const data = await loadDataJSON(); // peut retourner null si échec
-
-    // Remplit la liste des villages après le chargement
+    const data = await loadDataJSON();
     remplirListeVillagesDepuisData(data || {});
-
-    // Premier rendu
     renderNineColumns();
   } catch (e) {
     console.error("[Init] Erreur pendant l'init:", e);
