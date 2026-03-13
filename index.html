@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <base href="/calendrier-du-village/
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calendrier du Village</title>
+
+  <!-- IMPORTANT : Base pour GitHub Pages -->
+  <base href="/calendrier-du-vtitle>Calendrier du Village</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Akatab:wght@400;700&amp;display=swapifest -->
-  <link rel="manifest" href="/calendrier-duifest
-  <link rel="stylesheet" href="styles.v3.css?v=202603
-  <!-- Couleur navigateur -->
+  <link href="https://fonts.googleapis.com=Akatab:wght@400;700&amp;display=swap
+
+  <!-- Manifest -->
+  manifest.v3.webmanifest
+
+  <!-- Couleur du navigateur -->
   <meta name="theme-color" content="#0b3c8d">
 
-  <!-- CSS (chemin ABSOLU GitHub Pages) -->
-  <link rel="stylesheet" href="/calendrier-du-village/styles.v3on SVG -->
+  <!-- CSS du calendrier -->
+  styles.v3.css?v=20260311
+
+  <!-- favicon -->
   <link rel="icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3ata-action  <div class="params">
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3</div>
+
+  <div class="params">
     <label>Année (M) :
       <input id="param-annee" type="number" min="1900" max="2500">
     </label>
@@ -56,14 +63,12 @@
 
   <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
 
-  <!-- Script principal (ABSOLU) -->
-  <script src="/calendrier-du-village/app.v3.js?v=fix-ipt>
-
-  <!-- Service Worker (ABSOLU) -->
+  <!-- Script principal -->
+  <script src="app.v3.js?v=fix-entities"!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/calendrier-du-village/sw.js')
+        navigator.serviceWorker.register('sw.js')
           .catch(err => console.error('SW registration failed:', err));
       });
     }
@@ -72,11 +77,11 @@
   <!-- Debug -->
   <div id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></div>
 
-  <!-- Chargement des données (ABSOLU) -->
+  <!-- Chargement des données -->
   <script>
   (async () => {
     try {
-      const url = "/calendrier-du-village/data.v3.json?v=" + Date.now();
+      const url = "data.v3.json?v=" + Date.now();
       const res = await fetch(url, { cache: 'no-store' });
 
       if (!res.ok) throw new Error('HTTP ' + res.status);
