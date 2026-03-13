@@ -5,38 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendrier du Village</title>
 
-  https://fonts.googleapis.com/css2?family=Akatab:wght@400;700&display=swap
+  <!-- Google Fonts (échappé uniquement sur &) -->
+  <link href="https://fonts.googleapis.com/css2?family=Akatab:wght@400;700&amp;display- Manifeste -->
+  <link rel="manifestfest
 
-<!-- Le bon manifeste -->
-<link rel="manifest" href="manifest.v3.webmanifest">
+  <!-- Couleur -->
+  <meta name="theme-color" content="#0b3c8d">
 
-<!-- La bonne couleur -->
-<meta name="theme-color" content="#0b3c8d">
-
-
-  <!-- CSS principal -->
-  <link rel="stylesheet" href="./styles.v3.css?v=20260311">
-
-  <!-- favicon pour éviter le 404 -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3C/svg%3E">
-</head>
-
-<body>
-
-  <!-- BANDEAU BLEU TITRE -->
-  <div class="site-header">Calendrier du Village</div>
-
-  <!-- BOUTONS DE NAVIGATION -->
-  <div class="nav-row">
-    <button class="btn" data-action="prev3">‹ 3 mois</button>
-    <button class="btn" data-action="next3">3 mois ›</button>
-    <button class="btn btn-today" data-action="today">Aujourd’hui</button>
-    <button class="btn" data-action="prevY">‹ 1 an</button>
-    <button class="btn" data-action="nextY">1 an ›</button>
-  </div>
-
-  <!-- PARAMÈTRES -->
-  <div class="params">
+  <!-- CSS -->
+  <link rel="stylesheet" href="./styles.v3on -->
+  <link 
+    rel="icon" 
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3Ction="next class="params">
     <label>Année (M) :
       <input id="param-annee" type="number" min="1900" max="2500">
     </label>
@@ -50,323 +30,114 @@
         <option value="ALL">Tous</option>
       </select>
     </label>
-
-<div class="month">
-    <div class="month-watermark">BALENGOU</div>
-    <!-- ton calendrier -->
-</div>
-
-    
-    <label>Filtre :
-      <select id="param-filtre">
-        <option value="tous">Tous</option>
-        <option value="marché">Marchés</option>
-        <option value="interdits">Interdits</option>
-      </select>
-    </label>
   </div>
 
-  <!-- CALENDRIER -->
+  <div class="month">
+    <div class="month-watermark">BALENGOU</div>
+  </div>
+
+  <label>Filtre :
+    <select id="param-filtre">
+      <option value="tous">Tous</option>
+      <option value="marché">Marchés</option>
+      <option value="interdits">Interdits</option>
+    </select>
+  </label>
+
   <div id="calendar-9cols"></div>
 
-<!-- === BLOC INFOS FINAL === -->
-<section id="bloc-infos-final" class="bloc-infos-final">
+  <section id="bloc-infos-final" class="bloc-infos-final">
     <div class="infos-inner">
-        <p class="roi">Roi : <span id="roi-village"></span></p>
-        <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
-        <p class="marche">Jours de marché : <span id="marche-village"></span></p>
+      <p class="roi">Roi : <span id="roi-village"></span></p>
+      <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
+      <p class="marche">Jours de marché : <span id="marche-village"></span></p>
     </div>
-</section>
+  </section>
 
-<p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
-  <!-- SCRIPT -->
-  <script src="./app.v3.js?v=fix-entities" defer></script>
-<!-- SCRIPT principal -->
-  <script src="./app.v3.js?v=fix-entities"></script>
+  <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
 
+  <!-- Script principal -->
+  <script src="./ix-entities</script>
 
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .catch(err => console.error('SW registration failed:', err));
-    });
-  }
-</script>
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .catch(err => console.error('SW registration failed:', err));
+      });
+    }
+  </script>
 
   <div id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></div>
-<script>
-(async () => {
-  try {
-    // cache-buster pour éviter l’ancienne version
-    const res = await fetch('data.v3.json?v=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    console.log('DATA REÇUE =', data);
 
-    // Ta macro produit { rows: [...] }
-    const rows = Array.isArray(data) ? data : data.rows;
-    if (!rows || !rows.length) {
+  <!-- Script de chargement JSON (chemin GitHub Pages robuste) -->
+  <script>
+  (async () => {
+    try {
+      const BASE = '/calendrier-du-village/';
+      const url = BASE + 'data.v3.json?v=' + Date.now();
+
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      const json = await res.json();
+      const rows = Array.isArray(json) ? json : json.rows;
+      if (!rows || !rows.length) {
+        document.getElementById('debug').textContent =
+          '⚠️ Aucune donnée exploitable.';
+        return;
+      }
+
+      const params = new URLSearchParams(location.search);
+      const village = (params.get('village') || 'BALENGOU').trim();
+      const key = village.toLowerCase();
+
+      const row = rows.find(r => (r?.Village || '').trim().toLowerCase() === key);
+
+      const elRoi = document.getElementById('roi-village');
+      const elJI  = document.getElementById('interdits-village');
+      const elJM  = document.getElementById('marche-village');
+
+      if (!row) {
+        if (elRoi) elRoi.textContent = '—';
+        if (elJI)  elJI.textContent  = '—';
+        if (elJM)  elJM.textContent  = '—';
+        document.getElementById('debug').textContent = '⚠️ Village introuvable.';
+        return;
+      }
+
+      const roi  = row["Roi du village:"] || row["Roi du village:2"] || "";
+      const ji1  = row["Jour interdit1"] || "";
+      const ji2  = row["Jour interdit2"] || "";
+      const ji3  = row["Jour interdit3"] || "";
+      const jm1  = row["Jour du marché1"] || "";
+      const jm2  = row["Jour du marché2"] || "";
+      const jm3  = row["Jour du marché3"] || "";
+
+      const interdits = [ji1, ji2, ji3].filter(Boolean).join(' • ');
+      const marches   = [jm1, jm2, jm3].filter(Boolean).join(' • ');
+
+      if (elRoi) elRoi.textContent = roi || '—';
+      if (elJI)  elJI.textContent  = interdits || '—';
+      if (elJM)  elJM.textContent  = marches || '—';
+
+      const first = rows[0];
       document.getElementById('debug').textContent =
-        '⚠️ Aucune donnée exploitable (rows vide ou absent).';
-      return;
+        '1er village: ' + (first?.Village || '(inconnu)');
+    } 
+    catch (e) {
+      const dbg = document.getElementById('debug');
+      if (dbg) dbg.textContent = '❌ ' + e.message;
+      const elRoi = document.getElementById('roi-village');
+      const elJI  = document.getElementById('interdits-village');
+      const elJM  = document.getElementById('marche-village');
+      if (elRoi) elRoi.textContent = '—';
+      if (elJI)  elJI.textContent  = '—';
+      if (elJM)  elJM.textContent  = '—';
     }
+  })();
+  </script>
 
-    // Affiche 1ère ligne pour vérification
-    const first = rows[0];
-    document.getElementById('debug').textContent =
-      '1er village: ' + (first.Village || '(inconnu)') +
-      '\nJ1=' + (first?.J1 || '') +
-      '\n"Roi du village:" = ' + (first?.["Roi du village:"] || '');
-  } catch (e) {
-    console.error('ERREUR CHARGEMENT DATA', e);
-    document.getElementById('debug').textContent = '❌ ' + e.message;
-  }
-})();
-</script>
-
-  <!-- Pied de page : bloc infos + crédit -->
-
-  <script>
-(async () => {
-  // 1) DÉFINIR LE VILLAGE COURANT
-  //   - Option A : depuis l’URL (ex: ?village=BALENGOU)
-  const params = new URLSearchParams(location.search);
-  const villageFromUrl = params.get('village');
-
-  //   - Option B : valeur par défaut (à changer si besoin)
-  const villageCourant = villageFromUrl || 'BALENGOU';
-
-  // 2) CHARGER LE JSON EXPORTÉ PAR EXCEL (Param_Table -> data.v3.json)
-  const res = await fetch('data.v3.json?v=' + Date.now()); // anti-cache
-  if (!res.ok) throw new Error('Impossible de charger data.v3.json (HTTP ' + res.status + ')');
-  const json = await res.json();
-  const rows = Array.isArray(json) ? json : json.rows;
-  if (!rows || !rows.length) throw new Error('rows vide/absent dans data.v3.json');
-
-  // 3) RETROUVER LA LIGNE DU VILLAGE COURANT
-  //    (Colonnes Excel => clés JSON : "Village", "Informations:", "Roi du village:", "Jour du marché1", etc.)
-  const row = rows.find(r => (r.Village || '').trim().toLowerCase() === villageCourant.trim().toLowerCase());
-  if (!row) {
-    console.warn('Village non trouvé dans data.v3.json :', villageCourant);
-    document.querySelector('#info-bas').insertAdjacentHTML('beforeend',
-      `<p style="margin:0">Informations indisponibles pour <strong>${villageCourant}</strong>.</p>`);
-    return;
-  }
-
-  // 4) LIRE LES CHAMPS (exactement comme dans Param_Table)
-  //    ⚠️ Clés avec espaces/apostrophes/deux-points -> utiliser la notation crochets ["..."]
-  const infos           = row["Informations:"] || "";
-  const roi             = row["Roi du village:"] || row["Roi du village:2"] || "";
-  const jourInterdit1   = row["Jour interdit1"] || "";
-  const jourInterdit2   = row["Jour interdit2"] || "";
-  const jourInterdit3   = row["Jour interdit3"] || "";
-  const marche1         = row["Jour du marché1"] || "";
-  const marche2         = row["Jour du marché2"] || "";
-  const marche3         = row["Jour du marché3"] || "";
-
-  // 5) COMPOSER LE RENDU HTML DU BLOC
-  const lignes = [];
-
-  if (infos) lignes.push(`<p style="margin:.25rem 0 .5rem">${infos}</p>`);
-
-  // Sous-titres utiles si dispo
-  if (roi) {
-    lignes.push(`<p style="margin:.25rem 0"><strong>Roi&nbsp;:</strong> ${roi}</p>`);
-  }
-
-  const joursInterdits = [jourInterdit1, jourInterdit2, jourInterdit3].filter(Boolean).join(' • ');
-  if (joursInterdits) {
-    lignes.push(`<p style="margin:.25rem 0"><strong>Jours interdits&nbsp;:</strong> ${joursInterdits}</p>`);
-  }
-
-  const marches = [marche1, marche2, marche3].filter(Boolean).join(' • ');
-  if (marches) {
-    lignes.push(`<p style="margin:.25rem 0"><strong>Jour(s) de marché&nbsp;:</strong> ${marches}</p>`);
-  }
-
-  // Tu peux ajouter ici d’autres colonnes de Param_Table (J1..J8, M1..M12, etc.), exemple :
-  // const j1 = row["J1"] || ""; const m1 = row["M1"] || ""; ...
-  // lignes.push(`<p><strong>J1:</strong> ${j1} — <strong>M1:</strong> ${m1}</p>`);
-
-  // 6) INJECTER DANS LE RECTANGLE #info-bas
-  const container = document.querySelector('#info-bas');
-  container.insertAdjacentHTML('beforeend', lignes.join('\n'));
-
-  // 7) SIGNATURE : elle est déjà dans le HTML, centrée (".credit").
-  //    Si tu veux la manipuler dynamiquement, tu peux ici :
-  // document.querySelector('.credit').innerHTML = 'Proposé par <strong>Gilbert FONGA</strong>';
-
-})().catch(e => {
-  console.error('Erreur infos de bas de page :', e);
-  const c = document.querySelector('#info-bas');
-  if (c) c.insertAdjacentHTML('beforeend', `<p style="margin:0;color:#b00020">Erreur de chargement des informations.</p>`);
-});
-</script>
-``
-
-  <script>
-// Charge data.v3.json (gère {rows:[...]} ou un tableau [])
-async function loadParamTable() {
-  const res = await fetch('data.v3.json?v=' + Date.now()); // anti-cache
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
-  const rows = Array.isArray(data) ? data : data.rows;
-  if (!rows || !rows.length) throw new Error('rows vide/absent dans data.v3.json');
-  return rows;
-}
-
-// Village courant : ?village=BALENGOU dans l’URL, sinon valeur par défaut
-function getVillageCourant() {
-  const qs = new URLSearchParams(location.search);
-  const fromUrl = qs.get('village');
-  return (fromUrl || 'BALENGOU').trim();
-}
-
-(async () => {
-  try {
-    const rows = await loadParamTable();
-    const village = getVillageCourant();
-    const key = village.toLowerCase();
-
-    // Cherche la ligne correspondante dans Param_Table exporté
-    const row = rows.find(r => (r?.Village || '').trim().toLowerCase() === key);
-
-    const elRoi   = document.getElementById('roi-village');
-    const elJM    = document.getElementById('marche-village');
-    const elInfos = document.getElementById('motif-village');
-    const elJI    = document.getElementById('interdits-village'); // présent seulement si tu ajoutes la ligne HTML
-
-    if (!row) {
-      elRoi.textContent   = '—';
-      elJM.textContent    = '—';
-      if (elInfos) elInfos.textContent = '—';
-      if (elJI)    elJI.textContent    = '—';
-      console.warn('Village non trouvé dans data.v3.json :', village);
-      return;
-    }
-
-    // Clés exactement comme tes en-têtes Excel (Param / Param_Table)
-    const roi = row["Roi du village:"] || row["Roi du village:2"] || "";
-
-    const ji1 = row["Jour interdit1"] || "";
-    const ji2 = row["Jour interdit2"] || "";
-    const ji3 = row["Jour interdit3"] || "";
-    const interdits = [ji1, ji2, ji3].filter(Boolean).join(" • ");
-
-    const jm1 = row["Jour du marché1"] || "";
-    const jm2 = row["Jour du marché2"] || "";
-    const jm3 = row["Jour du marché3"] || "";
-    const marches = [jm1, jm2, jm3].filter(Boolean).join(" • ");
-
-    const infos = row["Informations:"] || "";
-
-    // Remplissage selon tes consignes
-    elRoi.textContent = roi || '—';
-    elJM.textContent  = marches || '—';
-    if (elInfos) elInfos.textContent = infos || '—';
-    if (elJI)    elJI.textContent    = interdits || '—';
-
-  } catch (e) {
-    console.error('Bloc infos bas :', e);
-    // Valeurs neutres en cas d’échec
-    const elRoi   = document.getElementById('roi-village');
-    const elJM    = document.getElementById('marche-village');
-    const elInfos = document.getElementById('motif-village');
-    const elJI    = document.getElementById('interdits-village');
-
-    if (elRoi)   elRoi.textContent   = '—';
-    if (elJM)    elJM.textContent    = '—';
-    if (elInfos) elInfos.textContent = '—';
-    if (elJI)    elJI.textContent    = '—';
-  }
-})();
-</script>
-
-
-<script>
-// Charge les lignes depuis data.v3.json (accepte {rows:[…]} ou un tableau [])
-async function loadParamTable() {
-  const res = await fetch('data.v3.json?v=' + Date.now()); // anti-cache pour éviter les versions en cache
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
-  const rows = Array.isArray(data) ? data : data.rows;     // tolère les deux formes
-  if (!rows || !rows.length) throw new Error('rows vide/absent');
-  return rows;
-}
-
-// Récupère le village courant : ?village=BALENGOU dans l’URL, sinon une valeur par défaut
-function getVillageCourant() {
-  const qs = new URLSearchParams(location.search);
-  const fromUrl = qs.get('village');
-  return (fromUrl || 'BALENGOU').trim();
-}
-
-(async () => {
-  try {
-    const rows = await loadParamTable();
-    const village = getVillageCourant();
-    const key = village.toLowerCase();
-
-    // Cherche la ligne dont "Village" correspond (insensible à la casse/espaces)
-    const row = rows.find(r => (r?.Village || '').trim().toLowerCase() === key);
-
-    const elRoi = document.getElementById('roi-village');
-    const elJI  = document.getElementById('interdits-village');
-    const elJM  = document.getElementById('marche-village');
-
-    if (!row) {
-      elRoi.textContent = '—';
-      elJI.textContent  = '—';
-      elJM.textContent  = '—';
-      console.warn('Village non trouvé dans data.v3.json :', village);
-      return;
-    }
-
-    // ⚠️ Accès aux clés EXACTES avec accents/espaces/deux-points :
-    //    utiliser la notation crochets ["..."]
-    const roi  = row["Roi du village:"] || row["Roi du village:2"] || "";
-    const ji1  = row["Jour interdit1"] || "";
-    const ji2  = row["Jour interdit2"] || "";
-    const ji3  = row["Jour interdit3"] || "";
-    const jm1  = row["Jour du marché1"] || "";
-    const jm2  = row["Jour du marché2"] || "";
-    const jm3  = row["Jour du marché3"] || "";
-
-    const interdits = [ji1, ji2, ji3].filter(Boolean).join(' • ');
-    const marches   = [jm1, jm2, jm3].filter(Boolean).join(' • ');
-
-    // Remplissage
-    elRoi.textContent = roi || '—';
-    elJI.textContent  = interdits || '—';
-    elJM.textContent  = marches || '—';
-
-  } catch (e) {
-    console.error('Bandeau infos bas :', e);
-    // Valeurs neutres en cas d’échec
-    const elRoi = document.getElementById('roi-village');
-    const elJI  = document.getElementById('interdits-village');
-    const elJM  = document.getElementById('marche-village');
-    if (elRoi) elRoi.textContent = '—';
-    if (elJI)  elJI.textContent  = '—';
-    if (elJM)  elJM.textContent  = '—';
-  }
-})();
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-  
 </body>
 </html>
-
