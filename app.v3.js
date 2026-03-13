@@ -375,7 +375,6 @@ function wireParams(){
     });
   }
 }
-
 function take(x){ return Number(x) || 1; }
 
 function syncParamFields(){
