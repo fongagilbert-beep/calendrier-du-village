@@ -6,17 +6,19 @@
   <title>Calendrier du Village</title>
 
   <!-- Google Fonts (échappé uniquement sur &) -->
-  <link href="https://fonts.googleapis.com/css2?family=Akatab:wght@400;700&amp;display- Manifeste -->
-  <link rel="manifestfest
+  <link href="https://fonts.googleapis.com/css2?family=Akatab:wght@400;700&amp;
+
+  <!-- manifeste -->
+  manifest.v3.webmanifest
 
   <!-- Couleur -->
   <meta name="theme-color" content="#0b3c8d">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="./styles.v3on -->
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="./!-- favicon -->
   <link 
     rel="icon" 
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3Ction="next class="params">
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E-action  <div class="params">
     <label>Année (M) :
       <input id="param-annee" type="number" min="1900" max="2500">
     </label>
@@ -57,9 +59,7 @@
   <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
 
   <!-- Script principal -->
-  <script src="./ix-entities</script>
-
-  <!-- Service Worker -->
+  <script src="./app.v3.js?v=fix-entities" deferregistrement du service worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -69,9 +69,10 @@
     }
   </script>
 
+  <!-- Debug -->
   <div id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></div>
 
-  <!-- Script de chargement JSON (chemin GitHub Pages robuste) -->
+  <!-- Chargement automatique du JSON -->
   <script>
   (async () => {
     try {
@@ -84,8 +85,7 @@
       const json = await res.json();
       const rows = Array.isArray(json) ? json : json.rows;
       if (!rows || !rows.length) {
-        document.getElementById('debug').textContent =
-          '⚠️ Aucune donnée exploitable.';
+        debug.textContent = '⚠️ Aucune donnée exploitable.';
         return;
       }
 
@@ -100,10 +100,10 @@
       const elJM  = document.getElementById('marche-village');
 
       if (!row) {
-        if (elRoi) elRoi.textContent = '—';
-        if (elJI)  elJI.textContent  = '—';
-        if (elJM)  elJM.textContent  = '—';
-        document.getElementById('debug').textContent = '⚠️ Village introuvable.';
+        elRoi.textContent = '—';
+        elJI.textContent  = '—';
+        elJM.textContent  = '—';
+        debug.textContent = '⚠️ Village introuvable.';
         return;
       }
 
@@ -115,26 +115,18 @@
       const jm2  = row["Jour du marché2"] || "";
       const jm3  = row["Jour du marché3"] || "";
 
-      const interdits = [ji1, ji2, ji3].filter(Boolean).join(' • ');
-      const marches   = [jm1, jm2, jm3].filter(Boolean).join(' • ');
-
-      if (elRoi) elRoi.textContent = roi || '—';
-      if (elJI)  elJI.textContent  = interdits || '—';
-      if (elJM)  elJM.textContent  = marches || '—';
+      elRoi.textContent = roi || '—';
+      elJI.textContent  = [ji1, ji2, ji3].filter(Boolean).join(' • ') || '—';
+      elJM.textContent  = [jm1, jm2, jm3].filter(Boolean).join(' • ') || '—';
 
       const first = rows[0];
-      document.getElementById('debug').textContent =
-        '1er village: ' + (first?.Village || '(inconnu)');
+      debug.textContent = '1er village: ' + (first?.Village || '(inconnu)');
     } 
     catch (e) {
-      const dbg = document.getElementById('debug');
-      if (dbg) dbg.textContent = '❌ ' + e.message;
-      const elRoi = document.getElementById('roi-village');
-      const elJI  = document.getElementById('interdits-village');
-      const elJM  = document.getElementById('marche-village');
-      if (elRoi) elRoi.textContent = '—';
-      if (elJI)  elJI.textContent  = '—';
-      if (elJM)  elJM.textContent  = '—';
+      debug.textContent = '❌ ' + e.message;
+      roiVillage.textContent   = '—';
+      interditsVillage.textContent = '—';
+      marcheVillage.textContent = '—';
     }
   })();
   </script>
