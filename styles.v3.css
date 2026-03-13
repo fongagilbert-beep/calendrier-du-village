@@ -563,3 +563,87 @@ h2 > #roi-village{
     position: relative !important;
     overflow: visible !important; /* jamais hidden */
 }
+
+
+/* =========================
+   PATCH WATERMARK & ETATS
+   ========================= */
+
+/* 1) Neutraliser tout watermark "ancien" */
+.month .month-watermark {           /* <div class="month-watermark">... */
+  display: none !important;
+}
+.month::after {                     /* ancien mini-watermark bas-droite */
+  content: none !important;
+  background: none !important;
+  background-image: none !important;
+}
+
+/* 2) Watermark officiel : vertical, centré, lisible
+      (texte pris depuis data-watermark posé par app.v3.js) */
+.month {
+  position: relative;
+  overflow: hidden;                 /* on garde le contenu propre */
+  background-image: none !important;
+}
+.month::before {
+  content: attr(data-watermark);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);        /* bas -> haut */
+  text-transform: uppercase;
+
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: clamp(28px, 10vw, 64px);
+  color: rgba(0,0,0,0.16);          /* gris ~16% */
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+}
+/* le contenu des mois reste au-dessus */
+.month .month-header,
+.month .month-head-row,
+.month .row {
+  position: relative;
+  z-index: 1;
+}
+
+/* 3) (Option recommandé) Ne plus peindre l'état "forbidden/market"
+      sur TOUTE la row ni dans la colonne grégorienne,
+      mais afficher des badges seulement dans la colonne TRAD.
+      -> Si tu souhaites garder les icônes actuelles (⛔/🛒) côté grégorien,
+         COMME TU LES AS, supprime ce bloc.
+*/
+
+/* Désactive la coloration globale de ligne si tu veux des badges trad-only */
+/*
+.row.market .cell    { background: transparent !important; }
+.row.forbidden .cell { background: transparent !important; }
+.row.filtered-out    { opacity: .35; filter: grayscale(55%); }  /* on garde le filtre */
+.cell.greg::before,
+.cell.greg::after {
+  content: none !important;        /* supprime les icônes sur la colonne grégorienne */
+}
+*/
+
+/* Si tu passes au "badge" en colonne TRAD (code JS fourni précédemment) :
+   tu peux ajouter ces styles. Laisse ce bloc commenté si tu veux garder tes icônes. */
+/*
+.cell.trad .trad-content {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.cell.trad .trad-name { font-weight: 700; color:#111827; }
+.cell.trad .trad-badges { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.badge {
+  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 800; letter-spacing: .2px; white-space: nowrap;
+}
+.badge-forbidden { color:#a60f0f; background:#ffe9e9; border:1px solid #f4b7b7; }
+.badge-market    { color:#0f6a2a; background:#e9ffef; border:1px solid #b7e7c5; }
+*/
