@@ -258,6 +258,27 @@ function shouldHideByFilter(x){
   return false;
 }
 
+// ----------------------------- Villages : remplissage du select
+function remplirListeVillages(rows) {
+  const sel = document.getElementById("param-village");
+  if (!sel) return;
+
+  sel.innerHTML = '<option value="ALL">Tous</option>';
+
+  const uniques = new Set();
+
+  rows.forEach(r => {
+    const v = (r.Village || "").trim();
+    if (v && !uniques.has(v.toUpperCase())) {
+      uniques.add(v.toUpperCase());
+      const opt = document.createElement("option");
+      opt.value = v.toUpperCase();
+      opt.textContent = v;
+      sel.appendChild(opt);
+    }
+  });
+}
+
 function wireNav(){
   document.querySelectorAll(".nav-row [data-action]").forEach(btn => {
     btn.addEventListener("click", () => {
