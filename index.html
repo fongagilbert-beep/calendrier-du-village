@@ -150,8 +150,7 @@
   const row = rows.find(r => (r.Village || '').trim().toLowerCase() === villageCourant.trim().toLowerCase());
   if (!row) {
     console.warn('Village non trouvé dans data.v3.json :', villageCourant);
-    document.querySelector('#info-bas').insertAdjacentHTML('beforeend',
-      `<p style="margin:0">Informations indisponibles pour <strong>${villageCourant}</strong>.</p>`);
+    
     return;
   }
 
