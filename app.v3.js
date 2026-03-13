@@ -140,7 +140,7 @@ function resolveTraditionalAndTags(d, village){
   return { trad, isMarket, isForbidden };
 }
 
-// ----------------------------- Données
+// ----------------------------- Données (optionnel)
 function cvUpdateData(entries){
   if (!Array.isArray(entries)) return;
   for (const e of entries){
@@ -155,7 +155,7 @@ function cvUpdateData(entries){
   }
 }
 
-// ----------------------------- Adaptateur rows -> canonique
+// ----------------------------- Adaptateur rows -> structure canonique
 function adaptRowsToCanonical_FR_withLetters(rows) {
   const canonical = {
     traditional_days_8: {},
@@ -186,9 +186,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) jmap[String(j)] = txt;
     }
-    if (Object.keys(jmap).length > 0) {
-      canonical.traditional_days_8[vUpper] = jmap;
-    }
+    if (Object.keys(jmap).length > 0) canonical.traditional_days_8[vUpper] = jmap;
 
     // M1..M12
     const mMap = {};
@@ -197,11 +195,9 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) mMap[String(m)] = txt;
     }
-    if (Object.keys(mMap).length > 0) {
-      canonical.traditional_months[vUpper] = mMap;
-    }
+    if (Object.keys(mMap).length > 0) canonical.traditional_months[vUpper] = mMap;
 
-    // Interdits : libellés FR d'abord, sinon V/W/X
+    // Interdits : FR d’abord, sinon V/W/X
     const forb = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour interdit${k}`];
@@ -214,7 +210,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     });
     if (forb.length > 0) canonical.forbidden_names[vUpper] = forb;
 
-    // Marchés : libellés FR d'abord, sinon Z/AA/AB
+    // Marché : FR d’abord, sinon Z/AA/AB
     const mark = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour du marché${k}`];
@@ -248,7 +244,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
 
 // ----------------------------- JSON Loader
 async function loadDataJSON(){
-  const url = "./data.v3.json?v=" + Date.now(); // <- si tu renommes le fichier, adapte ici
+  const url = "./data.v3.json?v=" + Date.now(); // adapte si ton fichier s'appelle data.json
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
@@ -257,9 +253,8 @@ async function loadDataJSON(){
     }
     const raw = await res.json();
 
-    // Déjà canonique ?
+    // Canonique ?
     if (raw && (raw.traditional_days_8 || raw.traditional_days_anchor || raw.traditional_months)) {
-      // Ancre globale au racine éventuelle
       let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
       let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
       if (ad && aj && (!raw.traditional_days_anchor || !raw.traditional_days_anchor.ALL)) {
@@ -460,7 +455,6 @@ function remplirListeVillagesDepuisData(data) {
 
   const uniques = new Set();
 
-  // d'abord les rows brutes -> montre tous les villages même si J/M vides
   if (Array.isArray(state.rowsRaw)) {
     state.rowsRaw.forEach(r => {
       const raw = (r.Village || r.village || '').toString().trim();
@@ -468,7 +462,6 @@ function remplirListeVillagesDepuisData(data) {
     });
   }
 
-  // compléter avec ce qui a été converti
   [state.j8, state.j8Anchor, state.tmonths, state.forbiddenNames, state.marketNames].forEach(obj => {
     Object.keys(obj || {}).forEach(k => {
       const v = String(k || '').trim().toUpperCase();
