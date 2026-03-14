@@ -1,4 +1,4 @@
-// =====================================================
+ // =====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
 // Loader rows + ancre globale + M1..M12 + J1..J8 + V/W/X & Z/AA/AB
 // =====================================================
@@ -110,12 +110,14 @@ function getJIndexForDate(d, village){
   if (!anc) return null;
   const start = new Date(String(anc.date) + "T00:00:00");
   const diff = Math.floor((d - start) / 86400000);
-  return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1; // 1..8
+  return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1;
 }
 function listContainsJ(map, village, j){
   const v = String(village || 'ALL').toUpperCase();
   const arr = map[v] || map["ALL"] || [];
   return Array.isArray(arr) ? arr.includes(j) : false;
+}
+
 }
 
 // ----------------------------- Résolution
@@ -155,7 +157,7 @@ function cvUpdateData(entries){
   }
 }
 
-// ----------------------------- Adaptateur rows -> structure canonique
+// ----------------------------- Adaptateur rows → structure canonique
 function adaptRowsToCanonical_FR_withLetters(rows) {
   const canonical = {
     traditional_days_8: {},
@@ -242,9 +244,11 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
   return canonical;
 }
 
+}
+
 // ----------------------------- JSON Loader
 async function loadDataJSON(){
-  const url = "./data.v3.json?v=" + Date.now(); // adapte si ton fichier s'appelle data.json
+  const url = "./data.v3.json?v=" + Date.now();
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
@@ -263,18 +267,19 @@ async function loadDataJSON(){
         raw.traditional_days_anchor = raw.traditional_days_anchor || {};
         if (iso && j >= 1 && j <= 8) {
           raw.traditional_days_anchor.ALL = { date: iso, j };
-          console.log("[DATA] Ancre globale injectée (canonique):", raw.traditional_days_anchor.ALL);
         }
       }
       return hydrateStateFromCanonical(raw, null);
     }
 
     // Table rows
-    const rows = Array.isArray(raw?.rows) ? raw.rows : (Array.isArray(raw) ? raw : null);
+    const rows = Array.isArray(raw?.rows)
+      ? raw.rows
+      : (Array.isArray(raw) ? raw : null);
+
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
 
-      // Ancre globale au racine ou dans rows[0]
       let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
       let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
       if (!ad && rows[0]) ad = rows[0]["AnchorDate (globale)"] ?? rows[0].AnchorDate;
@@ -285,9 +290,6 @@ async function loadDataJSON(){
         const j = Number(aj);
         if (iso && j >= 1 && j <= 8) {
           canonical.traditional_days_anchor.ALL = { date: iso, j };
-          console.log("[DATA] Ancre globale injectée (rows):", canonical.traditional_days_anchor.ALL);
-        } else {
-          console.warn("[DATA] Ancre globale détectée mais invalide :", ad, aj);
         }
       }
 
@@ -325,11 +327,8 @@ function hydrateStateFromCanonical(data, rowsRaw) {
 
   state.roi    = data.roi        || '—';
   state.motif  = data.extra_info || '—';
-  state.marche = (data.market_info || []);
+  state.marche = data.market_info || [];
 
-  console.log("[DATA] j8 villages:", Object.keys(state.j8 || {}));
-  console.log("[DATA] anchors villages:", Object.keys(state.j8Anchor || {}));
-  console.log("[DATA] months villages:", Object.keys(state.tmonths || {}));
   return data;
 }
 
@@ -418,35 +417,41 @@ function renderOneMonth(root, start, village, place){
   root.appendChild(wrap);
 }
 
+//
+// ⭐⭐⭐ VERSION CORRIGÉE DE renderVillageMeta() ⭐⭐⭐
+//
 function renderVillageMeta(){
   const vKey = String(state.village || 'ALL').toUpperCase();
 
-  const roi = (state.roiByVillage && state.roiByVillage[vKey]) || state.roi || "—";
-  const marcheArr = (state.marcheByVillage && state.marcheByVillage[vKey]) || state.marche || [];
-  const motif = (state.motifByVillage && state.motifByVillage[vKey]) || state.motif || "—";
+  const elRoi       = document.getElementById("roi-village");
+  const elMarche    = document.getElementById("marche-village");
+  const elMotif     = document.getElementById("motif-village");
+  const elInterdits = document.getElementById("interdits-village");
+  const blocInfos   = document.getElementById("bloc-infos-final");
 
-  const elRoi = document.getElementById("roi-village");
-  if (elRoi) elRoi.textContent = roi || "—";
+  // CAS ALL → on masque
+  if (vKey === 'ALL') {
+    if (elRoi)       elRoi.textContent = '—';
+    if (elMarche)    elMarche.textContent = '—';
+    if (elMotif)     elMotif.textContent = '—';
+    if (elInterdits) elInterdits.textContent = '—';
+    if (blocInfos)   blocInfos.style.display = 'none';
+    return;
+  }
 
-  const elMarche = document.getElementById("marche-village");
-  if (elMarche) elMarche.textContent = (marcheArr || []).join(", ") || "—";
+  // CAS VILLAGE
+  if (blocInfos) blocInfos.style.display = '';
 
-  const elMotif = document.getElementById("motif-village");
-  if (elMotif) elMotif.textContent = motif || "—";
+  const roi        = state.roiByVillage[vKey]    || "—";
+  const marcheArr  = state.marcheByVillage[vKey] || [];
+  const motif      = state.motifByVillage[vKey]  || "—";
+
+  if (elRoi)       elRoi.textContent = roi;
+  if (elMarche)    elMarche.textContent = marcheArr.join(", ") || "—";
+  if (elMotif)     elMotif.textContent = motif;
+  if (elInterdits) elInterdits.textContent = 
+      (state.forbiddenNames[vKey] || []).join(" • ") || "—";
 }
-
-if (vKey === 'ALL') {
-  if (elRoi)       elRoi.textContent = '—';
-  if (elMarche)    elMarche.textContent = '—';
-  if (elMotif)     elMotif.textContent = '—';
-  if (elInterdits) elInterdits.textContent = '—';
-  if (blocInfos)   blocInfos.style.display = 'none'; // ← on cache le bloc
-  return;
-} else {
-  if (blocInfos)   blocInfos.style.display = '';     // ← on le réaffiche sur un village
-}
-``
-
 
 // ----------------------------- Navigation & paramètres
 function shouldHideByFilter(x){
@@ -475,15 +480,15 @@ function remplirListeVillagesDepuisData(data) {
     });
   }
 
-  [state.j8, state.j8Anchor, state.tmonths, state.forbiddenNames, state.marketNames].forEach(obj => {
-    Object.keys(obj || {}).forEach(k => {
-      const v = String(k || '').trim().toUpperCase();
-      if (v && v !== 'ALL') uniques.add(v);
+  [state.j8, state.j8Anchor, state.tmonths, state.forbiddenNames, state.marketNames]
+    .forEach(obj => {
+      Object.keys(obj || {}).forEach(k => {
+        const v = String(k || '').trim().toUpperCase();
+        if (v && v !== 'ALL') uniques.add(v);
+      });
     });
-  });
 
   const list = Array.from(uniques).sort();
-  if (list.length === 0) console.warn("[Village] Aucun village détecté.");
 
   const frag = document.createDocumentFragment();
   list.forEach(vUpper => {
@@ -498,8 +503,6 @@ function remplirListeVillagesDepuisData(data) {
     state.village = "ALL";
     sel.value = "ALL";
   }
-
-  console.info(`[Village] Villages détectés: ${list.length}`, list);
 }
 
 function wireNav(){
@@ -577,9 +580,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = await loadDataJSON();
     remplirListeVillagesDepuisData(data || {});
+
     renderNineColumns();
   } catch (e) {
     console.error("[Init] Erreur pendant l'init:", e);
   }
 });
-
