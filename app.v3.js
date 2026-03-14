@@ -435,19 +435,6 @@ function renderVillageMeta(){
   if (elMotif) elMotif.textContent = motif || "—";
 }
 
-if (vKey === 'ALL') {
-  if (elRoi)       elRoi.textContent = '—';
-  if (elMarche)    elMarche.textContent = '—';
-  if (elMotif)     elMotif.textContent = '—';
-  if (elInterdits) elInterdits.textContent = '—';
-  if (blocInfos)   blocInfos.style.display = 'none'; // ← on cache le bloc
-  return;
-} else {
-  if (blocInfos)   blocInfos.style.display = '';     // ← on le réaffiche sur un village
-}
-``
-
-
 // ----------------------------- Navigation & paramètres
 function shouldHideByFilter(x){
   const f = state.filtre;
