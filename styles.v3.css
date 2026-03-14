@@ -698,7 +698,7 @@ font-family:
 
   text-shadow:
     0 2px 3px rgba(255,255,255,0.25),  /* Légère lumière dessous */
-    0 4px 14px rgba(0,0,0,0.45);       /* Ombre profonde qui renforce le contraste */
+    0 4px 14px rgba(0,0,0,0.39);       /* Ombre profonde qui renforce le contraste */
 
   mix-blend-mode: multiply;
   pointer-events: none;
