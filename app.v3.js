@@ -1,7 +1,7 @@
- // =====================================================================
+ // =====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
-// Version propre, sans doublon, avec bloc infos final correct
-// =====================================================================
+// Version finale, propre, avec watermark dynamique et bloc infos correct
+// =====================================================
 
 const today = new Date();
 
@@ -16,20 +16,23 @@ const state = {
   filtre: 'all',
   dataMap: new Map(),
 
+  /* Infos village */
   roiByVillage: {},
   motifByVillage: {},
   marcheByVillage: {},
 
+  /* J1..J8 + mois traditionnels */
   tmonths: {},
   j8: {},
   j8Anchor: {},
 
+  /* Interdits et marchés */
   forbiddenNames: {},
   marketNames: {},
-
   forbiddenFromJ: {},
   marketFromJ: {},
 
+  /* Données brutes */
   rowsRaw: null
 };
 
@@ -118,7 +121,7 @@ function listContainsJ(map, village, j){
   return Array.isArray(arr) ? arr.includes(j) : false;
 }
 
-// ----------------------------- Résolution : J8 + tags
+ // ----------------------------- Résolution
 function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
   const vKey = String(village || 'ALL').toUpperCase();
@@ -140,7 +143,7 @@ function resolveTraditionalAndTags(d, village){
   return { trad, isMarket, isForbidden };
 }
 
-// ----------------------------- Données additionnelles
+// ----------------------------- Données optionnelles
 function cvUpdateData(entries){
   if (!Array.isArray(entries)) return;
   for (const e of entries){
@@ -155,7 +158,7 @@ function cvUpdateData(entries){
   }
 }
 
-// ----------------------------- Convertit rows → structure interne
+// ----------------------------- Adaptation rows -> canonical
 function adaptRowsToCanonical_FR_withLetters(rows) {
   const canonical = {
     traditional_days_8: {},
@@ -175,7 +178,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
 
     // J1..J8
     const jmap = {};
-    for (let j = 1; j <= 8; j++) {
+    for (let j = 1; j <= 8; j++){
       const txt = (r[`J${j}`] ?? "").toString().trim();
       if (txt) jmap[String(j)] = txt;
     }
@@ -183,7 +186,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
 
     // M1..M12
     const mmap = {};
-    for (let m = 1; m <= 12; m++) {
+    for (let m = 1; m <= 12; m++){
       const txt = (r[`M${m}`] ?? "").toString().trim();
       if (txt) mmap[String(m)] = txt;
     }
@@ -277,7 +280,7 @@ function hydrateStateFromCanonical(data, rowsRaw) {
   return data;
 }
 
-// ----------------------------- Rendu visuel : les 3 mois
+/* ----------------------------- Rendu des 3 mois */
 function renderNineColumns(){
   const root = document.getElementById("calendar-9cols");
   if (!root) return;
@@ -295,10 +298,10 @@ function renderNineColumns(){
   root.appendChild(frag);
 
   syncParamFields();
-  renderVillageMeta();   // Appel correct
+  renderVillageMeta();   /* ← mise à jour du bloc infos */
 }
 
-// ----------------------------- BLOC INFOS (correct et unique)
+/* ----------------------------- BLOC INFOS DU VILLAGE */
 function renderVillageMeta(){
   const vKey = String(state.village || 'ALL').toUpperCase();
 
@@ -310,17 +313,16 @@ function renderVillageMeta(){
 
   if (!blocInfos) return;
 
-  // Cas ALL → on masque tout
+  /* Masquer quand ALL */
   if (vKey === 'ALL') {
     blocInfos.style.display = "none";
-    if (elRoi)       elRoi.textContent = '—';
+    if (elRoi)       elRoi.textContent       = '—';
     if (elInterdits) elInterdits.textContent = '—';
-    if (elMarche)    elMarche.textContent = '—';
-    if (elInfos)     elInfos.textContent = '—';
+    if (elMarche)    elMarche.textContent    = '—';
+    if (elInfos)     elInfos.textContent     = '—';
     return;
   }
 
-  // Sinon on affiche
   blocInfos.style.display = "";
 
   if (elRoi)       elRoi.textContent       = state.roiByVillage?.[vKey]    || "—";
@@ -329,20 +331,22 @@ function renderVillageMeta(){
   if (elInfos)     elInfos.textContent     = state.motifByVillage?.[vKey]  || "—";
 }
 
-// ----------------------------- Rendu d'un mois
+/* ----------------------------- Rendu d'un mois */
 function renderOneMonth(root, start, village, place){
   const y = start.getFullYear(), m = start.getMonth();
   const nDays = daysInMonth(y, m);
 
   const wrap = document.createElement("div");
   wrap.className = "month " + place;
+
+  /* ← Watermark dynamique */
   wrap.setAttribute('data-watermark', String(village || '').toUpperCase());
 
   const head = document.createElement("div");
   head.className = "month-header";
-  const tradMonth = state.tmonths[String(village || '').toUpperCase()]?.[String(m+1)]
-                 || state.tmonths["ALL"]?.[String(m+1)]
-                 || "—";
+  const tradMonth =
+    state.tmonths[String(village || '').toUpperCase()]?.[String(m+1)] ||
+    state.tmonths["ALL"]?.[String(m+1)] || "—";
   head.textContent = monthLabel(y, m) + " — " + tradMonth;
   wrap.appendChild(head);
 
@@ -363,10 +367,11 @@ function renderOneMonth(root, start, village, place){
     const { trad, isMarket, isForbidden } = resolveTraditionalAndTags(cur, village);
 
     const row = document.createElement("div");
-    row.className = "row"
-      + (isSameDay(cur, today) ? " today" : "")
-      + (isMarket ? " market" : "")
-      + (isForbidden ? " forbidden" : "");
+    row.className =
+      "row" +
+      (isSameDay(cur, today) ? " today" : "") +
+      (isMarket ? " market" : "") +
+      (isForbidden ? " forbidden" : "");
 
     if (shouldHideByFilter({ isMarket, isForbidden })) {
       row.classList.add("filtered-out");
@@ -396,7 +401,7 @@ function renderOneMonth(root, start, village, place){
   root.appendChild(wrap);
 }
 
-// ----------------------------- Filtre
+/* ----------------------------- Filtre */
 function shouldHideByFilter(x){
   const f = state.filtre;
   if (f === "market")    return !x.isMarket;
@@ -404,8 +409,8 @@ function shouldHideByFilter(x){
   return false;
 }
 
-// ----------------------------- Remplir la liste des villages
-function remplirListeVillagesDepuisData() {
+/* ----------------------------- Village select */
+function remplirListeVillagesDepuisData(data) {
   const sel = document.getElementById("param-village");
   if (!sel) return;
 
@@ -429,7 +434,6 @@ function remplirListeVillagesDepuisData() {
     });
 
   const list = Array.from(uniques).sort();
-
   const frag = document.createDocumentFragment();
   list.forEach(vUpper => {
     const opt = document.createElement("option");
@@ -445,21 +449,20 @@ function remplirListeVillagesDepuisData() {
   }
 }
 
-// ----------------------------- Navigation
+/* ----------------------------- Navigation */
 function wireNav(){
   document.querySelectorAll(".nav-row [data-action]").forEach(btn => {
     btn.addEventListener("click", () => {
       const a = btn.dataset.action;
-      const anchor = state.anchor;
 
       if (a === "prev3")
-        state.anchor = new Date(anchor.getFullYear(), anchor.getMonth() - 3, 1);
+        state.anchor = new Date(state.anchor.getFullYear(), state.anchor.getMonth() - 3, 1);
       if (a === "next3")
-        state.anchor = new Date(anchor.getFullYear(), anchor.getMonth() + 3, 1);
+        state.anchor = new Date(state.anchor.getFullYear(), state.anchor.getMonth() + 3, 1);
       if (a === "prevY")
-        state.anchor = new Date(anchor.getFullYear() - 1, anchor.getMonth(), 1);
+        state.anchor = new Date(state.anchor.getFullYear() - 1, state.anchor.getMonth(), 1);
       if (a === "nextY")
-        state.anchor = new Date(anchor.getFullYear() + 1, anchor.getMonth(), 1);
+        state.anchor = new Date(state.anchor.getFullYear() + 1, state.anchor.getMonth(), 1);
       if (a === "today") {
         const now = new Date();
         state.anchor = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -470,7 +473,7 @@ function wireNav(){
   });
 }
 
-// ----------------------------- Paramètres
+/* ----------------------------- Paramètres */
 function wireParams(){
   const y = document.getElementById("param-annee");
   const m = document.getElementById("param-mois");
@@ -508,15 +511,15 @@ function wireParams(){
   }
 }
 
-// ----------------------------- Mise à jour année + mois
+/* ----------------------------- Sync champ Année + Mois */
 function syncParamFields(){
   const y = document.getElementById("param-annee");
   const m = document.getElementById("param-mois");
-  if (y) y.value = String(state.anchor.getFullYear());
-  if (m) m.value = String(state.anchor.getMonth() + 1);
+  if (y) y.value = state.anchor.getFullYear();
+  if (m) m.value = state.anchor.getMonth() + 1;
 }
 
-// ----------------------------- INIT FINAL
+/* ----------------------------- INIT FINAL */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     wireNav();
@@ -526,9 +529,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     remplirListeVillagesDepuisData(data || {});
 
     renderNineColumns();
-    renderVillageMeta();   // bon endroit
+    renderVillageMeta();   /* ← mise à jour au chargement */
 
   } catch (e) {
     console.error("[Init] Erreur pendant l'init:", e);
   }
 });
+
