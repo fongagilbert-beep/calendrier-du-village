@@ -229,6 +229,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
 }
 
 // ----------------------------- JSON Loader
+// ----------------------------- JSON Loader (avec ancre globale)
 async function loadDataJSON(){
   const url = "./data.v3.json?v=" + Date.now();
   try {
@@ -237,17 +238,45 @@ async function loadDataJSON(){
 
     const raw = await res.json();
 
-    // JSON canonique ?
+    // Si format déjà "canonique"
     if (raw && raw.traditional_days_8) {
+      // Injecte l'ancre globale si présente
+      const dISO = toISODateFromAny(
+        raw["AnchorDate (globale)"] || raw["AnchorDate"] || raw["Ancre date globale"] || raw["AnchorDateGlobal"] || ""
+      );
+      const jStart = parseInt(
+        raw["AnchorJ (1..8)"] || raw["AnchorJ"] || raw["Ancre J globale"] || raw["AnchorJGlobal"] || "",
+        10
+      );
+      if (dISO && jStart >= 1 && jStart <= 8) {
+        raw.traditional_days_anchor = raw.traditional_days_anchor || {};
+        if (!raw.traditional_days_anchor.ALL) {
+          raw.traditional_days_anchor.ALL = { date: dISO, j: jStart };
+        }
+      }
       return hydrateStateFromCanonical(raw, raw.rows || null);
     }
 
-    // Sinon rows[]
+    // Sinon, format "rows" (ton cas)
     const rows = Array.isArray(raw?.rows) ? raw.rows :
                  (Array.isArray(raw) ? raw : null);
 
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
+
+      // ---- LIRE LES CHAMPS GLOBAUX (Param!A2:B3 dans ta capture) ----
+      const dISO = toISODateFromAny(
+        raw?.["AnchorDate (globale)"] || raw?.["AnchorDate"] || raw?.["Ancre date globale"] || raw?.["AnchorDateGlobal"] || ""
+      );
+      const jStart = parseInt(
+        raw?.["AnchorJ (1..8)"] || raw?.["AnchorJ"] || raw?.["Ancre J globale"] || raw?.["AnchorJGlobal"] || "",
+        10
+      );
+      if (dISO && jStart >= 1 && jStart <= 8) {
+        canonical.traditional_days_anchor = canonical.traditional_days_anchor || {};
+        canonical.traditional_days_anchor.ALL = { date: dISO, j: jStart };
+      }
+
       return hydrateStateFromCanonical(canonical, rows);
     }
 
