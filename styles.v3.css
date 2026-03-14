@@ -723,3 +723,31 @@ font-family:
   position: relative;
   z-index: 1;
 }
+
+.site-header {
+  width: 100%;
+  height: 240px;
+  background-image: url("assets/images/header-ndop.png");
+  background-size: cover;        /* remplira tout le header */
+  background-position: center;   /* centre le motif Ndop */
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  color: #E9E1D0;                /* écru, comme le soleil */
+  text-align: center;
+}
+
+.site-header h1 {
+  font-family: "Aharoni", "Arial Black", sans-serif;
+  font-size: 48px;
+  letter-spacing: 0.08em;
+
+  text-shadow:
+    0 3px 6px rgba(0,0,0,0.45),
+    0 0 4px rgba(255,255,255,0.4);
+}
+
