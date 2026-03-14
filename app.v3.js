@@ -118,8 +118,6 @@ function listContainsJ(map, village, j){
   return Array.isArray(arr) ? arr.includes(j) : false;
 }
 
-}
-
 // ----------------------------- Résolution
 function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
