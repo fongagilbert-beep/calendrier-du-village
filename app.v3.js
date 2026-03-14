@@ -621,3 +621,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('[Init] Erreur pendant l\'init:', e);
   }
 });
+
+/* Alignement à droite des jours traditionnels */
+.cell.trad {
+  text-align: right;
+}
+
