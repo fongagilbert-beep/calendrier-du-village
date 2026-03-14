@@ -324,6 +324,51 @@ function renderNineColumns(){
   renderVillageMeta();
 }
 
+function renderVillageMeta(){
+  const vKey = String(state.village || 'ALL').toUpperCase();
+
+  const elRoi       = document.getElementById("roi-village");
+  const elInterdits = document.getElementById("interdits-village");
+  const elMarche    = document.getElementById("marche-village");
+  const elInfos     = document.getElementById("motif-village");
+  const blocInfos   = document.getElementById("bloc-infos-final");
+
+  if (!blocInfos) return;
+
+  // Si ALL → on masque le bloc
+  if (vKey === 'ALL') {
+    blocInfos.style.display = "none";
+    if (elRoi) elRoi.textContent = '—';
+    if (elInterdits) elInterdits.textContent = '—';
+    if (elMarche) elMarche.textContent = '—';
+    if (elInfos) elInfos.textContent = '—';
+    return;
+  }
+
+  blocInfos.style.display = "";
+
+  // Roi
+  const roi = state.roiByVillage?.[vKey] || "—";
+  if (elRoi) elRoi.textContent = roi;
+
+  // Jours interdits
+  const interditsArr = state.forbiddenNames?.[vKey] || [];
+  if (elInterdits) elInterdits.textContent = interditsArr.join(" • ") || "—";
+
+  // Marchés
+  const marcheArr = state.marketNames?.[vKey] || [];
+  if (elMarche) elMarche.textContent = marcheArr.join(" • ") || "—";
+
+  // Informations
+  const infos = state.motifByVillage?.[vKey] || "—";
+  if (elInfos) elInfos.textContent = infos;
+}
+
+renderNineColumns();
+renderVillageMeta();
+
+
+
 function renderOneMonth(root, start, village, place){
   const y = start.getFullYear(), m = start.getMonth();
   const nDays = daysInMonth(y, m);
