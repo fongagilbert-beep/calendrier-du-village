@@ -261,3 +261,12 @@ body{
 @media(max-width:900px){
   .params{ flex-wrap:wrap; }
 }
+
+
+/* Masquer tout input texte “fantôme” dans la rangée Paramètres */
+.params > input[type="text"],
+.params #village-ghost,
+.params input[name="village"],
+.params input[aria-label="Village"] {
+  display: none !important;
+}
