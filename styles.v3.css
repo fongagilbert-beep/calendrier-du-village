@@ -147,37 +147,46 @@ body{
   overflow:visible; /* pour watermark */
 }
 
-/* WATERMARK propre et centré dans chaque mois */
-.month .month-watermark{
+/* WATERMARK lisible et centré dans chaque mois */
+.month .month-watermark {
     position: absolute;
     left: 50%;
-    top: 50%; /* centre naturel du mois */
+    top: 50%;
     transform: translate(-50%, -50%) rotate(-15deg);
 
-    font-family: 'Akatab', sans-serif;
-    text-transform: uppercase;
-    font-size: clamp(32px, 6vw, 80px);
-    font-weight: 700;
+    font-family:
+      "Aharoni",
+      "Arial Black",
+      "Montserrat",
+      Arial,
+      sans-serif;
 
-    color: rgba(120,120,120,0.25); /* gris visible */
-    letter-spacing: 0.1em;
-    opacity: 0.35;
+    text-transform: uppercase;
+    font-size: clamp(42px, 8vw, 160px);
+    font-weight: 900;
+    letter-spacing: 0.10em;
+
+    /* Couleur lisible sur fond clair */
+    color: rgba(0, 0, 0, 0.70);                /* VISIBILITÉ FORTE */
+    -webkit-text-stroke: 2px rgba(255,255,255,0.85);  /* contour blanc net */
+    text-shadow:
+        0 3px 6px rgba(0,0,0,0.55),
+        0 0 1px rgba(0,0,0,0.85);
+
+    /* surtout pas d'opacité globale */
+    opacity: 1;
+    mix-blend-mode: normal;
 
     pointer-events: none;
     user-select: none;
     z-index: 0;
 }
 
-/* Le contenu du mois passe AU-DESSUS */
-.month *:not(.month-watermark){
+/* Le contenu du mois DOIT passer au-dessus */
+.month > *:not(.month-watermark),
+.month *:not(.month-watermark) {
     position: relative;
     z-index: 1;
-}
-
-/* Pour que le calendrier reste lisible */
-.month > *:not(.month-watermark){
-  position: relative;
-  z-index: 1;
 }
 
 /* Entête mois (bandeau bleu) */
