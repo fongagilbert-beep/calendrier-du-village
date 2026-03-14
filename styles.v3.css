@@ -1,12 +1,12 @@
 /* =====================================================
-   CALENDRIER DU VILLAGE — styles.v3.css (final 2026-03-11)
+   CALENDRIER DU VILLAGE — styles.v3.css
    - Bandeau bleu titre
    - Boutons bleus nav
    - Colonne Date étroite
-   - Motif sur les 3 entêtes
+   - Motif entêtes
    - Cartes mois propres
    - Zebra + états (market/forbidden/today)
-   - Responsive mobile -> 1 colonne ; ≥900px -> 3 colonnes
+   - Responsive : mobile 1 col / >=900px 3 cols
    ===================================================== */
 
 /* ---------- Reset / Base ---------- */
@@ -31,6 +31,9 @@
   --forbid-bg: #ffe0e0;
 
   --date-col: 60px; /* largeur fixe colonne Date */
+
+  /* Fond tissu doux */
+  --fabric-yellow: #efe2b6;
 }
 
 html, body { height: 100%; }
@@ -38,7 +41,15 @@ body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   color: var(--fg);
   line-height: 1.42;
-  background: #f3efe4; /* fond beige sobre; tu peux remettre le papier texturé si tu veux */
+
+  /* Fond type tissu (léger) */
+  background-color: var(--fabric-yellow);
+  background-image:
+    radial-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 4px, rgba(0,0,0,.05) 4px 8px),
+    linear-gradient(0deg, rgba(255,255,255,.04), rgba(0,0,0,.04));
+  background-size: 3px 3px, 10px 10px, 100% 100%;
+  background-blend-mode: multiply;
 }
 
 /* ---------- Bandeau bleu Titre ---------- */
@@ -50,91 +61,59 @@ body{
   font-size: 2rem;
   font-weight: 800;
 }
+.site-header {
+  width: 100%;
+  height: 240px;
+  background-image: url("assets/images/header-ndop.png"); /* change si besoin */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  color: #E9E1D0; text-align: center;
+}
+.site-header h1 {
+  font-family: "Aharoni", "Arial Black", sans-serif;
+  font-size: 48px;
+  letter-spacing: 0.08em;
+  text-shadow: 0 3px 6px rgba(0,0,0,0.45), 0 0 4px rgba(255,255,255,0.4);
+}
 
-/* ---------- Nav (boutons bleus sous le titre) ---------- */
-/* --- Navigation --- */
-
+/* ---------- Nav (boutons bleus) ---------- */
 .nav-row {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #e9f1ff;
-  padding: 0.8rem;
-  border-radius: 8px;
+  display: flex; justify-content: center; gap: 0.5rem;
+  background: #e9f1ff; padding: 0.8rem; border-radius: 8px;
 }
-
 .nav-row .btn {
-  padding: 0.5rem 1rem;
-  background: #2b6cb0;     /* Bleu */
-  color: #fff;
-  border: 1px solid #1e4e85;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-  min-width: 120px;         /* pour les rendre visibles */
-  text-align: center;
-  display: inline-block;
+  padding: 0.5rem 1rem; background: #2b6cb0; color: #fff;
+  border: 1px solid #1e4e85; border-radius: 6px; font-weight: 600;
+  cursor: pointer; font-size: 1rem; min-width: 120px; text-align: center; display: inline-block;
 }
+.nav-row .btn-today { background: #1a365d; color: white; }
+.nav-row .btn:hover { background: #3c7fd1; }
+.nav-row .btn-today:hover { background: #2b4b80; }
 
-.nav-row .btn-today {
-  background: #1a365d;      /* Bleu foncé */
-  color: white;
-}
-
-.nav-row .btn:hover {
-  background: #3c7fd1;
-}
-
-.nav-row .btn-today:hover {
-  background: #2b4b80;
-}
-
-/* ---------- Paramètres (sous la nav) ---------- */
+/* ---------- Paramètres ---------- */
 .params{
-  display:flex;
-  gap:1rem;
-  justify-content:center;
-  align-items:center;
-  padding:1rem;
-  background:#fff;
-  border-bottom:1px solid var(--border);
+  display:flex; gap:1rem; justify-content:center; align-items:center;
+  padding:1rem; background:#fff; border-bottom:1px solid var(--border);
 }
-.params label{
-  display:inline-flex;
-  align-items:center;
-  gap:.4rem;
-  color: var(--muted);
-}
+.params label{ display:inline-flex; align-items:center; gap:.4rem; color: var(--muted); }
 .params input[type="number"], .params select{
-  padding:.35rem .5rem;
-  border:1px solid var(--border);
-  border-radius:6px;
-  background:#fff;
-  color:var(--fg);
-  min-width:72px;
-  text-align:center;
+  padding:.35rem .5rem; border:1px solid var(--border); border-radius:6px;
+  background:#fff; color:var(--fg); min-width:72px; text-align:center;
 }
 
-/* ---------- Grille 3 mois ---------- */
+/* ---------- Grille des mois ---------- */
 #calendar-9cols{
   position:relative;
   display:grid;
-  grid-template-columns: 1fr; /* mobile: 1 colonne */
-  gap:1.4rem;
-  padding:1.2rem;
+  grid-template-columns: 1fr; /* mobile */
+  gap:1.4rem; padding:1.2rem;
 }
 @media (min-width: 900px){
   #calendar-9cols{ grid-template-columns: repeat(3, 1fr); }
 }
-
-/* (Option) Watermark discret de la grille (global, facultatif)
-#calendar-9cols::before{
-  content: attr(data-watermark);
-  position:absolute; top:6px; right:12px;
-  font-size:12px; color: var(--muted); opacity:.5;
-}
-*/
 
 /* ---------- Carte mois ---------- */
 .month{
@@ -144,101 +123,38 @@ body{
   padding:.8rem;
   box-shadow:0 1px 3px rgba(0,0,0,.06);
   position:relative;
-  overflow:visible; /* pour watermark */
-}
-
-/* WATERMARK lisible et centré dans chaque mois */
-.month .month-watermark {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) rotate(-15deg);
-
-    font-family:
-      "Aharoni",
-      "Arial Black",
-      "Montserrat",
-      Arial,
-      sans-serif;
-
-    text-transform: uppercase;
-    font-size: clamp(42px, 8vw, 160px);
-    font-weight: 900;
-    letter-spacing: 0.10em;
-
-    /* Couleur lisible sur fond clair */
-    color: rgba(0, 0, 0, 0.70);                /* VISIBILITÉ FORTE */
-    -webkit-text-stroke: 2px rgba(255,255,255,0.85);  /* contour blanc net */
-    text-shadow:
-        0 3px 6px rgba(0,0,0,0.55),
-        0 0 1px rgba(0,0,0,0.85);
-
-    /* surtout pas d'opacité globale */
-    opacity: 1;
-    mix-blend-mode: normal;
-
-    pointer-events: none;
-    user-select: none;
-    z-index: 0;
-}
-
-/* Le contenu du mois DOIT passer au-dessus */
-.month > *:not(.month-watermark),
-.month *:not(.month-watermark) {
-    position: relative;
-    z-index: 1;
+  overflow:hidden; /* propre avec le watermark vertical */
 }
 
 /* Entête mois (bandeau bleu) */
 .month-header{
   background: var(--brand);
-  color:#fff;
-  font-weight:700;
-  text-align:center;
-  border-radius:6px;
-  margin-bottom:.6rem;
-  padding:.6rem;
+  color:#fff; font-weight:700; text-align:center;
+  border-radius:6px; margin-bottom:.6rem; padding:.6rem;
 }
 
-/* ---------- Ligne d’entêtes (motif bleu clair) ---------- */
+/* ---------- Entêtes colonnes ---------- */
 .month-head-row{
-  display:grid;
-  grid-template-columns: var(--date-col) 1fr 1fr; /* Date | Greg | Trad */
-  gap:6px;
-  margin-bottom:.25rem;
+  display:grid; grid-template-columns: var(--date-col) 1fr 1fr;
+  gap:6px; margin-bottom:.25rem;
 }
 .col-title{
   background: linear-gradient(var(--head-grad1), var(--head-grad2));
-  border:1px solid var(--head-border);
-  border-radius:4px;
-  padding:.4rem .45rem;
-  font-weight:700;
-  color: var(--head-text);
-  text-align:center;
+  border:1px solid var(--head-border); border-radius:4px;
+  padding:.4rem .45rem; font-weight:700; color: var(--head-text); text-align:center;
 }
 
 /* ---------- Lignes (jours) ---------- */
 .row{
-  display:grid;
-  grid-template-columns: var(--date-col) 1fr 1fr;
-  gap:6px;
-  align-items:center;
-  padding:.2rem 0;
-  border-bottom:1px solid var(--border);
+  display:grid; grid-template-columns: var(--date-col) 1fr 1fr;
+  gap:6px; align-items:center; padding:.2rem 0; border-bottom:1px solid var(--border);
 }
 .cell{
-  min-height:28px;
-  display:flex;
-  align-items:center;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  background:#fff;
-  border-radius:6px;
-  padding:.25rem .4rem;
+  min-height:28px; display:flex; align-items:center; justify-content:center;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  background:#fff; border-radius:6px; padding:.25rem .4rem;
 }
-.cell.date{ justify-content:center; }
-
+.cell.date{ font-weight: 600; }
 .row:nth-child(even) .cell{ background:#fafafa; }
 
 /* ---------- États ---------- */
@@ -246,10 +162,7 @@ body{
 .row.market .cell    { background: var(--market-bg); }
 .row.forbidden .cell { background: var(--forbid-bg); }
 
-.row.filtered-out{ opacity:.35; filter: grayscale(55%); }
-
-/* Icônes (dans la cellule grégorienne) */
-.cell.greg{ position:relative; justify-content:center; }
+.cell.greg{ position:relative; }
 .row.forbidden .cell.greg::before{
   content:"🛇"; position:absolute; left:50%; top:50%;
   transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
@@ -259,16 +172,14 @@ body{
   transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
 }
 .row.forbidden.market .cell.greg::before{
-  content:"🛇"; position:absolute; left:calc(50% - .8rem); top:50%;
-  transform:translate(-50%,-50%);
+  content:"🛇"; position:absolute; left:calc(50% - .8rem); top:50%; transform:translate(-50%,-50%);
 }
 .row.forbidden.market .cell.greg::after{
-  content:"🛒"; position:absolute; left:calc(50% + .8rem); top:50%;
-  transform:translate(-50%,-50%);
+  content:"🛒"; position:absolute; left:calc(50% + .8rem); top:50%; transform:translate(-50%,-50%);
 }
 .row.today .cell.greg::after{
-  content:"📍"; position:absolute; right:.25rem; top:50%;
-  transform:translateY(-50%); font-size:.95rem; opacity:.85;
+  content:"📍"; position:absolute; right:.25rem; top:50%; transform:translateY(-50%);
+  font-size:.95rem; opacity:.85;
 }
 
 /* Week-end (si data-day posé par JS) */
@@ -280,474 +191,42 @@ body{
   .params{ flex-wrap:wrap; }
 }
 
-.cell.date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-}
+/* ---------- Watermark : version officielle (verticale, ::before) ---------- */
 
-.cell.greg, .cell.trad { justify-content: center; }
+/* On neutralise tout ancien watermark central si présent dans le HTML */
+.month .month-watermark { display: none !important; }
 
-/* --- Watermark vertical : village en MAJUSCULE, bas -> haut, gris 18% --- */
-.month{
-  position: relative;
-  overflow: visible;
-}
-
-/* on garde ::before pour d'autres usages éventuels, on ajoute ::after pour le vertical */
-.month::after{
-  content: attr(data-watermark);               /* texte fourni par le JS */
-  position: absolute;
-  bottom: .6rem;                               /* point d’ancrage bas */
-  right: .4rem;                                /* bord droit (tu peux passer à left) */
-  writing-mode: vertical-rl;                   /* vertical (de haut en bas) */
-  transform: rotate(180deg);                   /* on inverse pour lire bas -> haut */
-  text-orientation: mixed;
-  color: rgba(0,0,0,.18);                      /* gris 18% */
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: .06em;
-  pointer-events: none;
-  user-select: none;
-  /* Si tu ajoutes une police décorative bamiléké, remplace la ligne suivante : */
-  font-family: "BamilekeMotif", "Noto Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-
-/* Ex. si tu as un WOFF2 décoratif (remplace l’URL) :
-@font-face {
-  font-family: "BamilekeMotif";
-  src: url("./fonts/bamileke-motif.woff2") format("woff2");
-  font-display: swap;
-}
-*/
-
-/* on libère de la place à gauche dans la cellule traditionnelle */
-.cell.trad {
-  position: relative;
-  padding-left: 2rem;             /* pour l’icône */
-}
-
-/* marché seul */
-.row.market:not(.forbidden) .cell.trad::before{
-  content: "🛒";
-  position: absolute; left: .5rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.05rem; opacity: .9;
-}
-
-/* interdit seul */
-.row.forbidden:not(.market) .cell.trad::before{
-  content: "⛔"; /* ou 🛇 si tu préfères */
-  position: absolute; left: .5rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.05rem; opacity: .9;
-}
-
-/* marché + interdit (double icône) */
-.row.market.forbidden .cell.trad::before{
-  content: "⛔";
-  position: absolute; left: .35rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.05rem; opacity: .9;
-}
-.row.market.forbidden .cell.trad::after{
-  content: "🛒";
-  position: absolute; left: 1.35rem; top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.05rem; opacity: .9;
-}
-
-/* --- Fond jaune texturé type tissu --- */
-:root{
-  --fabric-yellow: #efe2b6; /* ajuste le jaune ici */
-}
-
-body{
-  background-color: var(--fabric-yellow);
-  background-image:
-    /* grain léger */
-    radial-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
-    /* trame oblique douce */
-    repeating-linear-gradient(45deg,
-      rgba(255,255,255,.05) 0 4px,
-      rgba(0,0,0,.05) 4px 8px),
-    /* voile subtil pour la profondeur */
-    linear-gradient(0deg, rgba(255,255,255,.04), rgba(0,0,0,.04));
-  background-size:
-    3px 3px,
-    10px 10px,
-    100% 100%;
-  background-blend-mode: multiply;
-}
-
-/* Conteneur pied de page */
-.site-footer{
-  /* Séparateur visuel du contenu principal */
-  margin-top: 2.5rem;
-  padding: 1rem 1rem 1.25rem;
-}
-
-
-
-
-/* Titre optionnel dans le rectangle */
-.info-title{
-  margin: 0 0 .25rem 0;
-  font-size: 1.05rem;
-  line-height: 1.25;
-  color: #0b3c8d;
-}
-
-/* La signature centrée sous l’ensemble */
-.credit{
-  text-align: center;
-  margin: .75rem 0 0;
-  color: #0b3c8d;
-  font-weight: 600;
-}
-
-/* Bandeau pleine largeur */
-.cal-bottom-info{
-  margin-top: 16px;
-  padding: 10px 12px;
-  background: #fffaf3;          /* fond doux proche de ton thème */
-  border: 1px solid #e6d9c8;    /* fin séparateur */
-  border-radius: 8px;
-}
-
-/* Conteneur centré (facultatif) */
-.cal-bottom-inner{
-  max-width: 1200px;            /* ajuste si besoin */
-  margin: 0 auto;
-}
-
-/* Remets tout à gauche, sous le calendrier */
-#calendar-9cols + .cal-bottom-info .ligne{
-  margin-left: 0;
-}
-
-/* Typographies demandées */
-#roi-village{
-  color: #b00020;               /* rouge */
-  font-weight: 700;             /* gras */
-  font-size: 14px;              /* 14px */
-}
-
-#interdits-village{
-  color: #b00020;               /* rouge */
-  font-weight: 700;             /* gras */
-  font-size: 12px;              /* 12px */
-}
-
-#marche-village{
-  color: #087f23;               /* vert lisible */
-  font-weight: 700;             /* gras */
-  font-size: 12px;              /* 12px */
-}
-
-/* Roi : rouge, gras, 14 */
-h2 > #roi-village{
-  color: #b00020;       /* rouge lisible */
-  font-weight: 700;     /* gras */
-  font-size: 14px;      /* police 14 */
-}
-
-/* Jours interdits (si tu les ajoutes plus tard) : rouge, gras, 12 */
-#interdits-village{
-  color: #b00020;
-  font-weight: 700;
-  font-size: 12px;
-}
-
-/* Jours de marché : vert, gras, 12 */
-#marche-village{
-  color: #087f23;       /* vert lisible */
-  font-weight: 700;     /* gras */
-  font-size: 12px;      /* police 12 */
-}
-
-/* Informations (si tu l’affiches) – style neutre par défaut */
-#motif-village{
-  color: #0b3c8d;       /* ou #333 si tu préfères neutre */
-  font-weight: 500;
-  font-size: 12px;
-}
-
-/* Le conteneur mois doit pouvoir héberger un watermark absolu */
-.month{
-  position: relative;
-  overflow: visible !important;
-}
-
-/* --- Watermark grand, centré, VISIBLE, style Bamileké --- */
-
-.month{
-  position: relative;
-  overflow: visible !important;   /* ESSENTIEL pour que le watermark ne soit pas coupé */
-}
-
-/* Watermark texte BAMILEKÉ (police + majuscule + gris) */
-.month .month-watermark{
-  position: absolute;
-  left: 50%;
-  top: 50%; 
-  transform: translate(-50%, -50%) rotate(-18deg);
-
-  font-family: 'Akatab', sans-serif;   /* police Bamileké */
-  text-transform: uppercase;           /* MAJUSCULE */
-  font-size: clamp(60px, 12vw, 160px); /* GRAND */
-  font-weight: 800;
-
-  color: rgba(120,120,120,0.35);       /* gris lisible */
-  letter-spacing: 0.1em;
-  opacity: 0.35;                       /* ajustable */
-
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-/* Le contenu du mois reste AU-DESSUS */
-.month > *:not(.month-watermark){
-  position: relative;
-  z-index: 1;
-}
-
-/* === CADRE INFOS - même largeur que le calendrier === */
-.bloc-infos-final{
-    width: 100%;                    /* prend la largeur du conteneur calendrier */
-    max-width: 1200px;              /* même largeur que ton calendrier */
-    margin: 0 auto;                 /* centrer */
-    background: #fffaf3;            /* blanc légèrement cassé */
-    border: 1px solid #d8d8d8;
-    border-radius: 10px;
-
-    padding: 1rem 1.2rem;
-    margin-top: 0.8rem;             /* remonte sous le calendrier */
-
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-/* Contenu du cadre aligné à gauche */
-.infos-inner{
-    text-align: left;
-    width: 100%;
-}
-
-/* Les 3 lignes */
-.bloc-infos-final .roi{
-    color: #b00020;
-    font-weight: 700;
-    font-size: 14px;
-    margin: 0.2rem 0;
-}
-
-.bloc-infos-final .interdits{
-    color: #b00020;
-    font-weight: 700;
-    font-size: 12px;
-    margin: 0.2rem 0;
-}
-
-.bloc-infos-final .marche{
-    color: #087f23;
-    font-weight: 700;
-    font-size: 12px;
-    margin: 0.2rem 0;
-}
-
-/* CRÉDIT SOUS LE CADRE */
-.credit-final{
-    text-align: center;
-    margin: 0.5rem 0 1rem;
-    color: #0b3c8d;
-    font-weight: 600;
-}
-
-/* Le conteneur du mois doit pouvoir contenir un watermark absolu */
-.month{
-    position: relative !important;
-    overflow: visible !important; /* jamais hidden */
-}
-
-
-/* =========================
-   PATCH WATERMARK & ETATS
-   ========================= */
-
-/* 1) Neutraliser tout watermark "ancien" */
-.month .month-watermark {           /* <div class="month-watermark">... */
-  display: none !important;
-}
-.month::after {                     /* ancien mini-watermark bas-droite */
-  content: none !important;
-  background: none !important;
-  background-image: none !important;
-}
-
-/* 2) Watermark officiel : vertical, centré, lisible
-      (texte pris depuis data-watermark posé par app.v3.js) */
-.month {
-  position: relative;
-  overflow: hidden;                 /* on garde le contenu propre */
-  background-image: none !important;
-}
+/* Watermark vertical (lit de bas -> haut) */
 .month::before {
   content: attr(data-watermark);
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);        /* bas -> haut */
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  writing-mode: vertical-rl; transform: rotate(180deg);
   text-transform: uppercase;
 
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  font-size: clamp(50px, 14vw, 160px);
-  color: rgba(0,0,0,0.16);          /* gris ~16% */
-  user-select: none;
-  pointer-events: none;
-  z-index: 0;
-}
-/* le contenu des mois reste au-dessus */
-.month .month-header,
-.month .month-head-row,
-.month .row {
-  position: relative;
-  z-index: 1;
-}
-
-/* 3) (Option recommandé) Ne plus peindre l'état "forbidden/market"
-      sur TOUTE la row ni dans la colonne grégorienne,
-      mais afficher des badges seulement dans la colonne TRAD.
-      -> Si tu souhaites garder les icônes actuelles (⛔/🛒) côté grégorien,
-         COMME TU LES AS, supprime ce bloc.
-*/
-
-/* Désactive la coloration globale de ligne si tu veux des badges trad-only */
-/*
-.row.market .cell    { background: transparent !important; }
-.row.forbidden .cell { background: transparent !important; }
-.row.filtered-out    { opacity: .35; filter: grayscale(55%); }  /* on garde le filtre */
-.cell.greg::before,
-.cell.greg::after {
-  content: none !important;        /* supprime les icônes sur la colonne grégorienne */
-}
-*/
-
-/* Si tu passes au "badge" en colonne TRAD (code JS fourni précédemment) :
-   tu peux ajouter ces styles. Laisse ce bloc commenté si tu veux garder tes icônes. */
-/*
-.cell.trad .trad-content {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-}
-.cell.trad .trad-name { font-weight: 700; color:#111827; }
-.cell.trad .trad-badges { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.badge {
-  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px;
-  font-size: 12px; font-weight: 800; letter-spacing: .2px; white-space: nowrap;
-}
-.badge-forbidden { color:#a60f0f; background:#ffe9e9; border:1px solid #f4b7b7; }
-.badge-market    { color:#0f6a2a; background:#e9ffef; border:1px solid #b7e7c5; }
-*/
-
-
-/* =========================
-   WATERMARK XL – vertical, centré, lisible
-   ========================= */
-
-/* Neutralisation des anciens watermarks */
-.month .month-watermark {
-  display: none !important;
-}
-.month::after {
-  content: none !important;
-  background: none !important;
-  background-image: none !important;
-}
-
-/* Bloc principal du watermark */
-.month {
-  position: relative;
-  overflow: hidden;
-}
-
-.month::before {
-  content: attr(data-watermark);
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  text-transform: uppercase;
-
-font-family:
-    "Aharoni",
-    "Arial Black",
-    "Montserrat",
-    "Segoe UI",
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-
+  font-family: "Aharoni","Arial Black","Montserrat","Segoe UI","Helvetica Neue",Arial,sans-serif;
   font-size: clamp(36px, 7vw, 130px);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-
-  color: rgba(0, 0, 0, 0.60); /* Très lisible (0.12 → 0.60 !) */
-
-  text-shadow:
-    0 2px 4px rgba(255, 255, 255, 0.35),   /* contour clair */
-    0 4px 18px rgba(0, 0, 0, 0.55);        /* ombre profonde */
-
-  /* IMPORTANT : sinon ton watermark se fusionne avec le fond et disparaît */
+  font-weight: 800; letter-spacing: .08em;
+  color: rgba(0,0,0,0.60);
+  text-shadow: 0 2px 4px rgba(255,255,255,0.35), 0 4px 18px rgba(0,0,0,0.55);
   mix-blend-mode: normal;
-
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-/* Le contenu passe AU-DESSUS du watermark */
-.month .month-header,
-.month .month-head-row,
-.month .row {
-  position: relative;
-  z-index: 1;
+  pointer-events: none; user-select: none; z-index: 0;
 }
 
-.site-header {
-  width: 100%;
-  height: 240px;
-  background-image: url("assets/images/header-ndop.png");
-  background-size: cover;        /* remplira tout le header */
-  background-position: center;   /* centre le motif Ndop */
-  background-repeat: no-repeat;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: relative;
-  color: #E9E1D0;                /* écru, comme le soleil */
-  text-align: center;
+/* Le contenu du mois doit passer AU-DESSUS */
+.month > *:not(.month-watermark),
+.month *:not(.month-watermark) {
+  position: relative; z-index: 1;
 }
 
-.site-header h1 {
-  font-family: "Aharoni", "Arial Black", sans-serif;
-  font-size: 48px;
-  letter-spacing: 0.08em;
-
-  text-shadow:
-    0 3px 6px rgba(0,0,0,0.45),
-    0 0 4px rgba(255,255,255,0.4);
+/* ---------- Bloc infos (option) ---------- */
+.bloc-infos-final{
+  width: 100%; max-width: 1200px; margin: 0.8rem auto 0;
+  background: #fffaf3; border: 1px solid #d8d8d8; border-radius: 10px;
+  padding: 1rem 1.2rem; display: flex; justify-content: flex-start; align-items: flex-start;
 }
-
+.infos-inner{ text-align: left; width: 100%; }
+.bloc-infos-final .roi{ color:#b00020; font-weight:700; font-size:14px; margin:.2rem 0; }
+.bloc-infos-final .interdits{ color:#b00020; font-weight:700; font-size:12px; margin:.2rem 0; }
+.bloc-infos-final .marche{ color:#087f23; font-weight:700; font-size:12px; margin:.2rem 0; }
+.credit-final{ text-align:center; margin:.5rem 0 1rem; color:#0b3c8d; font-weight:600; }
