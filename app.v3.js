@@ -288,6 +288,17 @@ async function loadDataJSON(){
   }
 }
 
+
+// Fallback d’ancre : garantie d'un calcul J1..J8
+if (!state.j8Anchor || !state.j8Anchor.ALL) {
+  const keys = Object.keys(state.j8Anchor || {}).filter(k => k !== 'ALL');
+  if (keys.length) {
+    state.j8Anchor.ALL = { ...state.j8Anchor[keys[0]] }; // copie d'une ancre existante
+  } else {
+    state.j8Anchor.ALL = { date: "2026-01-01", j: 1 };   // valeur par défaut sûre
+  }
+}
+
 // ----------------------------- Injection dans state
 function hydrateStateFromCanonical(data, rowsRaw) {
   state.j8       = data.traditional_days_8      || {};
