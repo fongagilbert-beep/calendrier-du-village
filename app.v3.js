@@ -242,8 +242,6 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
   return canonical;
 }
 
-}
-
 // ----------------------------- JSON Loader
 async function loadDataJSON(){
   const url = "./data.v3.json?v=" + Date.now();
