@@ -690,22 +690,23 @@ font-family:
     Arial,
     sans-serif;
 
-  font-size: clamp(32px, 7vw, 110px);
+  font-size: clamp(36px, 7vw, 130px);
   font-weight: 800;
   letter-spacing: 0.08em;
 
-  color: rgba(0, 0, 0, 0.38); /* Beaucoup plus visible (12% → 38%) */
+  color: rgba(0, 0, 0, 0.60); /* Très lisible (0.12 → 0.60 !) */
 
   text-shadow:
-    0 2px 3px rgba(255,255,255,0.25),  /* Légère lumière dessous */
-    0 4px 14px rgba(0,0,0,0.39);       /* Ombre profonde qui renforce le contraste */
+    0 2px 4px rgba(255, 255, 255, 0.35),   /* contour clair */
+    0 4px 18px rgba(0, 0, 0, 0.55);        /* ombre profonde */
 
-  mix-blend-mode: multiply;
+  /* IMPORTANT : sinon ton watermark se fusionne avec le fond et disparaît */
+  mix-blend-mode: normal;
+
   pointer-events: none;
   user-select: none;
   z-index: 0;
 }
-
 /* Le contenu passe AU-DESSUS du watermark */
 .month .month-header,
 .month .month-head-row,
