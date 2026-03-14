@@ -4,6 +4,7 @@
 
 /* ---------- Reset / Base ---------- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root{
   --bg: #f6f7f3;
   --fg: #222;
@@ -24,50 +25,66 @@
   --forbid-bg: #ffe0e0;
 
   --date-col: 60px;
+
+  --fabric-yellow: #efe2b6;
 }
 
+/* ---------- Fond "tissu jaune" ---------- */
 body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, sans-serif;
   color: var(--fg);
   line-height: 1.42;
-  background: #f3efe4;
+
+  background-color: var(--fabric-yellow);
+  background-image:
+    radial-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
+    repeating-linear-gradient(45deg,
+      rgba(255,255,255,.05) 0 4px,
+      rgba(0,0,0,.05) 4px 8px),
+    linear-gradient(0deg, rgba(255,255,255,.04), rgba(0,0,0,.04));
+  background-size: 3px 3px, 10px 10px, 100% 100%;
+  background-blend-mode: multiply;
 }
 
-/* ---------- Bandeau bleu Titre ---------- */
+/* ---------- Bandeau bleu ---------- */
 .site-header{
   background: var(--brand);
   color:#fff;
-  padding: 1.2rem;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 800;
+  padding:1.2rem;
+  text-align:center;
+  font-size:2rem;
+  font-weight:800;
 }
 
 /* ---------- Navigation ---------- */
 .nav-row{
-  display: flex;
-  justify-content: center;
-  gap: .5rem;
-  background: #e9f1ff;
-  padding: .8rem;
-  border-radius: 8px;
+  display:flex;
+  justify-content:center;
+  gap:.5rem;
+  background:#e9f1ff;
+  padding:.8rem;
+  border-radius:8px;
 }
 
 .nav-row .btn{
-  padding: .5rem 1rem;
+  padding:.5rem 1rem;
   background: var(--nav-blue);
   color:#fff;
   border:1px solid var(--nav-blue-dark);
   border-radius:6px;
   font-weight:600;
   cursor:pointer;
-  font-size:1rem;
   min-width:120px;
+  text-align:center;
 }
-
-.nav-row .btn-today{ background:#1a365d; }
 .nav-row .btn:hover{ background:#3c7fd1; }
-.nav-row .btn-today:hover{ background:#2b4b80; }
+
+.nav-row .btn-today{
+  background:#1a365d;
+}
+.nav-row .btn-today:hover{
+  background:#2b4b80;
+}
 
 /* ---------- Paramètres ---------- */
 .params{
@@ -85,8 +102,7 @@ body{
   gap:.4rem;
   color:var(--muted);
 }
-.params input[type="number"],
-.params select{
+.params input[type="number"], .params select{
   padding:.35rem .5rem;
   border:1px solid var(--border);
   border-radius:6px;
@@ -103,8 +119,10 @@ body{
   gap:1.4rem;
   padding:1.2rem;
 }
-@media (min-width:900px){
-  #calendar-9cols{ grid-template-columns:repeat(3,1fr); }
+@media(min-width:900px){
+  #calendar-9cols{
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 
 /* ---------- Carte Mois ---------- */
@@ -118,37 +136,51 @@ body{
   overflow:hidden;
 }
 
-/* =====================================================
-   WATERMARK DYNAMIQUE XXL — vertical BAS → HAUT
-   ===================================================== */
+/* ============================================================
+   WATERMARK VERTICAL (VERSION C)
+   - Centré
+   - Taille moyenne
+   - Bas → haut
+   - Jamais débordant
+   ============================================================ */
 .month::before{
   content: attr(data-watermark);
   position:absolute;
   inset:0;
 
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
 
+  /* Vertical BAS → HAUT */
   writing-mode: vertical-rl;
-  transform: rotate(0deg); /* BAS → HAUT naturel */
+  transform: rotate(0deg);
 
   text-transform:uppercase;
-  font-weight:800;
-  font-size: clamp(70px, 18vw, 240px);
-  letter-spacing:0.15em;
+  font-weight:700;
 
+  /* Taille moyenne ajustable */
+  font-size: clamp(42px, 11vw, 120px);
+
+  /* Limitation anti-débordement */
+  max-height:90%;
+  max-width:90%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+
+  /* Couleur grise */
   color:rgba(0,0,0,0.22);
+
   text-shadow:
-    0 2px 4px rgba(255,255,255,0.4),
-    0 4px 12px rgba(0,0,0,0.25);
+      0 1px 3px rgba(255,255,255,0.35),
+      0 2px 6px rgba(0,0,0,0.25);
 
   pointer-events:none;
   user-select:none;
   z-index:0;
 }
 
-/* Contenu au-dessus du watermark */
+/* Contenu au-dessus */
 .month .month-header,
 .month .month-head-row,
 .month .row{
@@ -156,7 +188,7 @@ body{
   z-index:1;
 }
 
-/* ---------- Entête Mois ---------- */
+/* ---------- En-tête Mois ---------- */
 .month-header{
   background:var(--brand);
   color:#fff;
@@ -167,7 +199,7 @@ body{
   padding:.6rem;
 }
 
-/* ---------- Têtes colonnes ---------- */
+/* ---------- Colonnes ---------- */
 .month-head-row{
   display:grid;
   grid-template-columns:var(--date-col) 1fr 1fr;
@@ -208,20 +240,24 @@ body{
 .row:nth-child(even) .cell{ background:#fafafa; }
 
 /* ---------- États ---------- */
-.row.today .cell     { background:var(--today-bg); }
-.row.market .cell    { background:var(--market-bg); }
-.row.forbidden .cell { background:var(--forbid-bg); }
+.row.today .cell{ background:var(--today-bg); }
+.row.market .cell{ background:var(--market-bg); }
+.row.forbidden .cell{ background:var(--forbid-bg); }
 
 .row.filtered-out{
   opacity:.35;
   filter:grayscale(55%);
 }
 
-/* Week-end */
-.greg[data-day="samedi"]   { color:#0b4bd6; font-weight:600; }
-.greg[data-day="dimanche"] { color:#b00000; font-weight:700; }
+/* ---------- Week-end ---------- */
+.greg[data-day="samedi"]{
+  color:#0b4bd6; font-weight:600;
+}
+.greg[data-day="dimanche"]{
+  color:#b00000; font-weight:700;
+}
 
 /* ---------- Responsive ---------- */
-@media (max-width:900px){
+@media(max-width:900px){
   .params{ flex-wrap:wrap; }
 }
