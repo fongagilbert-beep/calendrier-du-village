@@ -1,49 +1,21 @@
-
 /* =====================================================
    CALENDRIER DU VILLAGE — styles.v3.css
-   - Bandeau bleu titre
-   - Boutons bleus nav
-   - Colonne Date étroite
-   - Motif entêtes
-   - Cartes mois propres
-   - Zebra + états (market/forbidden/today)
-   - Responsive : mobile 1 col / >=900px 3 cols
    ===================================================== */
 
-/* ---------- Reset / Base ---------- */
+/* Reset / Base */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root{
-  --bg: #f6f7f3;
-  --fg: #222;
-  --muted: #616673;
-  --border: #e4e7ee;
-
-  --brand: #004aad;    /* bleu bandeau & header mois */
-  --nav-blue: #006af5; /* bleu boutons nav */
-  --nav-blue-dark: #004aad;
-
-  --head-grad1: #e6efff; /* motif têtes colonnes */
-  --head-grad2: #dee7ff;
-  --head-border: #cfd9ff;
-  --head-text: #0d2a6b;
-
-  --today-bg: #fff6c4;
-  --market-bg: #e4ffe8;
-  --forbid-bg: #ffe0e0;
-
-  --date-col: 60px; /* largeur fixe colonne Date */
-
-  /* Fond tissu doux */
+  --bg: #f6f7f3; --fg: #222; --muted: #616673; --border: #e4e7ee;
+  --brand: #004aad; --nav-blue: #006af5; --nav-blue-dark: #004aad;
+  --head-grad1: #e6efff; --head-grad2: #dee7ff; --head-border: #cfd9ff; --head-text: #0d2a6b;
+  --today-bg: #fff6c4; --market-bg: #e4ffe8; --forbid-bg: #ffe0e0;
+  --date-col: 60px;
   --fabric-yellow: #efe2b6;
 }
-
 html, body { height: 100%; }
 body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  color: var(--fg);
-  line-height: 1.42;
-
-  /* Fond type tissu (léger) */
+  color: var(--fg); line-height: 1.42;
   background-color: var(--fabric-yellow);
   background-image:
     radial-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
@@ -53,124 +25,98 @@ body{
   background-blend-mode: multiply;
 }
 
-/* ---------- Bandeau bleu Titre ---------- */
+/* Bandeau titre */
 .site-header{
-  background: var(--brand);
-  color:#fff;
-  padding: 1.2rem;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 800;
+  background: var(--brand); color:#fff; padding: 1.2rem; text-align: center;
+  font-size: 2rem; font-weight: 800;
 }
-.site-header {
-  width: 100%;
-  height: 240px;
-  background-image: url("assets/images/header-ndop.png"); /* change si besoin */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.site-header{
+  width: 100%; height: 240px;
+  background-image: url("assets/images/header-ndop.png");
+  background-size: cover; background-position: center; background-repeat: no-repeat;
   display: flex; align-items: center; justify-content: center;
-  position: relative;
   color: #E9E1D0; text-align: center;
 }
-.site-header h1 {
-  font-family: "Aharoni", "Arial Black", sans-serif;
-  font-size: 48px;
-  letter-spacing: 0.08em;
-  text-shadow: 0 3px 6px rgba(0,0,0,0.45), 0 0 4px rgba(255,255,255,0.4);
+.site-header h1{
+  font-family: "Aharoni","Arial Black",sans-serif; font-size: 48px; letter-spacing: .08em;
+  text-shadow: 0 3px 6px rgba(0,0,0,.45), 0 0 4px rgba(255,255,255,.4);
 }
 
-/* ---------- Nav (boutons bleus) ---------- */
-.nav-row {
-  display: flex; justify-content: center; gap: 0.5rem;
-  background: #e9f1ff; padding: 0.8rem; border-radius: 8px;
+/* Nav boutons */
+.nav-row{
+  display:flex; justify-content:center; gap:.5rem; background:#e9f1ff; padding:.8rem; border-radius:8px;
 }
-.nav-row .btn {
-  padding: 0.5rem 1rem; background: #2b6cb0; color: #fff;
-  border: 1px solid #1e4e85; border-radius: 6px; font-weight: 600;
-  cursor: pointer; font-size: 1rem; min-width: 120px; text-align: center; display: inline-block;
+.nav-row .btn{
+  padding:.5rem 1rem; background:#2b6cb0; color:#fff; border:1px solid #1e4e85; border-radius:6px;
+  font-weight:600; cursor:pointer; font-size:1rem; min-width:120px; text-align:center; display:inline-block;
 }
-.nav-row .btn-today { background: #1a365d; color: white; }
-.nav-row .btn:hover { background: #3c7fd1; }
-.nav-row .btn-today:hover { background: #2b4b80; }
+.nav-row .btn-today{ background:#1a365d; color:#fff; }
+.nav-row .btn:hover{ background:#3c7fd1; }
+.nav-row .btn-today:hover{ background:#2b4b80; }
 
-/* ---------- Paramètres ---------- */
+/* Paramètres */
 .params{
   display:flex; gap:1rem; justify-content:center; align-items:center;
   padding:1rem; background:#fff; border-bottom:1px solid var(--border);
 }
-.params label{ display:inline-flex; align-items:center; gap:.4rem; color: var(--muted); }
+.params label{ display:inline-flex; align-items:center; gap:.4rem; color:var(--muted); }
 .params input[type="number"], .params select{
-  padding:.35rem .5rem; border:1px solid var(--border); border-radius:6px;
-  background:#fff; color:var(--fg); min-width:72px; text-align:center;
+  padding:.35rem .5rem; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--fg);
+  min-width:72px; text-align:center;
 }
 
-/* ---------- Grille des mois ---------- */
+/* Grille des mois */
 #calendar-9cols{
-  position:relative;
-  display:grid;
-  grid-template-columns: 1fr; /* mobile */
-  gap:1.4rem; padding:1.2rem;
+  position:relative; display:grid; grid-template-columns: 1fr; gap:1.4rem; padding:1.2rem;
 }
-@media (min-width: 900px){
-  #calendar-9cols{ grid-template-columns: repeat(3, 1fr); }
-}
+@media (min-width:900px){ #calendar-9cols{ grid-template-columns: repeat(3,1fr); } }
 
-/* ---------- Carte mois ---------- */
+/* Carte mois */
 .month{
-  background:#fff;
-  border:1px solid #d0d8e8;
-  border-radius:10px;
-  padding:.8rem;
-  box-shadow:0 1px 3px rgba(0,0,0,.06);
-  position:relative;
-  overflow:hidden; /* propre avec le watermark vertical */
+  background:#fff; border:1px solid #d0d8e8; border-radius:10px; padding:.8rem;
+  box-shadow:0 1px 3px rgba(0,0,0,.06); position:relative; overflow:hidden;
 }
 
-/* Entête mois (bandeau bleu) */
+/* Entête mois */
 .month-header{
-  background: var(--brand);
-  color:#fff; font-weight:700; text-align:center;
+  background: var(--brand); color:#fff; font-weight:700; text-align:center;
   border-radius:6px; margin-bottom:.6rem; padding:.6rem;
 }
 
-/* ---------- Entêtes colonnes ---------- */
+/* Entêtes colonnes */
 .month-head-row{
-  display:grid; grid-template-columns: var(--date-col) 1fr 1fr;
-  gap:6px; margin-bottom:.25rem;
+  display:grid; grid-template-columns: var(--date-col) 1fr 1fr; gap:6px; margin-bottom:.25rem;
 }
 .col-title{
   background: linear-gradient(var(--head-grad1), var(--head-grad2));
-  border:1px solid var(--head-border); border-radius:4px;
-  padding:.4rem .45rem; font-weight:700; color: var(--head-text); text-align:center;
+  border:1px solid var(--head-border); border-radius:4px; padding:.4rem .45rem; font-weight:700;
+  color: var(--head-text); text-align:center;
 }
 
-/* ---------- Lignes (jours) ---------- */
+/* Lignes jours */
 .row{
-  display:grid; grid-template-columns: var(--date-col) 1fr 1fr;
-  gap:6px; align-items:center; padding:.2rem 0; border-bottom:1px solid var(--border);
+  display:grid; grid-template-columns: var(--date-col) 1fr 1fr; gap:6px; align-items:center;
+  padding:.2rem 0; border-bottom:1px solid var(--border);
 }
 .cell{
   min-height:28px; display:flex; align-items:center; justify-content:center;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   background:#fff; border-radius:6px; padding:.25rem .4rem;
 }
-.cell.date{ font-weight: 600; }
+.cell.date{ font-weight:600; }
 .row:nth-child(even) .cell{ background:#fafafa; }
 
-/* ---------- États ---------- */
+/* États */
 .row.today .cell     { background: var(--today-bg); }
 .row.market .cell    { background: var(--market-bg); }
 .row.forbidden .cell { background: var(--forbid-bg); }
 
 .cell.greg{ position:relative; }
 .row.forbidden .cell.greg::before{
-  content:"🛇"; position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
+  content:"🛇"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
 }
 .row.market:not(.forbidden) .cell.greg::before{
-  content:"🛒"; position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
+  content:"🛒"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:1rem; opacity:.9;
 }
 .row.forbidden.market .cell.greg::before{
   content:"🛇"; position:absolute; left:calc(50% - .8rem); top:50%; transform:translate(-50%,-50%);
@@ -179,54 +125,42 @@ body{
   content:"🛒"; position:absolute; left:calc(50% + .8rem); top:50%; transform:translate(-50%,-50%);
 }
 .row.today .cell.greg::after{
-  content:"📍"; position:absolute; right:.25rem; top:50%; transform:translateY(-50%);
-  font-size:.95rem; opacity:.85;
+  content:"📍"; position:absolute; right:.25rem; top:50%; transform:translateY(-50%); font-size:.95rem; opacity:.85;
 }
 
 /* Week-end (si data-day posé par JS) */
-.greg[data-day="samedi"]   { color: #0b4bd6; font-weight:600; }
-.greg[data-day="dimanche"] { color: #b00000; font-weight:700; }
+.greg[data-day="samedi"]   { color:#0b4bd6; font-weight:600; }
+.greg[data-day="dimanche"] { color:#b00000; font-weight:700; }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 900px){
-  .params{ flex-wrap:wrap; }
-}
+/* Responsive */
+@media (max-width:900px){ .params{ flex-wrap:wrap; } }
 
-/* ---------- Watermark : version officielle (verticale, ::before) ---------- */
+/* Watermark officiel (vertical en ::before) */
+.month .month-watermark{ display:none !important; } /* on neutralise tout ancien watermark central */
 
-/* On neutralise tout ancien watermark central si présent dans le HTML */
-.month .month-watermark { display: none !important; }
-
-/* Watermark vertical (lit de bas -> haut) */
-.month::before {
+.month::before{
   content: attr(data-watermark);
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   writing-mode: vertical-rl; transform: rotate(180deg);
   text-transform: uppercase;
-
   font-family: "Aharoni","Arial Black","Montserrat","Segoe UI","Helvetica Neue",Arial,sans-serif;
-  font-size: clamp(36px, 7vw, 130px);
-  font-weight: 800; letter-spacing: .08em;
-  color: rgba(0,0,0,0.60);
-  text-shadow: 0 2px 4px rgba(255,255,255,0.35), 0 4px 18px rgba(0,0,0,0.55);
-  mix-blend-mode: normal;
-  pointer-events: none; user-select: none; z-index: 0;
+  font-size: clamp(36px, 7vw, 130px); font-weight:800; letter-spacing:.08em;
+  color: rgba(0,0,0,.60);
+  text-shadow: 0 2px 4px rgba(255,255,255,.35), 0 4px 18px rgba(0,0,0,.55);
+  mix-blend-mode: normal; pointer-events:none; user-select:none; z-index:0;
 }
 
-/* Le contenu du mois doit passer AU-DESSUS */
+/* Le contenu passe AU-DESSUS */
 .month > *:not(.month-watermark),
-.month *:not(.month-watermark) {
-  position: relative; z-index: 1;
-}
+.month *:not(.month-watermark){ position:relative; z-index:1; }
 
-/* ---------- Bloc infos (option) ---------- */
+/* Bloc infos (option) */
 .bloc-infos-final{
-  width: 100%; max-width: 1200px; margin: 0.8rem auto 0;
-  background: #fffaf3; border: 1px solid #d8d8d8; border-radius: 10px;
-  padding: 1rem 1.2rem; display: flex; justify-content: flex-start; align-items: flex-start;
+  width:100%; max-width:1200px; margin:.8rem auto 0; background:#fffaf3;
+  border:1px solid #d8d8d8; border-radius:10px; padding:1rem 1.2rem;
+  display:flex; justify-content:flex-start; align-items:flex-start;
 }
-.infos-inner{ text-align: left; width: 100%; }
+.infos-inner{ text-align:left; width:100%; }
 .bloc-infos-final .roi{ color:#b00020; font-weight:700; font-size:14px; margin:.2rem 0; }
 .bloc-infos-final .interdits{ color:#b00020; font-weight:700; font-size:12px; margin:.2rem 0; }
 .bloc-infos-final .marche{ color:#087f23; font-weight:700; font-size:12px; margin:.2rem 0; }
