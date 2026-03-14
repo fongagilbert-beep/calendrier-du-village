@@ -593,6 +593,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     remplirListeVillagesDepuisData(data || {});
 
     renderNineColumns();
+    renderVillageMeta();
   } catch (e) {
     console.error("[Init] Erreur pendant l'init:", e);
   }
