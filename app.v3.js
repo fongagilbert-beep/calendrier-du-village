@@ -62,7 +62,7 @@ function toISODateFromAny(x) {
     return `${y}-${m}-${d}`;
   }
   const s = String(x).trim();
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); // dd/MM/yyyy
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   const t = new Date(s);
@@ -87,6 +87,7 @@ function buildJNameIndexForVillage(village){
   }
   return out;
 }
+
 function computeIndicesFromNamesPerVillage(namesMap){
   const out = {};
   for (const [vill, arr] of Object.entries(namesMap || {})){
@@ -101,10 +102,12 @@ function computeIndicesFromNamesPerVillage(namesMap){
   }
   return out;
 }
+
 function getAnchorForVillage(v){
   const key = String(v || 'ALL').toUpperCase();
   return state.j8Anchor[key] || state.j8Anchor["ALL"];
 }
+
 function getJIndexForDate(d, village){
   const anc = getAnchorForVillage(village);
   if (!anc) return null;
@@ -112,13 +115,14 @@ function getJIndexForDate(d, village){
   const diff = Math.floor((d - start) / 86400000);
   return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1;
 }
+
 function listContainsJ(map, village, j){
   const v = String(village || 'ALL').toUpperCase();
   const arr = map[v] || map["ALL"] || [];
   return Array.isArray(arr) ? arr.includes(j) : false;
 }
 
-// ----------------------------- Résolution
+ // ----------------------------- Résolution
 function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
   const vKey = String(village || 'ALL').toUpperCase();
@@ -197,7 +201,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     }
     if (Object.keys(mMap).length > 0) canonical.traditional_months[vUpper] = mMap;
 
-    // Interdits : FR d’abord, sinon V/W/X
+    // Interdits : FR ou fallback V/W/X
     const forb = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour interdit${k}`];
@@ -210,7 +214,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     });
     if (forb.length > 0) canonical.forbidden_names[vUpper] = forb;
 
-    // Marché : FR d’abord, sinon Z/AA/AB
+    // Marchés : FR ou fallback Z/AA/AB
     const mark = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour du marché${k}`];
@@ -227,7 +231,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       if (!globalMarcheSet) { canonical.market_info = mark.slice(); globalMarcheSet = true; }
     }
 
-    // Méta village
+    // Meta : Roi / Informations
     const roi  = (r["Roi du village:2"] || r["Roi du village:"] || "").toString().trim();
     const info = (r["Informations:"] || "").toString().trim();
     if (roi)  { canonical.roi_by_village[vUpper] = roi;  if (!globalRoiSet)  { canonical.roi = roi;   globalRoiSet  = true; } }
@@ -237,8 +241,6 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
   if (!canonical.forbidden_names["ALL"]) canonical.forbidden_names["ALL"] = [];
   if (!canonical.market_names["ALL"])    canonical.market_names["ALL"]    = [];
 
-  console.log("[ADAPT] Villages (J8):", Object.keys(canonical.traditional_days_8));
-  console.log("[ADAPT] Villages (Mois):", Object.keys(canonical.traditional_months));
   return canonical;
 }
 
@@ -247,52 +249,25 @@ async function loadDataJSON(){
   const url = "./data.v3.json?v=" + Date.now();
   try {
     const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) {
-      console.error("Chargement des données échoué:", res.status, res.statusText, "URL:", url);
-      return null;
-    }
+    if (!res.ok) return null;
+
     const raw = await res.json();
 
-    // Canonique ?
+    // Canonique déjà structuré ?
     if (raw && (raw.traditional_days_8 || raw.traditional_days_anchor || raw.traditional_months)) {
-      let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
-      let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
-      if (ad && aj && (!raw.traditional_days_anchor || !raw.traditional_days_anchor.ALL)) {
-        const iso = toISODateFromAny(ad);
-        const j = Number(aj);
-        raw.traditional_days_anchor = raw.traditional_days_anchor || {};
-        if (iso && j >= 1 && j <= 8) {
-          raw.traditional_days_anchor.ALL = { date: iso, j };
-        }
-      }
       return hydrateStateFromCanonical(raw, null);
     }
 
-    // Table rows
+    // Structure rows
     const rows = Array.isArray(raw?.rows)
       ? raw.rows
       : (Array.isArray(raw) ? raw : null);
 
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
-
-      let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
-      let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
-      if (!ad && rows[0]) ad = rows[0]["AnchorDate (globale)"] ?? rows[0].AnchorDate;
-      if (!aj && rows[0]) aj = rows[0]["AnchorJ (1..8)"]      ?? rows[0].AnchorJ;
-
-      if (ad && aj) {
-        const iso = toISODateFromAny(ad);
-        const j = Number(aj);
-        if (iso && j >= 1 && j <= 8) {
-          canonical.traditional_days_anchor.ALL = { date: iso, j };
-        }
-      }
-
       return hydrateStateFromCanonical(canonical, rows);
     }
 
-    console.warn("[DATA] Structure inconnue (ni canonique, ni rows).");
     return null;
 
   } catch(e){
@@ -301,7 +276,7 @@ async function loadDataJSON(){
   }
 }
 
-// Hydrate 'state'
+ // Hydrate 'state'
 function hydrateStateFromCanonical(data, rowsRaw) {
   state.j8       = data.traditional_days_8      || {};
   state.j8Anchor = data.traditional_days_anchor || {};
@@ -425,7 +400,6 @@ function renderVillageMeta(){
   const elInterdits = document.getElementById("interdits-village");
   const blocInfos   = document.getElementById("bloc-infos-final");
 
-  // CAS ALL → on masque
   if (vKey === 'ALL') {
     if (elRoi)       elRoi.textContent = '—';
     if (elMarche)    elMarche.textContent = '—';
@@ -435,7 +409,6 @@ function renderVillageMeta(){
     return;
   }
 
-  // CAS VILLAGE
   if (blocInfos) blocInfos.style.display = '';
 
   const roi        = state.roiByVillage[vKey]    || "—";
@@ -445,7 +418,7 @@ function renderVillageMeta(){
   if (elRoi)       elRoi.textContent = roi;
   if (elMarche)    elMarche.textContent = marcheArr.join(", ") || "—";
   if (elMotif)     elMotif.textContent = motif;
-  if (elInterdits) elInterdits.textContent = 
+  if (elInterdits) elInterdits.textContent =
       (state.forbiddenNames[vKey] || []).join(" • ") || "—";
 }
 
@@ -460,10 +433,7 @@ function shouldHideByFilter(x){
 // ----------------------------- Villages : remplissage du select
 function remplirListeVillagesDepuisData(data) {
   const sel = document.getElementById("param-village");
-  if (!sel) {
-    console.error("[Village] <select id='param-village'> introuvable");
-    return;
-  }
+  if (!sel) return;
 
   sel.innerHTML = '<option value="ALL">Tous</option>';
 
