@@ -690,14 +690,17 @@ font-family:
     Arial,
     sans-serif;
 
-  font-size: clamp(28px, 5.5vw, 80px);
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: clamp(32px, 7vw, 110px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
 
-  color: rgba(0, 0, 0, 0.12);
-  text-shadow: none;
+  color: rgba(0, 0, 0, 0.38); /* Beaucoup plus visible (12% → 38%) */
+
+  text-shadow:
+    0 2px 3px rgba(255,255,255,0.25),  /* Légère lumière dessous */
+    0 4px 14px rgba(0,0,0,0.35);       /* Ombre profonde qui renforce le contraste */
+
   mix-blend-mode: multiply;
-
   pointer-events: none;
   user-select: none;
   z-index: 0;
