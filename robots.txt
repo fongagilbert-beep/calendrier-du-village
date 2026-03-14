@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fongagilbert-beep.github.io/calendrier-du-village/sitemap.xml
