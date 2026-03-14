@@ -681,7 +681,15 @@ h2 > #roi-village{
   transform: rotate(180deg);
   text-transform: uppercase;
 
- font-family: "Aharoni", sans-serif;
+font-family:
+    "Aharoni",
+    "Arial Black",
+    "Montserrat",
+    "Segoe UI",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
   font-size: clamp(28px, 5.5vw, 80px);
   font-weight: 600;
   letter-spacing: 0.06em;
