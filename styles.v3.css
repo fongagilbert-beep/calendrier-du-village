@@ -137,55 +137,60 @@ body{
 }
 
 /* ============================================================
-   WATERMARK VERTICAL (VERSION C)
-   - Centré
-   - Taille moyenne
-   - Bas → haut
-   - Jamais débordant
+   WATERMARK VERTICAL (VERSION C) — LISIBLE BAS -> HAUT
+   - Centré, derrière le contenu
+   - Taille adaptée, sans débordement
+   - Contraste lisible
    ============================================================ */
-.month::before{
-  content: attr(data-watermark);
-  position:absolute;
-  inset:0;
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  /* Vertical BAS → HAUT */
-  writing-mode: vertical-rl;
-  transform: rotate(0deg);
-
-   /* Watermark vertical lisible de BAS -> HAUT (bottom-to-top) */
-.month::before{
-  writing-mode: vertical-rl;   /* flux vertical */
-  text-orientation: upright;   /* lettres droites (Latin lisible) */
-  transform: rotate(180deg);   /* inverse le sens pour BAS -> HAUT */
+.month {
+  position: relative;
+  overflow: hidden;
 }
 
-   
-  text-transform:uppercase;
-  font-weight:700;
+.month::before{
+  content: attr(data-watermark);
+  position: absolute;
+  inset: 0;
 
-  /* Taille moyenne ajustable */
-  font-size: clamp(42px, 11vw, 120px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Orientation BAS -> HAUT (strictement lisible) */
+  writing-mode: vertical-rl;      /* flux vertical */
+  text-orientation: upright;      /* lettres droites (latin lisible) */
+  transform: rotate(180deg);      /* inverse le sens pour BAS -> HAUT */
+
+  /* Apparence */
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: .06em;
+  font-size: clamp(56px, 12vw, 160px);
 
   /* Limitation anti-débordement */
-  max-height:90%;
-  max-width:90%;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  max-height: 92%;
+  max-width: 92%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-  /* Couleur grise */
-  color:rgba(0,0,0,0.22);
-
+  /* Contraste (plus lisible que 0.22) */
+  color: rgba(0,0,0,0.28);
   text-shadow:
-      0 1px 3px rgba(255,255,255,0.35),
-      0 2px 6px rgba(0,0,0,0.25);
+    0 0 1px rgba(0,0,0,.15),
+    0 1px 2px rgba(0,0,0,.22),
+    0 0 8px rgba(255,255,255,.55);
 
-  pointer-events:none;
-  user-select:none;
-  z-index:0;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0; /* en arrière-plan */
+}
+
+/* Contenus au-dessus du watermark */
+.month .month-header,
+.month .month-head-row,
+.month .row{
+  position: relative;
+  z-index: 1;
 }
 
 /* Contenu au-dessus */
