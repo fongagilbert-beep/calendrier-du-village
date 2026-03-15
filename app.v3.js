@@ -7,6 +7,7 @@
 //  - Reset complet quand on repasse sur "Tous"
 // =====================================================
 
+console.log('app.v3.js chargé à', new Date().toISOString());
 const today = new Date();
 
 const fmt = {
