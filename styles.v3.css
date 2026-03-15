@@ -136,6 +136,68 @@ body{
   overflow:hidden;
 }
 
+/* ============================================================
+   WATERMARK ROTATION GAUCHE (horizontal pivoté de -90°)
+   - Centré
+   - Coupe visuelle si trop long (la carte masque l'excédent)
+   - Compatible mobile
+   ============================================================ */
+.month {
+  position: relative;
+  overflow: hidden; /* ← garantit "ne dépasse pas le mois" visuellement */
+}
+
+.month::before{
+  content: attr(data-watermark);
+  position: absolute;
+  inset: 0;                 /* occupe toute la carte */
+  display: flex;
+  justify-content: center;  /* centrer le groupe */
+  align-items: center;      /* centrer le groupe */
+
+  /* On écrit *horizontalement*, puis on pivote vers la gauche */
+  writing-mode: horizontal-tb;
+  transform: rotate(-90deg) scale(var(--wm-scale, 1));
+  transform-origin: 50% 50%;
+
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: .08em;
+  white-space: nowrap;           /* un seul "ruban" */
+  font-size: clamp(36px, 12vh, 110px); /* taille par défaut raisonnable */
+
+  /* La carte masque tout dépassement éventuel */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 92%;   /* marge intérieure visuelle */
+  max-height: 92%;
+
+  color: rgba(0,0,0,0.20);
+  text-shadow:
+      0 1px 3px rgba(255,255,255,0.35),
+      0 2px 6px rgba(0,0,0,0.22);
+
+  pointer-events: none;
+  user-select: none;
+  z-index: 0; /* derrière le contenu du mois */
+}
+
+/* Le contenu réel du mois reste dessus */
+.month .month-header,
+.month .month-head-row,
+.month .row{
+  position: relative;
+  z-index: 1;
+}
+
+/* Contenu au-dessus */
+.month .month-header,
+.month .month-head-row,
+.month .row{
+  position:relative;
+  z-index:1;
+}
+
 /* ---------- En-tête Mois ---------- */
 .month-header{
   background:var(--brand);
@@ -210,38 +272,43 @@ body{
   .params{ flex-wrap:wrap; }
 }
 
-
-
-/* ============================================================
-   WATERMARK ROTATION GAUCHE (horizontal pivoté de -90°)
-   - Centré
-   - Overflow masqué par .month
-   - Auto-fit via --wm-scale (piloté par JS)
-   ============================================================ */
-.month{ position:relative; overflow:hidden; }
-.month::before{
-  content: attr(data-watermark);
-  position:absolute; inset:0;
-  display:flex; justify-content:center; align-items:center;
-  writing-mode: horizontal-tb;
-  transform: rotate(-90deg) scale(var(--wm-scale, 1));
-  transform-origin: 50% 50%;
-  text-transform: uppercase; font-weight:700; letter-spacing:.08em;
-  white-space: nowrap; font-size: clamp(36px, 12vh, 110px);
-  color: rgba(0,0,0,0.20);
-  text-shadow: 0 1px 3px rgba(255,255,255,0.35), 0 2px 6px rgba(0,0,0,0.22);
-  pointer-events:none; user-select:none; z-index:0;
+/* Alignement à droite des jours traditionnels */
+.cell.trad {
+  text-align: right;
 }
-.month .month-header,
-.month .month-head-row,
-.month .row{ position:relative; z-index:1; }
 
-/* Colonne “Jour traditionnel” : alignée à droite + icônes */
-.cell.trad{
-  display:flex; justify-content:flex-end; align-items:center;
-  gap:.5rem; white-space:normal; line-height:1.3; text-align:right;
+/* Masquer tout input texte “fantôme” dans la rangée Paramètres */
+.params > input[type="text"],
+.params #village-ghost,
+.params input[name="village"],
+.params input[aria-label="Village"] {
+  display: none !important;
 }
-.trad-icons{ display:inline-flex; gap:6px; }
-.ico{ width:18px; height:18px; display:inline-block; background-repeat:no-repeat; background-position:center; background-size:contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,.15)); }
-.ico-market{ background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300a650'><path d='M7 9h10l1.2 8.4A2 2 0 0 1 16.2 20H7.8a2 2 0 0 1-1.98-1.6L5 9h2z'/><path d='M7 9l2-5h6l2 5H7z'/></svg>"); }
-.ico-forbidden{ background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b00020' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M5 19L19 5'/></svg>"); }
+
+/* --- Bloc infos sous le calendrier --- */
+.bloc-infos-final{
+  /* occupe la même largeur que la grille (géré par le conteneur parent) */
+  background: #ffffff;              /* fond blanc doux */
+  border: 1px solid var(--border);  /* cohérent avec la grille */
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  margin: 1rem 1.2rem 0;            /* espace au-dessus pour ne pas “coller” le calendrier */
+  padding: .8rem 1rem;
+}
+
+/* contenu interne : texte aligné à gauche, lignes bien espacées */
+.bloc-infos-final .infos-inner{
+  display: block;
+}
+.bloc-infos-final p{
+  margin: .25rem 0;
+  color: var(--fg);
+}
+
+/* --- Signature centrée et bleue sous le bloc --- */
+.credit-final{
+  text-align: center;
+  color: #0b3c8d;        /* bleu Suez/brand proche de ton theme-color */
+  font-weight: 600;
+  margin: .6rem 0 1.2rem;
+}
