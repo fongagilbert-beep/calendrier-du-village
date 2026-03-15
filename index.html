@@ -1,1 +1,114 @@
 
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendrier du Village</title>
+
+  <!--
+    VERSION CORRIGÉE – prête pour GitHub Pages
+    Hypothèse : ce fichier est situé dans /calendrier-du-village/index.html
+    Les chemins sont RELATIFS à ce dossier (./...)
+  -->
+
+  <!-- Favicon & icônes PWA -->
+  <link rel="icon" href="./icons/favicon.ico" sizes="any"> 
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon-180.png"> 
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png"> 
+  <link rel="icon" type="image/png" sizes="256x256" href="./icons/icon-256.png"> 
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png"> 
+  <link rel="manifest" href="./manifest.v3.webmanifest"> 
+
+  <!-- Feuille de styles principale -->
+  <link rel="stylesheet" href="./styles.v3.css"> 
+
+  <!-- Debug cache: évite que le navigateur garde une ancienne version -->
+  <meta http-equiv="Cache-Control" content="no-store">
+</head>
+<body>
+  <h1>Calendrier du Village</h1>
+
+  <!-- Barre de navigation -->
+  <div class="nav-row">
+    <button data-action="prev3">⟵ 3 mois</button>
+    <button data-action="today">Aujourd’hui</button>
+    <button data-action="next3">3 mois ⟶</button>
+    <button data-action="prevY">⟵ 1 an</button>
+    <button data-action="nextY">1 an ⟶</button>
+  </div>
+
+  <!-- Paramètres -->
+  <div class="param-row">
+    <label>Année (A) :
+      <select id="param-annee"></select>
+    </label>
+    <label>Mois (M) :
+      <select id="param-mois">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+    </label>
+    <label>Village :
+      <select id="param-village"></select>
+    </label>
+    <label>Filtre :
+      <select id="param-filtre">
+        <option>Tous</option>
+        <option>Jours de marché</option>
+        <option>Jours interdits</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Zone principale où l’application rend les 3 mois -->
+  <div id="calendar-9cols" class="calendar"></div>
+
+  <!-- Bloc d'informations du village sélectionné -->
+  <section id="bloc-infos-final" class="village-infos" style="display:none">
+    <p><strong>Roi :</strong> <span id="roi-village">—</span></p>
+    <p><strong>Jours interdits :</strong> <span id="interdits-village">—</span></p>
+    <p><strong>Jours de marché :</strong> <span id="marche-village">—</span></p>
+    <p><strong>Informations :</strong> <span id="motif-village">—</span></p>
+  </section>
+
+  <!-- Zone debug pour messages liés au JSON / erreurs réseau -->
+  <pre id="debug" style="white-space:pre-wrap;color:#b00;"></pre>
+
+  <!-- Petit script pour remplir dynamiquement la liste des années -->
+  <script>
+    (function(){
+      var ySel = document.getElementById('param-annee');
+      var yNow = new Date().getFullYear();
+      for (var y = yNow-2; y <= yNow+2; y++) {
+        var opt = document.createElement('option');
+        opt.value = String(y);
+        opt.textContent = String(y);
+        ySel.appendChild(opt);
+      }
+    })();
+  </script>
+
+  <!-- Script principal de l'application (DEFER indispensable) -->
+  <script src="./app.v3.js" defer></script>
+
+  <!-- (Optionnel) Désactiver un service worker potentiellement bloquant le debug
+  <script>
+    // Décommente ce bloc si tu soupçonnes un SW de servir une vieille version
+    // if ('serviceWorker' in navigator) {
+    //   navigator.serviceWorker.getRegistrations().then(list => list.forEach(r => r.unregister()));
+    // }
+  </script>
+  -->
+</body>
+</html>
