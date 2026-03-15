@@ -1,0 +1,82 @@
+{
+  "traditional_days_8": {
+    "ALL": {
+      "1": "Nkong",
+      "2": "Zne",
+      "3": "Tsu",
+      "4": "Tseu",
+      "5": "Ngu",
+      "6": "Njoh",
+      "7": "Ngoh",
+      "8": "Ndze"
+    },
+    "BAFOUSSAM": {
+      "1": "Nkong",
+      "2": "Zne",
+      "3": "Tsu",
+      "4": "Tseu",
+      "5": "Ngu",
+      "6": "Njoh",
+      "7": "Ngoh",
+      "8": "Ndze"
+    }
+  },
+  "traditional_days_anchor": {
+    "ALL": {
+      "date": "2026-01-01",
+      "j": 1
+    }
+  },
+  "traditional_months": {
+    "ALL": {
+      "1": "M1",
+      "2": "M2",
+      "3": "M3",
+      "4": "M4",
+      "5": "M5",
+      "6": "M6",
+      "7": "M7",
+      "8": "M8",
+      "9": "M9",
+      "10": "M10",
+      "11": "M11",
+      "12": "M12"
+    },
+    "BAFOUSSAM": {
+      "1": "M1",
+      "2": "M2",
+      "3": "M3",
+      "4": "M4",
+      "5": "M5",
+      "6": "M6",
+      "7": "M7",
+      "8": "M8",
+      "9": "M9",
+      "10": "M10",
+      "11": "M11",
+      "12": "M12"
+    }
+  },
+  "forbidden_names": {
+    "BAFOUSSAM": [
+      "Nkong",
+      "Ndze"
+    ]
+  },
+  "market_names": {
+    "BAFOUSSAM": [
+      "Tsu"
+    ]
+  },
+  "roi_by_village": {
+    "BAFOUSSAM": "Sa Majesté…"
+  },
+  "motif_by_village": {
+    "BAFOUSSAM": "Infos village"
+  },
+  "marche_by_village": {
+    "BAFOUSSAM": [
+      "Tsu"
+    ]
+  }
+}
