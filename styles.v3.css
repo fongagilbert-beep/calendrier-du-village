@@ -262,6 +262,10 @@ body{
   .params{ flex-wrap:wrap; }
 }
 
+/* Alignement à droite des jours traditionnels */
+.cell.trad {
+  text-align: right;
+}
 
 /* Masquer tout input texte “fantôme” dans la rangée Paramètres */
 .params > input[type="text"],
