@@ -156,6 +156,14 @@ body{
   writing-mode: vertical-rl;
   transform: rotate(0deg);
 
+   /* Watermark vertical lisible de BAS -> HAUT (bottom-to-top) */
+.month::before{
+  writing-mode: vertical-rl;   /* flux vertical */
+  text-orientation: upright;   /* lettres droites (Latin lisible) */
+  transform: rotate(180deg);   /* inverse le sens pour BAS -> HAUT */
+}
+
+   
   text-transform:uppercase;
   font-weight:700;
 
