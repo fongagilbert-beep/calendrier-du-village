@@ -625,5 +625,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 /* Alignement à droite des jours traditionnels */
 .cell.trad {
   text-align: right;
-}
+};
 
