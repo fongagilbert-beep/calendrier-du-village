@@ -1,7 +1,3 @@
-// =====================================================
-// CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
-// Loader rows + ancre globale + M1..M12 + J1..J8 + V/W/X & Z/AA/AB
-// =====================================================
 
 const today = new Date();
 
