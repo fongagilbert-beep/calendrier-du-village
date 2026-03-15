@@ -242,17 +242,28 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
 }
 
 // ----------------------------- JSON Loader (avec ancre globale)
+// ----------------------------- JSON Loader (robuste + diagnostics)
 async function loadDataJSON(){
   const url = './data.v3.json?v=' + Date.now();
   try {
     const res = await fetch(url, { cache:'no-store' });
-    if (!res.ok) return null;
+    if (!res.ok) throw new Error('HTTP ' + res.status);
 
+    // Vérifier le content-type annoncé par le serveur
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (!ct.includes('application/json')) {
+      // Peut-être que le host renvoie du HTML (SPA / 404)
+      const text = await res.text();
+      console.error('[data.v3.json] Réponse non JSON. Content-Type=', ct, 'Extrait=', text.slice(0, 200));
+      throw new Error('Réponse non JSON depuis data.v3.json (voir console).');
+    }
+
+    // Ici on peut parser tranquillement
     const raw = await res.json();
 
-    // Cas API "canonique"
+    // === Cas "canonique" ===
     if (raw && raw.traditional_days_8) {
-      // Injecte l'ancre globale si présente
+      // Injecte l'ancre globale si présente au niveau racine
       const dISO = toISODateFromAny(
         raw['AnchorDate (globale)'] || raw['AnchorDate'] || raw['Ancre date globale'] || raw['AnchorDateGlobal'] || ''
       );
@@ -269,14 +280,14 @@ async function loadDataJSON(){
       return hydrateStateFromCanonical(raw, raw.rows || null);
     }
 
-    // Sinon rows[]
-    const rows = Array.isArray(raw?.rows) ? raw.rows :
-                 (Array.isArray(raw) ? raw : null);
+    // === Cas "rows" (ton cas) ===
+    const rows = Array.isArray(raw?.rows) ? raw.rows
+                : (Array.isArray(raw) ? raw : null);
 
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
 
-      // ---- LIRE LES CHAMPS GLOBAUX (Param!A2:B3) ----
+      // Lire l'ancre globale au niveau racine
       const dISO = toISODateFromAny(
         raw?.['AnchorDate (globale)'] || raw?.['AnchorDate'] || raw?.['Ancre date globale'] || raw?.['AnchorDateGlobal'] || ''
       );
@@ -292,14 +303,18 @@ async function loadDataJSON(){
       return hydrateStateFromCanonical(canonical, rows);
     }
 
-    return null;
+    throw new Error('Format data.v3.json invalide (ni canonique, ni rows[]).');
 
-  } catch(e){
+  } catch (e) {
     console.error('Erreur JSON', e);
+    const debugEl = document.getElementById('debug');
+    if (debugEl) {
+      debugEl.textContent = '❌ data.v3.json : ' + e.message +
+        '\nVérifie le chemin, le Content-Type et le format JSON (pas de commentaires, pas de trailing commas).';
+    }
     return null;
   }
 }
-
 // ----------------------------- Injection dans state
 function hydrateStateFromCanonical(data, rowsRaw) {
   state.j8       = data.traditional_days_8      || {};
