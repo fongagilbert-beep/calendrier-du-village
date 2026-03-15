@@ -368,6 +368,12 @@ function renderNineColumns(){
 
   syncParamFields();
   renderVillageMeta();   /* ← mise à jour du bloc infos */
+
+
+// === AJOUT : ajuste les watermarks APRÈS rendu
+  fitWatermarks();
+
+  
 }
 
 /* ----------------------------- BLOC INFOS DU VILLAGE */
