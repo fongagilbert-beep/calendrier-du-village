@@ -392,6 +392,40 @@ function renderVillageMeta(){
     return;
   }
 
+// Ajuste la taille du watermark pour qu'il tienne dans la carte sans dépasser
+function fitWatermarks(){
+  // Élément de mesure hors écran
+  const measurer = document.createElement('span');
+  measurer.style.cssText = [
+    'position:absolute','visibility:hidden','white-space:nowrap',
+    // Ces styles doivent correspondre au watermark (poids, espacement, base taille)
+    'font-weight:700','letter-spacing:.08em',
+    'font-size:36px','line-height:1', // base cohérente avec le CSS
+    'font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, sans-serif'
+  ].join(';');
+  document.body.appendChild(measurer);
+
+  document.querySelectorAll('.month').forEach(card => {
+    const text = card.getAttribute('data-watermark') || '';
+    measurer.textContent = text;
+
+    // Largeur "horizontale" du texte avant rotation
+    const textWidth = measurer.getBoundingClientRect().width;
+
+    // Hauteur disponible dans la carte (on garde ~10% de marge)
+    const cardH = card.clientHeight * 0.90;
+
+    // Si on pivote à -90°, la longueur horizontale doit tenir dans la hauteur de la carte
+    const scale = textWidth > 0 ? Math.min(1, cardH / textWidth) : 1;
+
+    // Appliquer la variable CSS
+    card.style.setProperty('--wm-scale', String(scale));
+  });
+
+  document.body.removeChild(measurer);
+}
+
+  
   blocInfos.style.display = '';
 
   if (elRoi)       elRoi.textContent       = state.roiByVillage?.[vKey]    || '—';
