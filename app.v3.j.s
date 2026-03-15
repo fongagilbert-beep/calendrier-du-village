@@ -1,10 +1,9 @@
-
 // =====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
-// Patch 2026-03-14b : Auto-ajustement du watermark (fitWatermarks)
-//  - Watermark pivoté (-90°) : CSS à mettre dans styles
-//  - fitWatermarks() appelé après chaque rendu + après fonts + sur resize
-//  - Conserve les correctifs précédents (ancre globale, reset ALL, etc.)
+// Patch 2026-03-15c : Durcissement debug/UX
+//  - logs détaillés sur JSON (URL, CT, statut)
+//  - messages #debug sur erreurs/vides
+//  - meilleure robustesse de "Village" & rendu
 // =====================================================
 
 (function(){
@@ -46,6 +45,15 @@
     /* Données brutes */
     rowsRaw: null
   };
+
+  // +++ util #debug
+  function showDebug(msg) {
+    const el = document.getElementById('debug');
+    if (el) {
+      const time = new Date().toLocaleTimeString('fr-FR');
+      el.textContent = `[${time}] ${msg}`;
+    }
+  }
 
   // ----------------------------- Utils
   function normalizeName(s){
@@ -203,7 +211,7 @@
       }
       canonical.traditional_months[vUpper] = mmap;
 
-      // Ancre J par village (si un jour tu l'ajoutes dans Param)
+      // Ancre J par village (optionnelle)
       const anchorDateRaw = r['Ancre date'] || r['Anchor Date'] || r['AnchorDate'] || '';
       const anchorJRaw    = r['Ancre J']    || r['Anchor J']    || r['AnchorJ']    || '';
       const dateISO = toISODateFromAny(anchorDateRaw);
@@ -252,17 +260,23 @@
   async function loadDataJSON(){
     const url = './data.v3.json?v=' + Date.now();
     try {
+      console.log('[Calendrier] Chargement JSON depuis', url); // +++
+      showDebug('Chargement des données…');
+
       const res = await fetch(url, { cache:'no-store' });
+      console.log('[Calendrier] Statut JSON =', res.status, res.statusText); // +++
       if (!res.ok) throw new Error('HTTP ' + res.status);
 
       const ct = (res.headers.get('content-type') || '').toLowerCase();
+      console.log('[Calendrier] Content-Type =', ct); // +++
       if (!ct.includes('application/json')) {
         const text = await res.text();
-        console.error('[data.v3.json] Réponse non JSON. Content-Type=', ct, 'Extrait=', text.slice(0, 200));
+        console.error('[data.v3.json] Réponse non JSON. CT=', ct, 'Extrait=', text.slice(0, 200));
         throw new Error('Réponse non JSON depuis data.v3.json (voir console).');
       }
 
       const raw = await res.json();
+      console.log('[Calendrier] JSON reçu (racine type):', Array.isArray(raw) ? 'array' : typeof raw); // +++
 
       // Cas API "canonique"
       if (raw && raw.traditional_days_8) {
@@ -279,6 +293,7 @@
             raw.traditional_days_anchor.ALL = { date: dISO, j: jStart };
           }
         }
+        showDebug('Données chargées (format canonique).');
         return hydrateStateFromCanonical(raw, raw.rows || null);
       }
 
@@ -302,6 +317,7 @@
           canonical.traditional_days_anchor.ALL = { date: dISO, j: jStart };
         }
 
+        showDebug('Données chargées (format rows[]).');
         return hydrateStateFromCanonical(canonical, rows);
       }
 
@@ -309,11 +325,7 @@
 
     } catch (e) {
       console.error('Erreur JSON', e);
-      const debugEl = document.getElementById('debug');
-      if (debugEl) {
-        debugEl.textContent = '❌ data.v3.json : ' + e.message +
-          '\nVérifie le chemin, le Content-Type et le format JSON (pas de commentaires, pas de virgules finales).';
-      }
+      showDebug('❌ data.v3.json : ' + e.message + '\nVérifie le chemin, le Content-Type et le format JSON.');
       return null;
     }
   }
@@ -377,8 +389,16 @@
   /* ----------------------------- Rendu des 3 mois */
   function renderNineColumns(){
     const root = document.getElementById('calendar-9cols');
-    if (!root) return;
+    if (!root) { showDebug('❌ Élément #calendar-9cols introuvable.'); return; }
     root.innerHTML = '';
+
+    // +++ garde-fou : données minimales ?
+    const hasAnyVillage = Object.keys(state.j8 || {}).length > 0 ||
+                          Object.keys(state.tmonths || {}).length > 0 ||
+                          Array.isArray(state.rowsRaw);
+    if (!hasAnyVillage) {
+      showDebug('⚠️ Aucune donnée de village détectée. Vérifie data.v3.json.');
+    }
 
     const months = [
       new Date(state.anchor.getFullYear(), state.anchor.getMonth() - 1, 1),
@@ -392,9 +412,9 @@
     root.appendChild(frag);
 
     syncParamFields();
-    renderVillageMeta();   /* ← mise à jour du bloc infos */
+    renderVillageMeta();
 
-    // === Ajuster les watermarks APRÈS rendu
+    // Ajuster les watermarks APRÈS rendu
     fitWatermarks();
   }
 
@@ -483,7 +503,7 @@
       cell2.setAttribute('data-day', wd);
       cell2.textContent = wd.charAt(0).toUpperCase() + wd.slice(1);
 
-      // Cellule "Jour traditionnel" alignée à droite, avec icônes éventuelles
+      // Cellule "Jour traditionnel"
       const cell3 = document.createElement('div');
       cell3.className = 'cell trad';
 
@@ -532,7 +552,7 @@
   /* ----------------------------- Village select */
   function remplirListeVillagesDepuisData(data) {
     const sel = document.getElementById('param-village');
-    if (!sel) return;
+    if (!sel) { console.warn('⚠️ #param-village introuvable'); return; }
 
     sel.innerHTML = '<option value="ALL">Tous</option>';
 
@@ -554,6 +574,8 @@
       });
 
     const list = Array.from(uniques).sort();
+    console.log('[Calendrier] Villages détectés =', list.length, list); // +++
+
     const frag = document.createDocumentFragment();
     list.forEach(vUpper => {
       const opt = document.createElement('option');
@@ -567,6 +589,10 @@
       state.village = 'ALL';
     }
     sel.value = state.village;
+
+    if (!list.length) {
+      showDebug('⚠️ Aucun village détecté dans data.v3.json. Vérifie les colonnes (Village, J1..J8, M1..M12…).');
+    }
   }
 
   /* ----------------------------- Navigation */
@@ -693,8 +719,16 @@
         __wm_t = setTimeout(fitWatermarks, 150);
       });
 
+      // +++ si l'URL contient ?village=XXX, on force l’update UI
+      if (fromUrl) {
+        const vSel = document.getElementById('param-village');
+        if (vSel) vSel.value = state.village;
+        renderNineColumns();
+      }
+
     } catch (e) {
       console.error('[Init] Erreur pendant l\'init:', e);
+      showDebug('❌ Erreur pendant l’init : ' + e.message);
     }
   });
 })();
