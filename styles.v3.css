@@ -274,3 +274,31 @@ body{
 .params input[aria-label="Village"] {
   display: none !important;
 }
+
+/* --- Bloc infos sous le calendrier --- */
+.bloc-infos-final{
+  /* occupe la même largeur que la grille (géré par le conteneur parent) */
+  background: #ffffff;              /* fond blanc doux */
+  border: 1px solid var(--border);  /* cohérent avec la grille */
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  margin: 1rem 1.2rem 0;            /* espace au-dessus pour ne pas “coller” le calendrier */
+  padding: .8rem 1rem;
+}
+
+/* contenu interne : texte aligné à gauche, lignes bien espacées */
+.bloc-infos-final .infos-inner{
+  display: block;
+}
+.bloc-infos-final p{
+  margin: .25rem 0;
+  color: var(--fg);
+}
+
+/* --- Signature centrée et bleue sous le bloc --- */
+.credit-final{
+  text-align: center;
+  color: #0b3c8d;        /* bleu Suez/brand proche de ton theme-color */
+  font-weight: 600;
+  margin: .6rem 0 1.2rem;
+}
