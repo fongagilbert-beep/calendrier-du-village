@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calendrier du Village</title>
+
+  <!-- Google Fonts (liens corrects) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Akatab:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.v3.webmanifest">
+  <meta name="theme-color" content="#0b3c8d">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="./styles.v3.css?v=20260311">
+
+  <!-- favicon (SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3C/svg%3E">
+</head>
+
+<body>
+
+  <!-- BANDEAU BLEU TITRE -->
+  <div class="site-header">Calendrier du Village</div>
+
+  <!-- BOUTONS DE NAVIGATION -->
+  <div class="nav-row">
+    <button class="btn" data-action="prev3">‹ 3 mois</button>
+    <button class="btn" data-action="next3">3 mois ›</button>
+    <button class="btn btn-today" data-action="today">Aujourd’hui</button>
+    <button class="btn" data-action="prevY">‹ 1 an</button>
+    <button class="btn" data-action="nextY">1 an ›</button>
+  </div>
+
+  <!-- PARAMÈTRES -->
+  <div class="params">
+    <label>Année (M) :
+      <input id="param-annee" type="number" min="1900" max="2500">
+    </label>
+
+    <label>Mois (M) :
+      <input id="param-mois" type="number" min="1" max="12">
+    </label>
+
+    <label>Village :
+      <select id="param-village">
+        <option value="ALL">Tous</option>
+      </select>
+    </label>
+
+    <label>Filtre :
+      <select id="param-filtre">
+        <option value="tous">Tous</option>
+        <option value="marché">Marchés</option>
+        <option value="interdits">Interdits</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- CALENDRIER -->
+  <div id="calendar-9cols"></div>
+
+  <!-- === BLOC INFOS FINAL === -->
+  <section id="bloc-infos-final" class="bloc-infos-final">
+    <div class="infos-inner">
+      <p class="infos">Informations : <span id="motif-village"></span></p>
+      <p class="roi">Roi : <span id="roi-village"></span></p>
+      <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
+      <p class="marche">Jours de marché : <span id="marche-village"></span></p>
+    </div>
+  </section>
+
+  <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
+
+  <!-- Zone debug (facultative) -->
+  <div id="debug" style="white-space:pre-wrap;color:#0b3c8d;font-family:monospace"></div>
+
+  <!-- Service Worker (ok) -->
+  <script>
+    console.log('[Calendrier] index.html chargé');
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .catch(err => console.error('SW registration failed:', err));
+      });
+    }
+  </script>
+
+  <!-- === SCRIPT APP (UNE SEULE FOIS) === -->
+  <script src="./app.v3.js?v=20260314" defer></script>
+
+  <noscript>Veuillez activer JavaScript pour afficher le calendrier.</noscript>
+</body>
+</html>
