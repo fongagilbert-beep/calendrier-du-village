@@ -1,3 +1,4 @@
+
 // =====================================================
 // CALENDRIER DU VILLAGE — VERSION MOBILE SAFE (v3)
 // Patch 2026-03-15c : Durcissement debug/UX
@@ -260,15 +261,15 @@
   async function loadDataJSON(){
     const url = './data.v3.json?v=' + Date.now();
     try {
-      console.log('[Calendrier] Chargement JSON depuis', url); // +++
+      console.log('[Calendrier] Chargement JSON depuis', url);
       showDebug('Chargement des données…');
 
       const res = await fetch(url, { cache:'no-store' });
-      console.log('[Calendrier] Statut JSON =', res.status, res.statusText); // +++
+      console.log('[Calendrier] Statut JSON =', res.status, res.statusText);
       if (!res.ok) throw new Error('HTTP ' + res.status);
 
       const ct = (res.headers.get('content-type') || '').toLowerCase();
-      console.log('[Calendrier] Content-Type =', ct); // +++
+      console.log('[Calendrier] Content-Type =', ct);
       if (!ct.includes('application/json')) {
         const text = await res.text();
         console.error('[data.v3.json] Réponse non JSON. CT=', ct, 'Extrait=', text.slice(0, 200));
@@ -276,7 +277,7 @@
       }
 
       const raw = await res.json();
-      console.log('[Calendrier] JSON reçu (racine type):', Array.isArray(raw) ? 'array' : typeof raw); // +++
+      console.log('[Calendrier] JSON reçu (racine type):', Array.isArray(raw) ? 'array' : typeof raw);
 
       // Cas API "canonique"
       if (raw && raw.traditional_days_8) {
@@ -574,7 +575,7 @@
       });
 
     const list = Array.from(uniques).sort();
-    console.log('[Calendrier] Villages détectés =', list.length, list); // +++
+    console.log('[Calendrier] Villages détectés =', list.length, list);
 
     const frag = document.createDocumentFragment();
     list.forEach(vUpper => {
