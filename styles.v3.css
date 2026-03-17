@@ -22,6 +22,8 @@
   --forest: #2f7a53;
   --turquoise: #2b9aa0;
   --indigo: #30507d;
+  --deep-blue: #0b2e59;
+  --deep-blue-soft: #143d73;
 
   --border-gold: rgba(201, 139, 45, 0.18);
   --border-turquoise: rgba(43, 154, 160, 0.16);
@@ -105,8 +107,8 @@ body::before {
   border: 1px solid rgba(201, 139, 45, 0.16);
   border-radius: 26px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0)),
-    linear-gradient(135deg, rgba(223, 187, 116, 0.98), rgba(201, 139, 45, 0.95));
+    linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0)),
+    linear-gradient(135deg, var(--deep-blue-soft), var(--deep-blue));
   color: #fffef9;
   text-align: center;
   font-size: clamp(1.9rem, 3vw, 2.5rem);
@@ -219,12 +221,12 @@ body::before {
 }
 
 .nav-row .btn-today {
-  border-color: rgba(201, 139, 45, 0.16);
+  border-color: rgba(11, 46, 89, 0.2);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.08)),
-    linear-gradient(180deg, #e5b66f, var(--gold));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05)),
+    linear-gradient(180deg, var(--deep-blue-soft), var(--deep-blue));
   box-shadow:
-    0 12px 24px rgba(201, 139, 45, 0.18),
+    0 12px 24px rgba(11, 46, 89, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.32);
 }
 
@@ -384,14 +386,14 @@ body::before {
   border: 1px solid rgba(201, 139, 45, 0.12);
   border-radius: 16px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0)),
-    linear-gradient(135deg, rgba(224, 183, 105, 0.98), rgba(201, 139, 45, 0.95));
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0)),
+    linear-gradient(135deg, var(--deep-blue-soft), var(--deep-blue));
   color: #fffef9;
   text-align: center;
   font-size: 1.04rem;
   font-weight: 800;
   letter-spacing: 0.05em;
-  box-shadow: 0 10px 18px rgba(201, 139, 45, 0.1);
+  box-shadow: 0 10px 18px rgba(11, 46, 89, 0.12);
 }
 
 .month-header::after {
@@ -582,10 +584,10 @@ body::before {
   top: -0.72rem;
   left: 1.3rem;
   padding: 0.28rem 0.8rem;
-  border: 1px solid rgba(201, 139, 45, 0.14);
+  border: 1px solid rgba(11, 46, 89, 0.14);
   border-radius: 999px;
-  background: #fff8eb;
-  color: var(--gold-deep);
+  background: var(--deep-blue);
+  color: #ffffff;
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.08em;
