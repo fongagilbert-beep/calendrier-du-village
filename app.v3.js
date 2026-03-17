@@ -104,14 +104,19 @@ function getAnchorForVillage(v){
 function getJIndexForDate(d, village){
   const anc = getAnchorForVillage(village);
   if (!anc) return null;
-  const start = new Date(String(anc.date) + "T00:00:00");
-  const diff = Math.floor((d - start) / 86400000);
-  return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1; // 1..8
-}
-function listContainsJ(map, village, j){
-  const v = String(village || 'ALL').toUpperCase();
-  const arr = map[v] || map["ALL"] || [];
-  return Array.isArray(arr) ? arr.includes(j) : false;
+
+  // Parse l’ancre ISO "YYYY-MM-DD" en minuit UTC (pas local)
+  const [yy, mm, dd] = String(anc.date).split("-").map(Number);
+  const startUTC = new Date(Date.UTC(yy, (mm - 1), dd)); // 00:00:00Z
+
+  // Convertit aussi la date cible en "jour civil UTC"
+  const targetUTC = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+
+  // Écart en jours civils stricts (insensible au DST)
+  const diff = Math.floor((targetUTC - startUTC) / 86400000);
+
+  // Cycle J (1..8)
+  return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1;
 }
 
 // ----------------------------- Résolution
