@@ -240,7 +240,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
 
 // ----------------------------- JSON Loader
 async function loadDataJSON(){
-  const url = "./data.v3.json?v=" + Date.now(); // adapte si ton fichier s'appelle data.json
+  const url = "./data.v3.json?v=" + Date.now(); // source principale (export Excel rows)
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
@@ -248,6 +248,63 @@ async function loadDataJSON(){
       return null;
     }
     const raw = await res.json();
+
+    // Optionnel : charger un fichier canonique supplémentaire (si présent) et fusionner.
+    // Utile quand data.v3.json (rows) n'embarque pas les interdits/marchés mais qu'un autre export existe.
+    async function tryLoadSupplementCanonical() {
+      const supUrl = encodeURI("./data.v3 (2).json?v=" + Date.now());
+      try {
+        const r = await fetch(supUrl, { cache: "no-store" });
+        if (!r.ok) return null;
+        const j = await r.json();
+        if (j && (j.traditional_days_8 || j.traditional_days_anchor || j.traditional_months || j.forbidden_names || j.market_names)) {
+          return j;
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    function mergeCanonicalBaseWithSupplement(base, sup) {
+      if (!sup) return base;
+      const out = base;
+      const mergeObj = (k) => {
+        out[k] = out[k] || {};
+        const src = sup[k] || {};
+        for (const [kk, vv] of Object.entries(src)) {
+          if (out[k][kk] == null) out[k][kk] = vv;
+        }
+      };
+      const mergeArrObj = (k) => {
+        out[k] = out[k] || {};
+        const src = sup[k] || {};
+        for (const [kk, vv] of Object.entries(src)) {
+          if (out[k][kk] == null) out[k][kk] = Array.isArray(vv) ? vv.slice() : vv;
+          else if (Array.isArray(out[k][kk]) && Array.isArray(vv) && out[k][kk].length === 0 && vv.length > 0) out[k][kk] = vv.slice();
+        }
+      };
+
+      // J8 / mois / ancres
+      mergeObj("traditional_days_8");
+      mergeObj("traditional_months");
+      mergeObj("traditional_days_anchor");
+
+      // Interdits / marchés / méta
+      mergeArrObj("forbidden_names");
+      mergeArrObj("market_names");
+      mergeObj("roi_by_village");
+      mergeObj("motif_by_village");
+      mergeArrObj("marche_by_village");
+
+      // Champs globaux si absents
+      if ((out.roi == null || out.roi === "—") && sup.roi) out.roi = sup.roi;
+      if ((out.extra_info == null || out.extra_info === "—") && sup.extra_info) out.extra_info = sup.extra_info;
+      if ((!Array.isArray(out.market_info) || out.market_info.length === 0) && Array.isArray(sup.market_info) && sup.market_info.length > 0) {
+        out.market_info = sup.market_info.slice();
+      }
+      return out;
+    }
 
     // Canonique ?
     if (raw && (raw.traditional_days_8 || raw.traditional_days_anchor || raw.traditional_months)) {
@@ -262,7 +319,9 @@ async function loadDataJSON(){
           console.log("[DATA] Ancre globale injectée (canonique):", raw.traditional_days_anchor.ALL);
         }
       }
-      return hydrateStateFromCanonical(raw, null);
+      const sup = await tryLoadSupplementCanonical();
+      const merged = mergeCanonicalBaseWithSupplement(raw, sup);
+      return hydrateStateFromCanonical(merged, null);
     }
 
     // Table rows
@@ -287,7 +346,9 @@ async function loadDataJSON(){
         }
       }
 
-      return hydrateStateFromCanonical(canonical, rows);
+      const sup = await tryLoadSupplementCanonical();
+      const merged = mergeCanonicalBaseWithSupplement(canonical, sup);
+      return hydrateStateFromCanonical(merged, rows);
     }
 
     console.warn("[DATA] Structure inconnue (ni canonique, ni rows).");
@@ -417,18 +478,32 @@ function renderOneMonth(root, start, village, place){
 function renderVillageMeta(){
   const vKey = String(state.village || 'ALL').toUpperCase();
 
+  const elRoi       = document.getElementById("roi-village");
+  const elMarche    = document.getElementById("marche-village");
+  const elMotif     = document.getElementById("motif-village");
+  const elInterdits = document.getElementById("interdits-village");
+
+  // Pour "Tous" (ALL), on n'affiche rien de spécifique : uniquement des tirets
+  if (vKey === 'ALL') {
+    if (elRoi)       elRoi.textContent       = "—";
+    if (elMarche)    elMarche.textContent    = "—";
+    if (elMotif)     elMotif.textContent     = "—";
+    if (elInterdits) elInterdits.textContent = "—";
+    return;
+  }
+
   const roi = (state.roiByVillage && state.roiByVillage[vKey]) || state.roi || "—";
   const marcheArr = (state.marcheByVillage && state.marcheByVillage[vKey]) || state.marche || [];
   const motif = (state.motifByVillage && state.motifByVillage[vKey]) || state.motif || "—";
+  const interditsArr = (state.forbiddenNames && state.forbiddenNames[vKey]) || [];
 
-  const elRoi = document.getElementById("roi-village");
   if (elRoi) elRoi.textContent = roi || "—";
 
-  const elMarche = document.getElementById("marche-village");
-  if (elMarche) elMarche.textContent = (marcheArr || []).join(", ") || "—";
+  if (elMarche) elMarche.textContent = (marcheArr || []).join(" • ") || "—";
 
-  const elMotif = document.getElementById("motif-village");
   if (elMotif) elMotif.textContent = motif || "—";
+
+  if (elInterdits) elInterdits.textContent = (interditsArr || []).join(" • ") || "—";
 }
 
 // ----------------------------- Navigation & paramètres
@@ -552,11 +627,45 @@ function syncParamFields(){
   if (m) m.value = String(state.anchor.getMonth() + 1);
 }
 
+// ----------------------------- Animations UI (scroll reveal, sans masquer le contenu)
+function setupScrollRevealAnimations(){
+  const selectors = [
+    ".site-header",
+    ".nav-row",
+    ".params",
+    "#calendar-9cols",
+    ".bloc-infos-final",
+    ".month"
+  ];
+  const els = Array.from(document.querySelectorAll(selectors.join(",")));
+  if (!els.length) return;
+
+  // Marqueurs CSS (ne cachent rien, servent juste à l'animation)
+  els.forEach(el => el.classList.add("af-reveal"));
+
+  if (!("IntersectionObserver" in window)) {
+    els.forEach(el => el.classList.add("is-visible"));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        io.unobserve(entry.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: "40px 0px -10px 0px" });
+
+  els.forEach(el => io.observe(el));
+}
+
 // ----------------------------- Init
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     wireNav();
     wireParams();
+    setupScrollRevealAnimations();
 
     const data = await loadDataJSON();
     remplirListeVillagesDepuisData(data || {});

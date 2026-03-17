@@ -1,183 +1,100 @@
 {
-    "AnchorDate (globale)": "28/02/2026",
-    "AnchorJ (1..8)": 1,
-    "rows": [
-        {
-            "VILLAGE": "BAFANG",
-            "Roi du village": "Sa Majesté René KAMGA NGANDJUI"
-        },
-        {
-            "VILLAGE": "BAFOUSSAM",
-            "Roi du village": "Sa majesté Njitack Ngompe Pelé"
-        },
-        {
-            "VILLAGE": "BAHAM",
-            "Roi du village": "Sa Majesté POUOKAM TEGUIA Max2",
-            "Informations": "Superficie de près de 56Km². Pour plus d'infos"
-        },
-        {
-            "VILLAGE": "BAKONDJI",
-            "Roi du village": "Sa Majesté Austère Durand MOUMI 3"
-        },
-        {
-            "VILLAGE": "BALENG",
-            "Roi du village": "Sa Majesté Sa Majesté Guillaume Alain NEGOU TELA "
-        },
-        {
-            "VILLAGE": "BALENGOU",
-            "J1": "Ngèdjou",
-            "J2": "Ndin'kap",
-            "J3": "Nzeu'gheu",
-            "J4": "Ndi'keun",
-            "J5": "Nzedjio",
-            "J6": "Ndi'bou",
-            "J7": "Ndi'kong",
-            "J8": "Nditcheu",
-            "M1": "Nka'gnia",
-            "M2": "Zeu'gnia",
-            "M3": "Ti'zoueu",
-            "M4": "Ti'zoueu",
-            "M5": "Sou'gnia",
-            "M6": "Nkap'djap",
-            "M7": "Tcho'zoueu",
-            "M8": "Tcho'zoueu",
-            "M9": "Mbuo'gnia",
-            "M10": "Zue'Diap",
-            "M11": "Chui'Kwelè",
-            "M12": "Tchoua'Kwelè",
-            "Jour interdit1": "Ndin'kap",
-            "Jour interdit2": "Nzedjio",
-            "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
-            "Informations": "A completer"
-        },
-        {
-            "VILLAGE": "BAMEKA",
-            "Roi du village": "Sa Majesté TAKUKAM Jean-Raymond"
-        },
-        {
-            "VILLAGE": "BAMENA",
-            "J1": "Li'Nkap",
-            "J2": "Nzengheu",
-            "J3": "Li'Ntio",
-            "J4": "Nzedjio",
-            "J5": "Nzeleung",
-            "J6": "Li'Nkong",
-            "J7": "Nta'Sang",
-            "J8": "Ngueudjou",
-            "M1": "Mou'Nka",
-            "M2": "Nka'Ngneu",
-            "M3": "Nti'Zueu",
-            "M4": "TchieNo",
-            "M5": "Sou'Ngno",
-            "M6": "Nwa'Nkou",
-            "M7": "Njusse'Zue",
-            "M8": "Tcho'Zue",
-            "M9": "Ntse'Zue",
-            "M10": "Toun'Ndioh",
-            "M11": "Sougno'Ndong",
-            "M12": "Menengwe",
-            "Jour interdit1": "cheu",
-            "Jour interdit2": "Tiè",
-            "Jour interdit3": "Tah",
-            "Roi du village": "Sa Majesté NGIENTCHO",
-            "Jour du marché1": "Ntah",
-            "Jour du marché2": "Mbouh",
-            "Jour du marché3": "Tountah"
-        },
-        {
-            "VILLAGE": "BAMENDJOU",
-            "Roi du village": "Sa Majesté Jean-Rameau SOUKOUDJOU"
-        },
-        {
-            "VILLAGE": "BANA",
-            "Roi du village": "Sa Majesté Sikam Happi 5"
-        },
-        {
-            "VILLAGE": "BANDREFAM",
-            "Roi du village": "Sa Majesté GeorgesJIEJIP TCOMGANG"
-        },
-        {
-            "VILLAGE": "BANGAM",
-            "Roi du village": "Sa Majesté POUFONG"
-        },
-        {
-            "VILLAGE": "BANGANGTE",
-            "Roi du village": "Sa Majesté Nji Mohnlu Siedou Pokam"
-        },
-        {
-            "VILLAGE": "BANGOU",
-            "J1": "Dinkon",
-            "J2": "Dintouo",
-            "J3": "Guendjou",
-            "J4": "Ntassak",
-            "J5": "Nzeuleug",
-            "J6": "Ntambeté",
-            "J7": "Guefack",
-            "J8": "Nduh",
-            "M1": "Akon",
-            "M2": "Bisa",
-            "M3": "Kete",
-            "M4": "Fufu",
-            "M5": "Dede",
-            "M6": "Hunu",
-            "M7": "Mensa",
-            "M8": "Kwaku",
-            "M9": "Yaa",
-            "M10": "Kofi",
-            "M11": "Kwame",
-            "M12": "Adwoa",
-            "Jour interdit1": "Nduh",
-            "Jour interdit2": "Dintouo",
-            "Jour interdit3": "Guendjou",
-            "Roi du village": "Sa Majesté FONGA",
-            "Jour du marché1": "Nduh= Chefferie",
-            "Jour du marché2": "Dintouo= Carrefeour",
-            "Jour du marché3": "Guendjou= Kamna",
-            "Informations": "Dynastie vielle de 300 ans environs,
-             ancien site d'esclaves,
-             28 quartiers. Site touristique moderne."
-        },
-        {
-            "VILLAGE": "BANGOUA",
-            "Roi du village": "Sa Majesté Yannick Julio DJAMPOU"
-        },
-        {
-            "VILLAGE": "BANJOUN",
-            "Roi du village": "Sa Majesté Diomo Kamga Honoré"
-        },
-        {
-            "VILLAGE": "BANOUNGA",
-            "Roi du village": "Sa  Majesté Louis NGAPMOU"
-        },
-        {
-            "VILLAGE": "BANSOA",
-            "Roi du village": "Sa Majesté TCHINDA 2 DJONTU JEAN DEDIEU"
-        },
-        {
-            "VILLAGE": "BANWA"
-        },
-        {
-            "VILLAGE": "BATCHINGOU",
-            "Roi du village": "Sa Majesté André Flaubert NANA"
-        },
-        {
-            "VILLAGE": "BATIE",
-            "Roi du village": "Sa Ma jesté Théodore TCHOUANKAM DADA"
-        },
-        {
-            "VILLAGE": "BAYANGAM",
-            "Roi du village": "Sa Majesté POUOKAM II"
-        },
-        {
-            "VILLAGE": "BAZOU",
-            "Roi du village": "Sa Majesté Marcelin Happy Tchoua"
-        },
-        {
-            "VILLAGE": "DSHANG",
-            "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
-        },
-        {
-            "VILLAGE": "MBOUDA"
-        }
-    ]
+  "AnchorDate (globale)": "28/02/2026",
+  "AnchorJ (1..8)": 1,
+  "rows": [
+    {
+      "Village": "BAFANG",
+      "J1": "", "J2": "", "J3": "", "J4": "", "J5": "", "J6": "", "J7": "", "J8": "",
+      "M1": "", "M2": "", "M3": "", "M4": "", "M5": "", "M6": "", "M7": "", "M8": "", "M9": "", "M10": "", "M11": "", "M12": "",
+      "Jour interdit1": "", "Jour interdit2": "", "Jour interdit3": "",
+      "Roi du village:": "Sa Majesté René KAMGA NGANDJUI",
+      "Jour du marché1": "", "Jour du marché2": "", "Jour du marché3": "",
+      "Informations:": "",
+      "Roi du village:2": ""
+    },
+    {
+      "Village": "BAFOUSSAM",
+      "J1": "", "J2": "", "J3": "", "J4": "", "J5": "", "J6": "", "J7": "", "J8": "",
+      "M1": "", "M2": "", "M3": "", "M4": "", "M5": "", "M6": "", "M7": "", "M8": "", "M9": "", "M10": "", "M11": "", "M12": "",
+      "Jour interdit1": "", "Jour interdit2": "", "Jour interdit3": "",
+      "Roi du village:": "Sa majesté Njitack Ngompe Pelé",
+      "Jour du marché1": "", "Jour du marché2": "", "Jour du marché3": "",
+      "Informations:": "",
+      "Roi du village:2": ""
+    },
+    {
+      "Village": "BAHAM",
+      "J1": "", "J2": "", "J3": "", "J4": "", "J5": "", "J6": "", "J7": "", "J8": "",
+      "M1": "", "M2": "", "M3": "", "M4": "", "M5": "", "M6": "", "M7": "", "M8": "", "M9": "", "M10": "", "M11": "", "M12": "",
+      "Jour interdit1": "", "Jour interdit2": "", "Jour interdit3": "",
+      "Roi du village:": "Sa Majesté POUOKAM TEGUIA Max2",
+      "Jour du marché1": "", "Jour du marché2": "", "Jour du marché3": "",
+      "Informations:": "Superficie de près de 56Km². Pour plus d'infos",
+      "Roi du village:2": ""
+    },
+    {
+      "Village": "BAKONDJI",
+      "J1": "", "J2": "", "J3": "", "J4": "", "J5": "", "J6": "", "J7": "", "J8": "",
+      "M1": "", "M2": "", "M3": "", "M4": "", "M5": "", "M6": "", "M7": "", "M8": "", "M9": "", "M10": "", "M11": "", "M12": "",
+      "Jour interdit1": "", "Jour interdit2": "", "Jour interdit3": "",
+      "Roi du village:": "Sa Majesté Austère Durand MOUMI 3",
+      "Jour du marché1": "", "Jour du marché2": "", "Jour du marché3": "",
+      "Informations:": "",
+      "Roi du village:2": ""
+    },
+    {
+      "Village": "BALENG",
+      "J1": "", "J2": "", "J3": "", "J4": "", "J5": "", "J6": "", "J7": "", "J8": "",
+      "M1": "", "M2": "", "M3": "", "M4": "", "M5": "", "M6": "", "M7": "", "M8": "", "M9": "", "M10": "", "M11": "", "M12": "",
+      "Jour interdit1": "", "Jour interdit2": "", "Jour interdit3": "",
+      "Roi du village:": "Sa Majesté Sa Majesté Guillaume Alain NEGOU TELA",
+      "Jour du marché1": "", "Jour du marché2": "", "Jour du marché3": "",
+      "Informations:": "",
+      "Roi du village:2": ""
+    },
+    {
+      "Village": "BALENGOU",
+      "J1": "Ngèdjou",
+      "J2": "Ndin'kap",
+      "J3": "Nzeu'gheu",
+      "J4": "Ndi'keun",
+      "J5": "Nzedjio",
+      "J6": "Ndi'bou",
+      "J7": "Ndi'kong",
+      "J8": "Nditcheu",
+      "M1": "Nka'gnia",
+      "M2": "Zeu'gnia",
+      "M3": "Ti'zoueu",
+      "M4": "Ti'zoueu",
+      "M5": "Sou'gnia",
+      "M6": "Nkap'djap",
+      "M7": "Tcho'zoueu",
+      "M8": "Tcho'zoueu",
+      "M9": "Mbuo'gnia",
+      "M10": "Zue'Diap",
+      "M11": "Chui'Kwelè",
+      "M12": "Tchoua'Kwelè",
+      "Jour interdit1": "Ndin'kap",
+      "Jour interdit2": "Nzedjio",
+      "Jour interdit3": "",
+      "Roi du village:": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
+      "Jour du marché1": "",
+      "Jour du marché2": "",
+      "Jour du marché3": "",
+      "Informations:": "A completer",
+      "Roi du village:2": ""
+    },
+    {
+      "Village": "MBOUDA",
+      "J1": "", "J2": "", "J3": "", "J4": "", "J5": "", "J6": "", "J7": "", "J8": "",
+      "M1": "", "M2": "", "M3": "", "M4": "", "M5": "", "M6": "", "M7": "", "M8": "", "M9": "", "M10": "", "M11": "", "M12": "",
+      "Jour interdit1": "", "Jour interdit2": "", "Jour interdit3": "",
+      "Roi du village:": "",
+      "Jour du marché1": "",
+      "Jour du marché2": "",
+      "Jour du marché3": "",
+      "Informations:": "",
+      "Roi du village:2": ""
+    }
+  ]
 }
