@@ -4,24 +4,24 @@
     "rows": [
         {
             "VILLAGE": "BAFANG",
-            "Roi du village": "Sa Majesté René KAMGA NGANDJUI"
+            "Roi": "Sa Majesté René KAMGA NGANDJUI"
         },
         {
             "VILLAGE": "BAFOUSSAM",
-            "Roi du village": "Sa majesté Njitack Ngompe Pelé"
+            "Roi": "Sa majesté Njitack Ngompe Pelé"
         },
         {
             "VILLAGE": "BAHAM",
-            "Roi du village": "Sa Majesté POUOKAM TEGUIA Max2",
+            "Roi": "Sa Majesté POUOKAM TEGUIA Max2",
             "Informations": "Superficie de près de 56Km². Pour plus d'infos"
         },
         {
             "VILLAGE": "BAKONDJI",
-            "Roi du village": "Sa Majesté Austère Durand MOUMI 3"
+            "Roi": "Sa Majesté Austère Durand MOUMI 3"
         },
         {
             "VILLAGE": "BALENG",
-            "Roi du village": "Sa Majesté Sa Majesté Guillaume Alain NEGOU TELA "
+            "Roi": "Sa Majesté Sa Majesté Guillaume Alain NEGOU TELA "
         },
         {
             "VILLAGE": "BALENGOU",
@@ -47,12 +47,12 @@
             "M12": "Tchoua'Kwelè",
             "Jour interdit1": "Ndin'kap",
             "Jour interdit2": "Nzedjio",
-            "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
+            "Roi": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
             "Informations": "A completer"
         },
         {
             "VILLAGE": "BAMEKA",
-            "Roi du village": "Sa Majesté TAKUKAM Jean-Raymond"
+            "Roi": "Sa Majesté TAKUKAM Jean-Raymond"
         },
         {
             "VILLAGE": "BAMENA",
@@ -79,26 +79,26 @@
             "Jour interdit1": "cheu",
             "Jour interdit2": "Tiè",
             "Jour interdit3": "Tah",
-            "Roi du village": "Sa Majesté NGIENTCHO",
+            "Roi": "Sa Majesté NGIENTCHO",
             "Jour du marché1": "Ntah",
             "Jour du marché2": "Mbouh",
             "Jour du marché3": "Tountah"
         },
         {
             "VILLAGE": "BAMENDJOU",
-            "Roi du village": "Sa Majesté Jean-Rameau SOUKOUDJOU"
+            "Roi": "Sa Majesté Jean-Rameau SOUKOUDJOU"
         },
         {
             "VILLAGE": "BANA",
-            "Roi du village": "Sa Majesté Sikam Happi 5"
+            "Roi": "Sa Majesté Sikam Happi 5"
         },
         {
             "VILLAGE": "BANDREFAM",
-            "Roi du village": "Sa Majesté GeorgesJIEJIP TCOMGANG"
+            "Roi": "Sa Majesté GeorgesJIEJIP TCOMGANG"
         },
         {
             "VILLAGE": "BANGAM",
-            "Roi du village": "Sa Majesté POUFONG"
+            "Roi": "Sa Majesté POUFONG"
         },
         {
             "VILLAGE": "BANGANGTE",
@@ -110,7 +110,7 @@
             "J6": "Nkôtu",
             "J7": "Nzinyam",
             "J8": "Ntabu",
-            "Roi du village": "Sa Majesté Nji Mohnlu Siedou Pokam"
+            "Roi": "Sa Majesté Nji Mohnlu Siedou Pokam"
         },
         {
             "VILLAGE": "BANGOU",
@@ -134,19 +134,19 @@
         },
         {
             "VILLAGE": "BANGOUA",
-            "Roi du village": "Sa Majesté Yannick Julio DJAMPOU"
+            "Roi": "Sa Majesté Yannick Julio DJAMPOU"
         },
         {
             "VILLAGE": "BANJOUN",
-            "Roi du village": "Sa Majesté Diomo Kamga Honoré"
+            "Roi": "Sa Majesté Diomo Kamga Honoré"
         },
         {
             "VILLAGE": "BANOUNGA",
-            "Roi du village": "Sa  Majesté Louis NGAPMOU"
+            "Roi": "Sa  Majesté Louis NGAPMOU"
         },
         {
             "VILLAGE": "BANSOA",
-            "Roi du village": "Sa Majesté TCHINDA 2 DJONTU JEAN DEDIEU"
+            "Roi": "Sa Majesté TCHINDA 2 DJONTU JEAN DEDIEU"
         },
         {
             "VILLAGE": "BANWA"
@@ -175,12 +175,12 @@
             "M12": "Mene'gwe",
             "Jour interdit1": "Zejouo",
             "Jour interdit2": "Zegheu",
-            "Roi du village": "Sa Majesté André Flaubert NANA",
+            "Roi": "Sa Majesté André Flaubert NANA",
             "Informations": "ADAMOU ARDO:  Chef du village TCHOUGWE  ;  SOP Tampi Philippe:  Chef du village BANGWE  ;  Mbeu Toukep DAZOUE Thomas:  Chef du village TOUSSE"
         },
         {
             "VILLAGE": "BATIE",
-            "Roi du village": "Sa Ma jesté Théodore TCHOUANKAM DADA"
+            "Roi": "Sa Ma jesté Théodore TCHOUANKAM DADA"
         },
         {
             "VILLAGE": "BATOUFAM",
@@ -192,19 +192,19 @@
             "J6": "Lie'Tchak",
             "J7": "Kouo'Tchak",
             "J8": "Nto'Ssack",
-            "Roi du village": "Sa Majesté NAYANG TOUKAM Innocent"
+            "Roi": "Sa Majesté NAYANG TOUKAM Innocent"
         },
         {
             "VILLAGE": "BAYANGAM",
-            "Roi du village": "Sa Majesté POUOKAM II"
+            "Roi": "Sa Majesté POUOKAM II"
         },
         {
             "VILLAGE": "BAZOU",
-            "Roi du village": "Sa Majesté Marcelin Happy Tchoua"
+            "Roi": "Sa Majesté Marcelin Happy Tchoua"
         },
         {
             "VILLAGE": "DSHANG",
-            "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
+            "Roi": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
         },
         {
             "VILLAGE": "MBOUDA"
