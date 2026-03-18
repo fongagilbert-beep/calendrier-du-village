@@ -1,9 +1,3 @@
-/* ===========================
- *  Calendrier du Village - app.js (Option A)
- *  - DST neutralisé (calcul en jours civils UTC)
- *  - Détection Param_Table.VILLAGE (+ ancres par village)
- *  - Robuste contre données manquantes
- * =========================== */
 
 const today = new Date();
 
@@ -36,11 +30,7 @@ const state = {
   forbiddenFromJ: {},
   marketFromJ: {},
 
-  rowsRaw: null,
-
-  // ---> Nouveaux champs liés à Param_Table
-  paramVillages: new Set(),
-  defaultVillage: null
+  rowsRaw: null
 };
 
 // ----------------------------- Utils
@@ -54,8 +44,13 @@ function normalizeName(s){
 function toISO(d){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
+function pickFirst(row, keys){
+  for (const key of keys){
+    if (row && row[key] != null && row[key] !== "") return row[key];
+  }
+  return "";
+}
 function utcDayNumberFromDate(d){
-  // Jour civil UTC (neutralise fuseau + heure d'été/hiver)
   return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000;
 }
 function utcDayNumberFromISO(iso){
@@ -102,6 +97,16 @@ function buildJNameIndexForVillage(village){
   }
   return out;
 }
+function candidateDayNames(rawName){
+  const raw = String(rawName || '').trim();
+  if (!raw) return [];
+  const parts = raw
+    .split(/[=:;,]/)
+    .map(x => normalizeName(x))
+    .filter(Boolean);
+  const base = normalizeName(raw);
+  return Array.from(new Set([base, ...parts]));
+}
 function computeIndicesFromNamesPerVillage(namesMap){
   const out = {};
   for (const [vill, arr] of Object.entries(namesMap || {})){
@@ -109,8 +114,12 @@ function computeIndicesFromNamesPerVillage(namesMap){
     const ref = buildJNameIndexForVillage(v);
     const list = [];
     for (const nm of (arr || [])){
-      const norm = normalizeName(nm);
-      if (ref[norm]) list.push(ref[norm]);
+      for (const candidate of candidateDayNames(nm)){
+        if (ref[candidate]) {
+          list.push(ref[candidate]);
+          break;
+        }
+      }
     }
     out[v] = Array.from(new Set(list));
   }
@@ -121,36 +130,13 @@ function getAnchorForVillage(v){
   return state.j8Anchor[key] || state.j8Anchor["ALL"];
 }
 function getJIndexForDate(d, village){
-  try {
-    const anc = getAnchorForVillage(village);
-    if (!anc || !anc.date || !anc.j) return null;
-
-    const iso = String(anc.date).trim();
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
-      console.warn("[JINDEX] Ancre invalide (format ISO attendu YYYY-MM-DD) :", anc);
-      return null;
-    }
-
-    const j0 = Number(anc.j);
-    if (!(j0 >= 1 && j0 <= 8)) {
-      console.warn("[JINDEX] AnchorJ hors 1..8 :", anc);
-      return null;
-    }
-
-    const startDay = utcDayNumberFromISO(iso);      // Jour civil UTC (anc)
-    const currentDay = utcDayNumberFromDate(d);     // Jour civil UTC (date cible)
-    if (!Number.isFinite(startDay) || !Number.isFinite(currentDay)) {
-      console.warn("[JINDEX] startDay/currentDay non finits :", { startDay, currentDay, anc, d });
-      return null;
-    }
-
-    const diff = currentDay - startDay;
-    const jIdx = ((j0 - 1 + ((diff % 8) + 8) % 8) % 8) + 1; // 1..8
-    return jIdx;
-  } catch (e) {
-    console.error("[JINDEX] Erreur inattendue :", e);
-    return null;
-  }
+  const anc = getAnchorForVillage(village);
+  if (!anc) return null;
+  const startDay = utcDayNumberFromISO(anc.date);
+  const currentDay = utcDayNumberFromDate(d);
+  if (!Number.isFinite(startDay) || !Number.isFinite(currentDay)) return null;
+  const diff = currentDay - startDay;
+  return ((anc.j - 1 + ((diff % 8) + 8) % 8) % 8) + 1; // 1..8
 }
 function listContainsJ(map, village, j){
   const v = String(village || 'ALL').toUpperCase();
@@ -158,7 +144,7 @@ function listContainsJ(map, village, j){
   return Array.isArray(arr) ? arr.includes(j) : false;
 }
 
-// ----------------------------- Résolution (jour affiché + tags)
+// ----------------------------- Résolution
 function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
   const vKey = String(village || 'ALL').toUpperCase();
@@ -168,8 +154,8 @@ function resolveTraditionalAndTags(d, village){
 
   const jIdx = getJIndexForDate(d, vKey);
 
-  const isMarket    = !!(jIdx && listContainsJ(state.marketFromJ, vKey, jIdx));
-  const isForbidden = !!(jIdx && listContainsJ(state.forbiddenFromJ, vKey, jIdx));
+  const isMarket    = jIdx && listContainsJ(state.marketFromJ, vKey, jIdx);
+  const isForbidden = jIdx && listContainsJ(state.forbiddenFromJ, vKey, jIdx);
 
   let trad = rec?.trad;
   if (!trad && jIdx){
@@ -195,56 +181,6 @@ function cvUpdateData(entries){
   }
 }
 
-// ----------------------------- Param_Table adapter
-function extractFromParamTable(paramTable) {
-  // Retourne { villages:Set, anchorsByVillage:Object, defaultVillage:String|null }
-  const villages = new Set();
-  const anchorsByVillage = {};
-  let defaultVillage = null;
-
-  if (!Array.isArray(paramTable)) return { villages, anchorsByVillage, defaultVillage };
-
-  const col = (obj, ...names) => {
-    for (const n of names) {
-      if (obj[n] != null && String(obj[n]).trim() !== "") return String(obj[n]).trim();
-    }
-    return "";
-  };
-
-  for (const row of paramTable) {
-    const v = col(row, "VILLAGE", "Village", "village");
-    if (!v) continue;
-    const vUpper = v.toUpperCase();
-    villages.add(vUpper);
-
-    // Ancre par village si présente
-    const aDateRaw = col(
-      row,
-      "AnchorDate", "Anchor_Date", "Anchor Date",
-      "AnchorDate (globale)", "AnchorDate_globale", "DateAncre", "Date_Ancre"
-    );
-    const aJRaw = col(
-      row,
-      "AnchorJ", "Anchor_J", "Anchor J", "AnchorJ (1..8)", "AnchorJ_1_8", "JAncre", "J_Ancre"
-    );
-
-    const iso = toISODateFromAny(aDateRaw);
-    const j   = Number(aJRaw);
-    if (iso && j >= 1 && j <= 8) {
-      anchorsByVillage[vUpper] = { date: iso, j };
-    }
-
-    // Village par défaut (facultatif)
-    const def = col(row, "Default", "DEFAULT", "defaut", "Défaut");
-    const defNorm = def.toLowerCase();
-    if (!defaultVillage && ["1","true","yes","oui"].includes(defNorm)) {
-      defaultVillage = vUpper;
-    }
-  }
-
-  return { villages, anchorsByVillage, defaultVillage };
-}
-
 // ----------------------------- Adaptateur rows -> structure canonique
 function adaptRowsToCanonical_FR_withLetters(rows) {
   const canonical = {
@@ -265,7 +201,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
   let globalRoiSet = false, globalInfoSet = false, globalMarcheSet = false;
 
   rows.forEach(r => {
-    const vSrc = r["Village"] || r.village || "";
+    const vSrc = pickFirst(r, ["Village", "VILLAGE", "village"]);
     if (!vSrc) return;
     const vUpper = String(vSrc).trim().toUpperCase();
 
@@ -303,7 +239,11 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     // Marché : FR d’abord, sinon Z/AA/AB
     const mark = [];
     for (let k=1; k<=3; k++){
-      const val = r[`Jour du marché${k}`];
+      const val = pickFirst(r, [
+        `Jour du marché${k}`,
+        `Jour du marche${k}`,
+        `Jour du marchÃ©${k}`
+      ]);
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) mark.push(txt);
     }
@@ -318,8 +258,8 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     }
 
     // Méta village
-    const roi  = (r["Roi du village:2"] || r["Roi du village:"] || "").toString().trim();
-    const info = (r["Informations:"] || "").toString().trim();
+    const roi  = pickFirst(r, ["Roi du village:2", "Roi du village:", "Roi du village"]).toString().trim();
+    const info = pickFirst(r, ["Informations:", "Informations"]).toString().trim();
     if (roi)  { canonical.roi_by_village[vUpper] = roi;  if (!globalRoiSet)  { canonical.roi = roi;   globalRoiSet  = true; } }
     if (info) { canonical.motif_by_village[vUpper] = info; if (!globalInfoSet) { canonical.extra_info = info; globalInfoSet = true; } }
   });
@@ -343,21 +283,8 @@ async function loadDataJSON(){
     }
     const raw = await res.json();
 
-    // ---------- (Nouveau) Si Param_Table existe, pré-extraire villages + ancres + default
-    let extras = { villages: new Set(), anchorsByVillage: {}, defaultVillage: null };
-    if (Array.isArray(raw?.Param_Table)) {
-      extras = extractFromParamTable(raw.Param_Table);
-      state.paramVillages = extras.villages || new Set();
-      state.defaultVillage = extras.defaultVillage || null;
-      console.log("[PARAM_TABLE] villages:", Array.from(state.paramVillages));
-      console.log("[PARAM_TABLE] anchorsByVillage:", extras.anchorsByVillage);
-      console.log("[PARAM_TABLE] defaultVillage:", state.defaultVillage);
-    } else {
-      state.paramVillages = new Set();
-      state.defaultVillage = null;
-    }
-
     // Optionnel : charger un fichier canonique supplémentaire (si présent) et fusionner.
+    // Utile quand data.v3.json (rows) n'embarque pas les interdits/marchés mais qu'un autre export existe.
     async function tryLoadSupplementCanonical() {
       const supUrl = encodeURI("./data.v3 (2).json?v=" + Date.now());
       try {
@@ -413,7 +340,7 @@ async function loadDataJSON(){
       return out;
     }
 
-    // Cas 1 : JSON déjà canonique
+    // Canonique ?
     if (raw && (raw.traditional_days_8 || raw.traditional_days_anchor || raw.traditional_months)) {
       let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
       let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
@@ -428,21 +355,10 @@ async function loadDataJSON(){
       }
       const sup = await tryLoadSupplementCanonical();
       const merged = mergeCanonicalBaseWithSupplement(raw, sup);
-
-      // (Nouveau) Injecter les ancres par village issues de Param_Table
-      if (extras.anchorsByVillage && Object.keys(extras.anchorsByVillage).length > 0) {
-        merged.traditional_days_anchor = merged.traditional_days_anchor || {};
-        for (const [v, anc] of Object.entries(extras.anchorsByVillage)) {
-          if (!merged.traditional_days_anchor[v]) {
-            merged.traditional_days_anchor[v] = anc;
-          }
-        }
-      }
-
       return hydrateStateFromCanonical(merged, null);
     }
 
-    // Cas 2 : Table rows (Excel export)
+    // Table rows
     const rows = Array.isArray(raw?.rows) ? raw.rows : (Array.isArray(raw) ? raw : null);
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
@@ -466,17 +382,6 @@ async function loadDataJSON(){
 
       const sup = await tryLoadSupplementCanonical();
       const merged = mergeCanonicalBaseWithSupplement(canonical, sup);
-
-      // (Nouveau) Injecter les ancres par village issues de Param_Table
-      if (extras.anchorsByVillage && Object.keys(extras.anchorsByVillage).length > 0) {
-        merged.traditional_days_anchor = merged.traditional_days_anchor || {};
-        for (const [v, anc] of Object.entries(extras.anchorsByVillage)) {
-          if (!merged.traditional_days_anchor[v]) {
-            merged.traditional_days_anchor[v] = anc;
-          }
-        }
-      }
-
       return hydrateStateFromCanonical(merged, rows);
     }
 
@@ -627,8 +532,11 @@ function renderVillageMeta(){
   const interditsArr = (state.forbiddenNames && state.forbiddenNames[vKey]) || [];
 
   if (elRoi) elRoi.textContent = roi || "—";
+
   if (elMarche) elMarche.textContent = (marcheArr || []).join(" • ") || "—";
+
   if (elMotif) elMotif.textContent = motif || "—";
+
   if (elInterdits) elInterdits.textContent = (interditsArr || []).join(" • ") || "—";
 }
 
@@ -654,22 +562,16 @@ function remplirListeVillagesDepuisData(data) {
 
   if (Array.isArray(state.rowsRaw)) {
     state.rowsRaw.forEach(r => {
-      const raw = (r.Village || r.village || '').toString().trim();
+      const raw = pickFirst(r, ["Village", "VILLAGE", "village"]).toString().trim();
       if (raw) uniques.add(raw.toUpperCase());
     });
   }
 
-  // Sources de villages : J8 / ancres / mois / interdits / marchés
   [state.j8, state.j8Anchor, state.tmonths, state.forbiddenNames, state.marketNames].forEach(obj => {
     Object.keys(obj || {}).forEach(k => {
       const v = String(k || '').trim().toUpperCase();
       if (v && v !== 'ALL') uniques.add(v);
     });
-  });
-
-  // (Nouveau) villages issus de Param_Table
-  (state.paramVillages || new Set()).forEach(v => {
-    if (v && v !== 'ALL') uniques.add(String(v).toUpperCase());
   });
 
   const list = Array.from(uniques).sort();
@@ -684,11 +586,7 @@ function remplirListeVillagesDepuisData(data) {
   });
   sel.appendChild(frag);
 
-  // Si un "defaultVillage" est défini et présent, l'appliquer
-  if (state.defaultVillage && list.includes(state.defaultVillage)) {
-    state.village = state.defaultVillage;
-    sel.value = state.defaultVillage;
-  } else if (!list.includes(state.village)) {
+  if (!list.includes(state.village)) {
     state.village = "ALL";
     sel.value = "ALL";
   }
@@ -804,7 +702,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupScrollRevealAnimations();
 
     const data = await loadDataJSON();
-    // Remplir le select AVANT le rendu (prend en compte Param_Table + ancres)
     remplirListeVillagesDepuisData(data || {});
     renderNineColumns();
   } catch (e) {

@@ -40,6 +40,7 @@
   --radius-sm: 10px;
   --date-col: 64px;
   --max-content: 1240px;
+  --motif-sun: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23f0d48b' stroke-width='6.5' stroke-linecap='round'%3E%3Ccircle cx='50' cy='50' r='20'/%3E%3Cpath d='M50 8v18M50 74v18M8 50h18M74 50h18M20 20l13 13M67 67l13 13M80 20L67 33M33 67L20 80'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 html,
@@ -143,8 +144,10 @@ body::before {
   position: absolute;
   inset: 0;
   background:
+    var(--motif-sun) no-repeat 1.1rem 0.65rem / 92px 92px,
+    var(--motif-sun) no-repeat calc(100% - 1.1rem) 0.65rem / 92px 92px,
     linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.14) 40%, transparent 62%);
-  opacity: 0.55;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -182,8 +185,11 @@ body::before {
   inset: 0;
   border-radius: inherit;
   background:
+    var(--motif-sun) no-repeat 0.85rem center / 62px 62px,
+    var(--motif-sun) no-repeat calc(100% - 0.85rem) center / 62px 62px,
     radial-gradient(circle at left center, rgba(43, 154, 160, 0.08), transparent 22%),
     radial-gradient(circle at right center, rgba(201, 139, 45, 0.08), transparent 24%);
+  opacity: 0.34;
   pointer-events: none;
 }
 
@@ -350,11 +356,11 @@ body::before {
   font-size: clamp(2.2rem, 7vw, 5.2rem);
   font-weight: 800;
   letter-spacing: 0.2em;
-  color: rgba(201, 139, 45, 0.08);
-  text-shadow: 0 0 12px rgba(201, 139, 45, 0.04);
+  color: rgba(11, 46, 89, 0.12);
+  text-shadow: 0 0 14px rgba(11, 46, 89, 0.05);
   pointer-events: none;
   user-select: none;
-  z-index: 0;
+  z-index: 3;
 }
 
 .month::after {
@@ -382,7 +388,7 @@ body::before {
 .month-header {
   position: relative;
   margin-bottom: 0.82rem;
-  padding: 0.92rem 1rem 0.86rem;
+  padding: 0.92rem 3rem 0.86rem;
   border: 1px solid rgba(201, 139, 45, 0.12);
   border-radius: 16px;
   background:
@@ -394,6 +400,18 @@ body::before {
   font-weight: 800;
   letter-spacing: 0.05em;
   box-shadow: 0 10px 18px rgba(11, 46, 89, 0.12);
+}
+
+.month-header::before {
+  content: "";
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  transform: translateY(-50%);
+  background: var(--motif-sun) no-repeat center / contain;
+  opacity: 0.55;
 }
 
 .month-header::after {
@@ -421,12 +439,12 @@ body::before {
 
 .col-title {
   padding: 0.58rem 0.5rem;
-  border: 1px solid rgba(43, 154, 160, 0.14);
+  border: 1px solid #bcdcf6;
   border-radius: 10px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, rgba(43, 154, 160, 0.1), rgba(201, 139, 45, 0.1));
-  color: var(--indigo);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.1)),
+    linear-gradient(180deg, #eaf4ff, #d8eaff);
+  color: #214b81;
   text-align: center;
   font-size: 0.9rem;
   font-weight: 800;
@@ -486,7 +504,7 @@ body::before {
 }
 
 .cell.trad {
-  padding-left: 2rem;
+  padding-left: 2.1rem;
   color: var(--fg);
   font-size: 1rem;
   font-weight: 800;
@@ -550,6 +568,10 @@ body::before {
   left: 1.35rem;
 }
 
+.row.market.forbidden .cell.trad {
+  padding-left: 2.5rem;
+}
+
 .row.today .cell.greg::after {
   content: "\1F4CD";
   right: 0.4rem;
@@ -579,7 +601,7 @@ body::before {
 }
 
 .bloc-infos-final::before {
-  content: "Identite du village";
+  content: "Identité du village";
   position: absolute;
   top: -0.72rem;
   left: 1.3rem;
@@ -599,6 +621,18 @@ body::before {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.7rem 1rem;
   width: 100%;
+}
+
+.bloc-infos-final::after {
+  content: "";
+  position: absolute;
+  right: 1rem;
+  top: 0.9rem;
+  width: 62px;
+  height: 62px;
+  background: var(--motif-sun) no-repeat center / contain;
+  opacity: 0.34;
+  pointer-events: none;
 }
 
 .bloc-infos-final p {
@@ -654,7 +688,7 @@ body::before {
   margin-top: 0.8rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #8d7451;
+  color: var(--deep-blue);
   font-weight: 700;
   letter-spacing: 0.05em;
 }
@@ -711,6 +745,14 @@ body::before {
     white-space: normal;
   }
 
+  .site-header::after {
+    background:
+      var(--motif-sun) no-repeat 0.65rem 0.65rem / 60px 60px,
+      var(--motif-sun) no-repeat calc(100% - 0.65rem) 0.65rem / 60px 60px,
+      linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.14) 40%, transparent 62%);
+    opacity: 0.36;
+  }
+
   .params {
     justify-content: stretch;
   }
@@ -732,6 +774,17 @@ body::before {
   .month::after {
     width: 48px;
     height: 48px;
+  }
+
+  .month-header {
+    padding-left: 2.2rem;
+    padding-right: 2.2rem;
+  }
+
+  .month-header::before {
+    left: 0.55rem;
+    width: 28px;
+    height: 28px;
   }
 
   .month-head-row,

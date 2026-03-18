@@ -11,7 +11,7 @@
 
   <link rel="manifest" href="manifest.v3.webmanifest">
   <meta name="theme-color" content="#0b3c8d">
-  <link rel="stylesheet" href="./styles.v3.css?v=20260317">
+  <link rel="stylesheet" href="./styles.v3.css?v=20260318b">
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3C/svg%3E">
 </head>
@@ -28,7 +28,7 @@
   </div>
 
   <div class="params">
-    <label>Annee (M) :
+    <label>Année (M) :
       <input id="param-annee" type="number" min="1900" max="2500">
     </label>
 
@@ -45,7 +45,7 @@
     <label>Filtre :
       <select id="param-filtre">
         <option value="tous">Tous</option>
-        <option value="marche">Marches</option>
+        <option value="marche">Marché</option>
         <option value="interdits">Interdits</option>
       </select>
     </label>
@@ -57,14 +57,14 @@
     <div class="infos-inner">
       <p class="roi">Roi : <span id="roi-village"></span></p>
       <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
-      <p class="marche">Jours de marche : <span id="marche-village"></span></p>
+      <p class="marche">Jours de marché : <span id="marche-village"></span></p>
       <p class="infos">Infos : <span id="motif-village"></span></p>
     </div>
   </section>
 
   <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
 
-  <script src="./app.v3.js?v=20260316-bis"></script>
+  <script src="./app.v3.js?v=20260318c"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
