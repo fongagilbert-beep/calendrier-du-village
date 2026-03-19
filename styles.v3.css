@@ -815,3 +815,14 @@ body::before {
     padding: 1rem;
   }
 }
+
+
+/* styles.v3.css — squelette minimal */
+body{background:#f7f2e7}
+.site-header{font-weight:700;margin:10px 0}
+.nav-row{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0}
+.btn{background:#0b3c8d;color:#fff;border:0;padding:8px 10px;border-radius:6px;cursor:pointer}
+.params label{margin-right:12px}
+#calendar-9cols{min-height:120px; margin:12px 0}
+.bloc-infos-final{background:#fff; border-radius:10px; padding:10px; box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.credit-final{margin:16px 0; color:#333}
