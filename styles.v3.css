@@ -816,33 +816,110 @@ body::before {
   }
 }
 
-/* ====== OPTION C • COLONNE TISSU PLEINE HAUTEUR ====== */
+/* ====== STYLES OFFICIELS — OPTION C : Soleil | Texte | Colonne tissu ====== */
+
+:root {
+  --bg: #f7f2e7;
+  --txt: #222;
+  --muted: #555;
+  --blue: #0b3c8d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  margin: 0;
+  font-family: Akatab, Arial, Helvetica, sans-serif;
+}
+
+/* Conteneur général */
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+/* ====== GRILLE OPTION C ====== */
 
 .cv-grid {
   display: grid;
-  grid-template-columns: 200px 1fr 380px;  /* soleil | texte | tissu (full height) */
+  grid-template-columns: 200px 1fr 380px;  /* soleil | texte | tissu colonne */
   gap: 24px;
   align-items: start;
-  max-width: 1400px;
-  margin: 40px auto;
+  margin: 30px auto;
 }
 
-.cv-soleil {
-  width: 200px;
+/* Soleil à gauche */
+.cv-soleil img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
 }
 
+/* Texte au centre */
 .cv-texte {
-  background: rgba(255,255,255,0.72);
+  background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(3px);
   padding: 24px;
   border-radius: 12px;
   line-height: 1.65;
 }
 
+/* Le tissu FULL HEIGHT */
 .cv-tissu {
   background-image: url("icons/Ndop.png");
   background-size: cover;
-  background-position: center top;
+  background-position: right top;
   background-repeat: no-repeat;
   border-radius: 12px;
+}
+
+/* ====== Styles calendrier (inchangés) ====== */
+
+.site-header { font-weight: 700; margin: 16px 0; }
+
+.nav-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.btn {
+  background: var(--blue);
+  color: #fff;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.params label {
+  margin-right: 12px;
+}
+
+#calendar-9cols {
+  min-height: 160px;
+  margin: 12px 0;
+}
+
+.bloc-infos-final {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.credit-final { margin: 16px 0; color: #333; }
+
+/* Responsive */
+@media (max-width: 980px) {
+  .cv-grid {
+    grid-template-columns: 1fr;
+  }
+  .cv-tissu {
+    height: 300px;
+  }
 }
