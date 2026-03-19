@@ -816,23 +816,33 @@ body::before {
   }
 }
 
-/* ====== Bandeau tissu PLEIN ÉCRAN ====== */
-.tissu-banner-bg {
-  width: 100%;
-  background-image: url("icons/Ndop.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: right top;
-  padding-top: 60px;      /* espace au-dessus du tableau */
-  padding-bottom: 60px;   /* espace en dessous */
+/* ====== OPTION C • COLONNE TISSU PLEINE HAUTEUR ====== */
+
+.cv-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr 380px;  /* soleil | texte | tissu (full height) */
+  gap: 24px;
+  align-items: start;
+  max-width: 1400px;
+  margin: 40px auto;
 }
 
-/* Le tableau décor reste centré sur le tissu */
-.cv-decor {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: rgba(255,255,255,0.7);
+.cv-soleil {
+  width: 200px;
+}
+
+.cv-texte {
+  background: rgba(255,255,255,0.72);
   backdrop-filter: blur(3px);
+  padding: 24px;
   border-radius: 12px;
-  padding: 20px;
+  line-height: 1.65;
+}
+
+.cv-tissu {
+  background-image: url("icons/Ndop.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  border-radius: 12px;
 }
