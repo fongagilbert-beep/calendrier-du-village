@@ -33,67 +33,12 @@ const state = {
   rowsRaw: null
 };
 
-// ============================= HELPERS CHARGEMENT
-function getEmbeddedJSONById(id){
-  try{
-    const el = document.getElementById(id);
-    if (!el) return null;
-    const txt = el.textContent || el.innerText || '';
-    if (!txt.trim()) return null;
-    return JSON.parse(txt);
-  } catch(e){
-    console.error(`[DATA] JSON embarqué invalide (#${id})`, e);
-    return null;
-  }
-}
-
-function mergeCanonicalBaseWithSupplement(base, sup) {
-  if (!sup) return base;
-  const out = base;
-  const mergeObj = (k) => {
-    out[k] = out[k] || {};
-    const src = sup[k] || {};
-    for (const [kk, vv] of Object.entries(src)) {
-      if (out[k][kk] == null) out[k][kk] = vv;
-    }
-  };
-  const mergeArrObj = (k) => {
-    out[k] = out[k] || {};
-    const src = sup[k] || {};
-    for (const [kk, vv] of Object.entries(src)) {
-      if (out[k][kk] == null) out[k][kk] = Array.isArray(vv) ? vv.slice() : vv;
-      else if (Array.isArray(out[k][kk]) && Array.isArray(vv) && out[k][kk].length === 0 && vv.length > 0) out[k][kk] = vv.slice();
-    }
-  };
-
-  // J8 / mois / ancres
-  mergeObj("traditional_days_8");
-  mergeObj("traditional_months");
-  mergeObj("traditional_days_anchor");
-
-  // Interdits / marchés / méta
-  mergeArrObj("forbidden_names");
-  mergeArrObj("market_names");
-  mergeObj("roi_by_village");
-  mergeObj("motif_by_village");
-  mergeArrObj("marche_by_village");
-
-  // Champs globaux si absents
-  if ((out.roi == null || out.roi === "—") && sup.roi) out.roi = sup.roi;
-  if ((out.extra_info == null || out.extra_info === "—") && sup.extra_info) out.extra_info = sup.extra_info;
-  if ((!Array.isArray(out.market_info) || out.market_info.length === 0) && Array.isArray(sup.market_info) && sup.market_info.length > 0) {
-    out.market_info = sup.market_info.slice();
-  }
-  return out;
-}
-
-// ============================= UTILS
+// ----------------------------- Utils
 function normalizeName(s){
   return String(s || '')
     .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // accents
-    .replace(/['’`´]/g, '')                         // apostrophes diverses
-    .replace(/\s+/g, ' ')                           // espaces multiples
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/['’`´]/g, '')
     .trim();
 }
 function toISO(d){
@@ -140,7 +85,7 @@ function toISODateFromAny(x) {
   return "";
 }
 
-// ============================= J-cycle
+// ----------------------------- J-cycle
 function buildJNameIndexForVillage(village){
   const v = String(village || 'ALL').toUpperCase();
   const map = state.j8[v] || state.j8["ALL"];
@@ -156,8 +101,7 @@ function candidateDayNames(rawName){
   const raw = String(rawName || '').trim();
   if (!raw) return [];
   const parts = raw
-    // Ajout split sur / - ( ) et égal, pour cellules riches (Param_Table)
-    .split(/[=:;,/()\-\u2013\u2014]/)
+    .split(/[=:;,]/)
     .map(x => normalizeName(x))
     .filter(Boolean);
   const base = normalizeName(raw);
@@ -200,7 +144,7 @@ function listContainsJ(map, village, j){
   return Array.isArray(arr) ? arr.includes(j) : false;
 }
 
-// ============================= Résolution
+// ----------------------------- Résolution
 function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
   const vKey = String(village || 'ALL').toUpperCase();
@@ -222,7 +166,7 @@ function resolveTraditionalAndTags(d, village){
   return { trad, isMarket, isForbidden };
 }
 
-// ============================= Données (optionnel)
+// ----------------------------- Données (optionnel)
 function cvUpdateData(entries){
   if (!Array.isArray(entries)) return;
   for (const e of entries){
@@ -237,7 +181,7 @@ function cvUpdateData(entries){
   }
 }
 
-// ============================= Adaptateur rows -> canonique (Param_Table)
+// ----------------------------- Adaptateur rows -> structure canonique
 function adaptRowsToCanonical_FR_withLetters(rows) {
   const canonical = {
     traditional_days_8: {},
@@ -279,7 +223,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     }
     if (Object.keys(mMap).length > 0) canonical.traditional_months[vUpper] = mMap;
 
-    // Interdits : FR d’abord, sinon V/W/X (exports table)
+    // Interdits : FR d’abord, sinon V/W/X
     const forb = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour interdit${k}`];
@@ -292,7 +236,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     });
     if (forb.length > 0) canonical.forbidden_names[vUpper] = forb;
 
-    // Marché : FR d’abord, sinon Z/AA/AB (exports table)
+    // Marché : FR d’abord, sinon Z/AA/AB
     const mark = [];
     for (let k=1; k<=3; k++){
       const val = pickFirst(r, [
@@ -313,7 +257,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       if (!globalMarcheSet) { canonical.market_info = mark.slice(); globalMarcheSet = true; }
     }
 
-    // Méta village (entêtes variées possibles)
+    // Méta village
     const roi  = pickFirst(r, ["Roi du village:2", "Roi du village:", "Roi du village"]).toString().trim();
     const info = pickFirst(r, ["Informations:", "Informations"]).toString().trim();
     if (roi)  { canonical.roi_by_village[vUpper] = roi;  if (!globalRoiSet)  { canonical.roi = roi;   globalRoiSet  = true; } }
@@ -328,68 +272,23 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
   return canonical;
 }
 
-// ============================= JSON Loader
+// ----------------------------- JSON Loader
 async function loadDataJSON(){
-  const isFileProtocol = location.protocol === 'file:';
-
-  const tryEmbedded = () => {
-    const embedded = getEmbeddedJSONById('cv-data');       // principal optionnel
-    const embeddedSup = getEmbeddedJSONById('cv-data-sup'); // supplément optionnel
-    if (!embedded) return null;
-
-    // Canonique
-    if (embedded && (embedded.traditional_days_8 || embedded.traditional_days_anchor || embedded.traditional_months)) {
-      const merged = mergeCanonicalBaseWithSupplement(embedded, embeddedSup);
-      return hydrateStateFromCanonical(merged, null);
-    }
-
-    // Rows
-    const rows = Array.isArray(embedded?.rows) ? embedded.rows : (Array.isArray(embedded) ? embedded : null);
-    if (Array.isArray(rows)){
-      const canonical = adaptRowsToCanonical_FR_withLetters(rows);
-
-      let ad = embedded["AnchorDate (globale)"] ?? embedded.AnchorDate;
-      let aj = embedded["AnchorJ (1..8)"]      ?? embedded.AnchorJ;
-      if (!ad && rows[0]) ad = rows[0]["AnchorDate (globale)"] ?? rows[0].AnchorDate;
-      if (!aj && rows[0]) aj = rows[0]["AnchorJ (1..8)"]      ?? rows[0].AnchorJ;
-
-      if (ad && aj){
-        const iso = toISODateFromAny(ad);
-        const j = Number(aj);
-        if (iso && j >= 1 && j <= 8){
-          canonical.traditional_days_anchor.ALL = { date: iso, j };
-          console.log("[DATA] Ancre globale injectée (embedded/rows):", canonical.traditional_days_anchor.ALL);
-        } else {
-          console.warn("[DATA] Ancre globale détectée mais invalide (embedded):", ad, aj);
-        }
-      }
-
-      const merged = mergeCanonicalBaseWithSupplement(canonical, embeddedSup);
-      return hydrateStateFromCanonical(merged, rows);
-    }
-
-    console.warn("[DATA] Structure embarquée inconnue (#cv-data).");
-    return null;
-  };
-
-  if (isFileProtocol){
-    const embedded = tryEmbedded();
-    if (embedded) return embedded;
-    console.warn("[DATA] file:// sans JSON embarqué : tentative de fetch quand même (peut échouer).");
-  }
-
-  const urlMain = "./data.v3.json?v=" + Date.now();
-  const urlSup  = encodeURI("./data.v3 (2).json?v=" + Date.now());
-
+  const url = "./data.v3.json?v=" + Date.now(); // source principale (export Excel rows)
   try {
-    const res = await fetch(urlMain, { cache: "no-store" });
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      console.error("Chargement des données échoué:", res.status, res.statusText, "URL:", url);
+      return null;
+    }
     const raw = await res.json();
 
+    // Optionnel : charger un fichier canonique supplémentaire (si présent) et fusionner.
+    // Utile quand data.v3.json (rows) n'embarque pas les interdits/marchés mais qu'un autre export existe.
     async function tryLoadSupplementCanonical() {
+      const supUrl = encodeURI("./data.v3 (2).json?v=" + Date.now());
       try {
-        const r = await fetch(urlSup, { cache: "no-store" });
+        const r = await fetch(supUrl, { cache: "no-store" });
         if (!r.ok) return null;
         const j = await r.json();
         if (j && (j.traditional_days_8 || j.traditional_days_anchor || j.traditional_months || j.forbidden_names || j.market_names)) {
@@ -401,7 +300,47 @@ async function loadDataJSON(){
       }
     }
 
-    // Canonique
+    function mergeCanonicalBaseWithSupplement(base, sup) {
+      if (!sup) return base;
+      const out = base;
+      const mergeObj = (k) => {
+        out[k] = out[k] || {};
+        const src = sup[k] || {};
+        for (const [kk, vv] of Object.entries(src)) {
+          if (out[k][kk] == null) out[k][kk] = vv;
+        }
+      };
+      const mergeArrObj = (k) => {
+        out[k] = out[k] || {};
+        const src = sup[k] || {};
+        for (const [kk, vv] of Object.entries(src)) {
+          if (out[k][kk] == null) out[k][kk] = Array.isArray(vv) ? vv.slice() : vv;
+          else if (Array.isArray(out[k][kk]) && Array.isArray(vv) && out[k][kk].length === 0 && vv.length > 0) out[k][kk] = vv.slice();
+        }
+      };
+
+      // J8 / mois / ancres
+      mergeObj("traditional_days_8");
+      mergeObj("traditional_months");
+      mergeObj("traditional_days_anchor");
+
+      // Interdits / marchés / méta
+      mergeArrObj("forbidden_names");
+      mergeArrObj("market_names");
+      mergeObj("roi_by_village");
+      mergeObj("motif_by_village");
+      mergeArrObj("marche_by_village");
+
+      // Champs globaux si absents
+      if ((out.roi == null || out.roi === "—") && sup.roi) out.roi = sup.roi;
+      if ((out.extra_info == null || out.extra_info === "—") && sup.extra_info) out.extra_info = sup.extra_info;
+      if ((!Array.isArray(out.market_info) || out.market_info.length === 0) && Array.isArray(sup.market_info) && sup.market_info.length > 0) {
+        out.market_info = sup.market_info.slice();
+      }
+      return out;
+    }
+
+    // Canonique ?
     if (raw && (raw.traditional_days_8 || raw.traditional_days_anchor || raw.traditional_months)) {
       let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
       let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
@@ -419,10 +358,12 @@ async function loadDataJSON(){
       return hydrateStateFromCanonical(merged, null);
     }
 
-    // Rows
+    // Table rows
     const rows = Array.isArray(raw?.rows) ? raw.rows : (Array.isArray(raw) ? raw : null);
     if (Array.isArray(rows)) {
       const canonical = adaptRowsToCanonical_FR_withLetters(rows);
+
+      // Ancre globale au racine ou dans rows[0]
       let ad = raw["AnchorDate (globale)"] ?? raw.AnchorDate;
       let aj = raw["AnchorJ (1..8)"]      ?? raw.AnchorJ;
       if (!ad && rows[0]) ad = rows[0]["AnchorDate (globale)"] ?? rows[0].AnchorDate;
@@ -439,16 +380,7 @@ async function loadDataJSON(){
         }
       }
 
-      const sup = await (async ()=>{
-        try {
-          const r = await fetch(urlSup, { cache: "no-store" });
-          if (!r.ok) return null;
-          const j = await r.json();
-          if (j && (j.traditional_days_8 || j.traditional_days_anchor || j.traditional_months || j.forbidden_names || j.market_names)) return j;
-          return null;
-        } catch { return null; }
-      })();
-
+      const sup = await tryLoadSupplementCanonical();
       const merged = mergeCanonicalBaseWithSupplement(canonical, sup);
       return hydrateStateFromCanonical(merged, rows);
     }
@@ -456,19 +388,13 @@ async function loadDataJSON(){
     console.warn("[DATA] Structure inconnue (ni canonique, ni rows).");
     return null;
 
-  } catch (e) {
-    console.error("Chargement des données échoué via fetch:", e);
-    const embedded = tryEmbedded();
-    if (embedded) {
-      console.info("[DATA] Fallback réussi: données embarquées utilisées.");
-      return embedded;
-    }
-    alert("Impossible de charger les données.\n- Si vous ouvrez la page en file://, utilisez le bloc JSON embarqué (#cv-data) OU servez la page via un petit serveur local.\n- Vérifiez aussi que 'data.v3.json' est bien à côté du fichier HTML.");
+  } catch(e){
+    console.error("Erreur JSON", e);
     return null;
   }
 }
 
-// ============================= Hydrate 'state'
+// Hydrate 'state'
 function hydrateStateFromCanonical(data, rowsRaw) {
   state.j8       = data.traditional_days_8      || {};
   state.j8Anchor = data.traditional_days_anchor || {};
@@ -498,7 +424,7 @@ function hydrateStateFromCanonical(data, rowsRaw) {
   return data;
 }
 
-// ============================= Rendu
+// ----------------------------- Rendu
 function renderNineColumns(){
   const root = document.getElementById("calendar-9cols");
   if (!root) return;
@@ -606,12 +532,15 @@ function renderVillageMeta(){
   const interditsArr = (state.forbiddenNames && state.forbiddenNames[vKey]) || [];
 
   if (elRoi) elRoi.textContent = roi || "—";
+
   if (elMarche) elMarche.textContent = (marcheArr || []).join(" • ") || "—";
+
   if (elMotif) elMotif.textContent = motif || "—";
+
   if (elInterdits) elInterdits.textContent = (interditsArr || []).join(" • ") || "—";
 }
 
-// ============================= Navigation & paramètres
+// ----------------------------- Navigation & paramètres
 function shouldHideByFilter(x){
   const f = state.filtre;
   if (f === "market")    return !x.isMarket;
@@ -619,7 +548,7 @@ function shouldHideByFilter(x){
   return false;
 }
 
-// ============================= Villages : remplissage du select
+// ----------------------------- Villages : remplissage du select
 function remplirListeVillagesDepuisData(data) {
   const sel = document.getElementById("param-village");
   if (!sel) {
@@ -732,7 +661,7 @@ function syncParamFields(){
   if (m) m.value = String(state.anchor.getMonth() + 1);
 }
 
-// ============================= Animations UI
+// ----------------------------- Animations UI (scroll reveal, sans masquer le contenu)
 function setupScrollRevealAnimations(){
   const selectors = [
     ".site-header",
@@ -765,7 +694,7 @@ function setupScrollRevealAnimations(){
   els.forEach(el => io.observe(el));
 }
 
-// ============================= Init
+// ----------------------------- Init
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     wireNav();
@@ -779,4 +708,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("[Init] Erreur pendant l'init:", e);
   }
 });
-</script>
