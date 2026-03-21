@@ -191,14 +191,40 @@
       "J8": "Nto'Ssack",
       "Roi du village": "Sa Majesté NAYANG TOUKAM Innocent"
     },
+    
+     {
+            "VILLAGE": "BAZOU",
+            "J1": "Ntàh'Lang",
+            "J2": "Kàp",
+            "J3": "Nkoekè",
+            "J4": "Nkoen",
+            "J5": "Ndion'Gwe",
+            "J6": "Mbù",
+            "J7": "Nkon",
+            "J8": "Ncoe",
+            "M1": "Muh'Nka",
+            "M2": "Nkah'Ngnia",
+            "M3": "Nti'Zzwè",
+            "M4": "Coe'Zwoe",
+            "M5": "Suh'Ngnia",
+            "M6": "Nwah'Nkou",
+            "M7": "Tu'Ngofi",
+            "M8": "Co'Zwe",
+            "M9": "Yaa'Zwe",
+            "M10": "Ku'u Suoe",
+            "M11": "Suh Ngnia Ndong",
+            "M12": "Ntun'Ku'u",
+            "Jour interdit1": "Kàp",
+            "Jour interdit2": "Ndion'Gwe",
+            "Jour interdit3": "Ncoe",
+            "Roi du village": "Sa Majesté Marcelin Happy Tchoua"
+        },
+    
     {
       "VILLAGE": "BAYANGAM",
       "Roi du village": "Sa Majesté POUOKAM II"
     },
-    {
-      "VILLAGE": "BAZOU",
-      "Roi du village": "Sa Majesté Marcelin Happy Tchoua"
-    },
+    
     {
       "VILLAGE": "DSHANG",
       "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
