@@ -1,5 +1,4 @@
-<script>
-// ============================= INIT FORMATTEURS & STATE
+
 const today = new Date();
 
 const fmt = {
