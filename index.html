@@ -11,12 +11,53 @@
 
   <link rel="manifest" href="manifest.v3.webmanifest">
   <meta name="theme-color" content="#0b3c8d">
-  <link rel="stylesheet" href="./styles.v3.css?v=20260318b">
+  <link rel="stylesheet" href="./styles.v3.css?v=20260321d">
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='%23FFD166'/%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' font-size='44'%3E%F0%9F%8C%9E%3C/text%3E%3C/svg%3E">
 </head>
 
 <body>
+  <section class="official-index">
+    <p class="official-kicker">Index officiel</p>
+    <h1>Calendrier traditionnel perp&eacute;tuel</h1>
+    <p class="official-lead">Projet &laquo; Calendrier du Village &raquo; : soleil &agrave; 8 branches, tissu traditionnel et watermark dynamique pour transmettre la m&eacute;moire, l&apos;identit&eacute; et les rythmes du village.</p>
+
+    <div class="official-sections">
+      <section>
+        <h2>1. Pr&eacute;sentation g&eacute;n&eacute;rale</h2>
+        <p>Le Calendrier Traditionnel Perp&eacute;tuel du Village est un syst&egrave;me cyclique inspir&eacute; des traditions villageoises. Il repose sur trois &eacute;l&eacute;ments visuels majeurs : un soleil &agrave; 8 branches, un fond en tissu traditionnel et un watermark dynamique selon le village choisi.</p>
+        <p>Perp&eacute;tuel, il reste utilisable chaque ann&eacute;e sans modification et sert d&apos;outil culturel, &eacute;ducatif et identitaire.</p>
+      </section>
+
+      <section>
+        <h2>2. Fonctionnement</h2>
+        <p>Lecture circulaire : chaque branche du soleil repr&eacute;sente un cycle culturel, journalier ou saisonnier.</p>
+        <p>Les p&eacute;riodes cl&eacute;s s&apos;articulent autour de cette roue symbolique. Le watermark s&apos;adapte automatiquement selon le village choisi.</p>
+        <p>Le calendrier pr&eacute;serve la m&eacute;moire coutumi&egrave;re et transmet la culture.</p>
+      </section>
+
+      <section>
+        <h2>3. FAQ</h2>
+        <p><strong>Qu&apos;est-ce qu&apos;un calendrier traditionnel perp&eacute;tuel ?</strong> Un calendrier bas&eacute; sur un cycle permanent, ind&eacute;pendant de l&apos;ann&eacute;e civile.</p>
+        <p><strong>Pourquoi un soleil &agrave; 8 branches ?</strong> Il symbolise les huit grands rythmes ou phases qui structurent la vie villageoise.</p>
+        <p><strong>Pourquoi un watermark diff&eacute;rent selon les villages ?</strong> Chaque village poss&egrave;de une identit&eacute; visuelle propre. Le watermark l&apos;exprime.</p>
+        <p><strong>Peut-on l&apos;utiliser comme calendrier moderne ?</strong> Oui, mais il reste avant tout un rep&egrave;re traditionnel et culturel.</p>
+      </section>
+
+      <section>
+        <h2>4. Ressources</h2>
+        <p>Version PDF du calendrier, version PDF Lite, galerie d&apos;images et variantes par village avec watermarks personnalis&eacute;s.</p>
+      </section>
+
+      <section>
+        <h2>5. Contact &amp; cr&eacute;dits</h2>
+        <p><strong>Auteur :</strong> Gilbert Fonga — fongagilbert@gmail.com</p>
+        <p><strong>Projet :</strong> Calendrier du Village</p>
+        <p><strong>&Eacute;l&eacute;ments graphiques :</strong> soleil &agrave; 8 branches, motifs de tissus traditionnels et watermarks dynamiques par village.</p>
+      </section>
+    </div>
+  </section>
+
   <div class="site-header">Calendrier du Village</div>
 
   <div class="nav-row">
@@ -28,7 +69,7 @@
   </div>
 
   <div class="params">
-    <label>Année (M) :
+    <label>Ann&eacute;e (M) :
       <input id="param-annee" type="number" min="1900" max="2500">
     </label>
 
@@ -45,7 +86,7 @@
     <label>Filtre :
       <select id="param-filtre">
         <option value="tous">Tous</option>
-        <option value="marche">Marché</option>
+        <option value="marche">March&eacute;</option>
         <option value="interdits">Interdits</option>
       </select>
     </label>
@@ -57,12 +98,12 @@
     <div class="infos-inner">
       <p class="roi">Roi : <span id="roi-village"></span></p>
       <p class="interdits">Jours interdits : <span id="interdits-village"></span></p>
-      <p class="marche">Jours de marché : <span id="marche-village"></span></p>
+      <p class="marche">Jours de march&eacute; : <span id="marche-village"></span></p>
       <p class="infos">Infos : <span id="motif-village"></span></p>
     </div>
   </section>
 
-  <p class="credit-final">Proposé par <strong>Gilbert FONGA</strong></p>
+  <p class="credit-final">Propos&eacute; par <strong>Gilbert FONGA</strong></p>
 
   <script src="./app.v3.js?v=20260318c"></script>
   <script>
