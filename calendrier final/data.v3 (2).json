@@ -1,0 +1,204 @@
+{
+  "traditional_days_anchor": {
+    "ALL": {
+      "date": "2026-02-28",
+      "j": 1
+    }
+  },
+  "traditional_days_8": {
+    "BALENGOU": {
+      "1": "Ngèdjou",
+      "2": "Ndin'kap",
+      "3": "Nzeu'gheu",
+      "4": "Ndi'keun",
+      "5": "Nzedjio",
+      "6": "Ndi'bou",
+      "7": "Ndi'kong",
+      "8": "Nditcheu"
+    },
+    "BAMENA": {
+      "1": "Li'Nkap",
+      "2": "Nzengheu",
+      "3": "Li'Ntio",
+      "4": "Nzedjio",
+      "5": "Nzeleung",
+      "6": "Li'Nkong",
+      "7": "Nta'Sang",
+      "8": "Ngueudjou"
+    },
+    "BANGANGTE": {
+      "1": "Ntânte",
+      "2": "Ntanla",
+      "3": "Nsigha",
+      "4": "Nsemtè",
+      "5": "Nga",
+      "6": "Nkôtu",
+      "7": "Nzinyam",
+      "8": "Ntabu"
+    },
+    "BANGOU": {
+      "1": "Dinkon",
+      "2": "Dintouo",
+      "3": "Guendjou",
+      "4": "Ntassak",
+      "5": "Nzeuleug",
+      "6": "Ntambeté",
+      "7": "Guefack",
+      "8": "Nduh"
+    },
+    "BATCHINGOU": {
+      "1": "Nguedjou",
+      "2": "Dikap",
+      "3": "Zegheu",
+      "4": "Ditchouo",
+      "5": "Zejouo",
+      "6": "Zeleuck",
+      "7": "Dickok",
+      "8": "Tassia"
+    },
+    "BATOUFAM": {
+      "1": "Ndi'NJou",
+      "2": "Lie'Tsue",
+      "3": "Kouo'Tsue",
+      "4": "Lie'Tioc",
+      "5": "Nzee'Nzee",
+      "6": "Lie'Tchak",
+      "7": "Kouo'Tchak",
+      "8": "Nto'Ssack"
+    }
+  },
+  "traditional_months": {
+    "BALENGOU": {
+      "1": "Nka'gnia",
+      "2": "Zeu'gnia",
+      "3": "Ti'zoueu",
+      "4": "Ti'zoueu",
+      "5": "Sou'gnia",
+      "6": "Nkap'djap",
+      "7": "Tcho'zoueu",
+      "8": "Tcho'zoueu",
+      "9": "Mbuo'gnia",
+      "10": "Zue'Diap",
+      "11": "Chui'Kwelè",
+      "12": "Tchoua'Kwelè"
+    },
+    "BAMENA": {
+      "1": "Mou'Nka",
+      "2": "Nka'Ngneu",
+      "3": "Nti'Zueu",
+      "4": "TchieNo",
+      "5": "Sou'Ngno",
+      "6": "Nwa'Nkou",
+      "7": "Njusse'Zue",
+      "8": "Tcho'Zue",
+      "9": "Ntse'Zue",
+      "10": "Toun'Ndioh",
+      "11": "Sougno'Ndong",
+      "12": "Menengwe"
+    },
+    "BANGOU": {
+      "1": "Akon",
+      "2": "Bisa",
+      "3": "Kete",
+      "4": "Fufu",
+      "5": "Dede",
+      "6": "Hunu",
+      "7": "Mensa",
+      "8": "Kwaku",
+      "9": "Yaa",
+      "10": "Kofi",
+      "11": "Kwame",
+      "12": "Adwoa"
+    },
+    "BATCHINGOU": {
+      "1": "Mou'nka",
+      "2": "Nka'Ngnia",
+      "3": "Nti'zoueh",
+      "4": "Chiè'Nô",
+      "5": "Sou'Ngno",
+      "6": "Nwa'Nkou",
+      "7": "Njuisse'Zoueh",
+      "8": "Tchôh'Zoueh",
+      "9": "Nte'Zoueh",
+      "10": "Toun'Djouoh",
+      "11": "Sougno'Ndong",
+      "12": "Mene'gwe"
+    }
+  },
+  "forbidden_names": {
+    "BALENGOU": [
+      "Ndin'kap",
+      "Nzedjio"
+    ],
+    "BAMENA": [
+      "cheu",
+      "Tiè",
+      "Tah"
+    ],
+    "BANGOU": [
+      "Nduh",
+      "Dintouo",
+      "Guendjou"
+    ],
+    "BATCHINGOU": [
+      "Zejouo",
+      "Zegheu"
+    ]
+  },
+  "market_names": {
+    "BAMENA": [
+      "Ntah",
+      "Mbouh",
+      "Tountah"
+    ],
+    "BANGOU": [
+      "Nduh= Chefferie",
+      "Dintouo= Carrefeour",
+      "Guendjou= Kamna"
+    ]
+  },
+  "roi_by_village": {
+    "BAFANG": "Sa Majesté René KAMGA NGANDJUI",
+    "BAFOUSSAM": "Sa majesté Njitack Ngompe Pelé",
+    "BAHAM": "Sa Majesté POUOKAM TEGUIA Max2",
+    "BAKONDJI": "Sa Majesté Austère Durand MOUMI 3",
+    "BALENG": "Sa Majesté Sa Majesté Guillaume Alain NEGOU TELA",
+    "BALENGOU": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
+    "BAMEKA": "Sa Majesté TAKUKAM Jean-Raymond",
+    "BAMENA": "Sa Majesté NGIENTCHO",
+    "BAMENDJOU": "Sa Majesté Jean-Rameau SOUKOUDJOU",
+    "BANA": "Sa Majesté Sikam Happi 5",
+    "BANDREFAM": "Sa Majesté GeorgesJIEJIP TCOMGANG",
+    "BANGAM": "Sa Majesté POUFONG",
+    "BANGANGTE": "Sa Majesté Nji Mohnlu Siedou Pokam",
+    "BANGOU": "Sa Majesté FONGA",
+    "BANGOUA": "Sa Majesté Yannick Julio DJAMPOU",
+    "BANJOUN": "Sa Majesté Diomo Kamga Honoré",
+    "BANOUNGA": "Sa  Majesté Louis NGAPMOU",
+    "BANSOA": "Sa Majesté TCHINDA 2 DJONTU JEAN DEDIEU",
+    "BATCHINGOU": "Sa Majesté André Flaubert NANA",
+    "BATIE": "Sa Ma jesté Théodore TCHOUANKAM DADA",
+    "BATOUFAM": "Sa Majesté NAYANG TOUKAM Innocent",
+    "BAYANGAM": "Sa Majesté POUOKAM II",
+    "BAZOU": "Sa Majesté Marcelin Happy Tchoua",
+    "DSHANG": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
+  },
+  "motif_by_village": {
+    "BAHAM": "Superficie de près de 56Km². Pour plus d'infos",
+    "BALENGOU": "A completer",
+    "BANGOU": "Dynastie vielle de 300 ans environs,\nancien site d'esclaves,\n28 quartiers. Site touristique moderne.",
+    "BATCHINGOU": "ADAMOU ARDO: Chef du village TCHOUGWE ; SOP Tampi Philippe: Chef du village BANGWE ; Mbeu Toukep DAZOUE Thomas: Chef du village TOUSSE"
+  },
+  "marche_by_village": {
+    "BAMENA": [
+      "Ntah",
+      "Mbouh",
+      "Tountah"
+    ],
+    "BANGOU": [
+      "Nduh= Chefferie",
+      "Dintouo= Carrefeour",
+      "Guendjou= Kamna"
+    ]
+  }
+}
