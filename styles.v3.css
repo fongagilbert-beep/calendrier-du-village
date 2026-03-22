@@ -128,10 +128,14 @@ body::before {
 
 .official-index h1 {
   color: var(--deep-blue);
-  font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+  font-family: "Akatab", "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+  font-weight: 900;
   margin-top: 0.7rem;
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.01em;
+  margin-bottom: 0.65rem;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .official-lead {
@@ -139,6 +143,9 @@ body::before {
   color: var(--fg-soft);
   font-size: 1rem;
   line-height: 1.65;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .official-index h2 {
@@ -154,6 +161,17 @@ body::before {
   line-height: 1.6;
 }
 
+.official-index a {
+  color: var(--deep-blue);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(11, 46, 89, 0.24);
+}
+
+.official-index a:hover {
+  border-bottom-color: rgba(11, 46, 89, 0.5);
+}
+
 .official-sections {
   margin-top: 1rem;
 }
@@ -167,6 +185,10 @@ body::before {
 .site-header {
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
   margin-top: 1rem;
   padding: 1.35rem 1.5rem 2.6rem;
   border: 1px solid rgba(201, 139, 45, 0.16);
@@ -182,6 +204,16 @@ body::before {
   text-transform: uppercase;
   text-shadow: 0 1px 3px rgba(123, 77, 14, 0.1);
   box-shadow: 0 18px 32px rgba(145, 103, 37, 0.12);
+}
+
+.site-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  flex: 0 0 auto;
 }
 
 .site-header::before {
@@ -208,9 +240,8 @@ body::before {
   position: absolute;
   inset: 0;
   background:
-    var(--motif-sun) no-repeat 1.1rem 0.65rem / 92px 92px,
     linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.14) 40%, transparent 62%);
-  opacity: 0.5;
+  opacity: 0.38;
   pointer-events: none;
 }
 
@@ -395,11 +426,20 @@ body::before {
   padding: 1rem;
   border: 1px solid rgba(43, 154, 160, 0.12);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(circle at top right, rgba(43, 154, 160, 0.05), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0)),
-    linear-gradient(135deg, rgba(201, 139, 45, 0.05), rgba(48, 80, 125, 0.03)),
-    var(--panel-strong);
+  background-color: var(--fabric-yellow);
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0 4px,
+      rgba(0, 0, 0, 0.05) 4px 8px
+    ),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.04));
+  background-size:
+    3px 3px,
+    10px 10px,
+    100% 100%;
+  background-blend-mode: multiply;
   box-shadow: var(--shadow-md);
   isolation: isolate;
 }
@@ -419,8 +459,8 @@ body::before {
   letter-spacing: 0.24em;
   line-height: 0.92;
   padding-block: 1rem;
-  color: rgba(11, 46, 89, 0.12);
-  text-shadow: 0 0 14px rgba(11, 46, 89, 0.05);
+  color: rgba(110, 110, 110, 0.18);
+  text-shadow: 0 0 12px rgba(110, 110, 110, 0.05);
   pointer-events: none;
   user-select: none;
   z-index: 3;
@@ -520,7 +560,7 @@ body::before {
   padding: 0.45rem 0.6rem;
   border: 1px solid rgba(255, 255, 255, 0.56);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 248, 238, 0.72);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
   white-space: nowrap;
   overflow: hidden;
@@ -534,7 +574,7 @@ body::before {
 }
 
 .row:nth-child(even) .cell {
-  background: rgba(249, 251, 248, 0.92);
+  background: rgba(247, 240, 224, 0.74);
 }
 
 .cell.date {
@@ -644,9 +684,20 @@ body::before {
   padding: 1.15rem 1.35rem;
   border: 1px solid var(--border-gold);
   border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0)),
-    var(--panel);
+  background-color: var(--fabric-yellow);
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0 4px,
+      rgba(0, 0, 0, 0.05) 4px 8px
+    ),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.04));
+  background-size:
+    3px 3px,
+    10px 10px,
+    100% 100%;
+  background-blend-mode: multiply;
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-sm);
 }
@@ -786,6 +837,11 @@ body::before {
     border-radius: 20px;
   }
 
+  .site-logo {
+    width: 34px;
+    height: 34px;
+  }
+
   .site-header::before {
     max-width: calc(100% - 2rem);
     font-size: 0.64rem;
@@ -794,9 +850,8 @@ body::before {
 
   .site-header::after {
     background:
-      var(--motif-sun) no-repeat 0.65rem 0.65rem / 60px 60px,
       linear-gradient(120deg, transparent 18%, rgba(255, 255, 255, 0.14) 40%, transparent 62%);
-    opacity: 0.36;
+    opacity: 0.28;
   }
 
   .params {

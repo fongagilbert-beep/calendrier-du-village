@@ -12,8 +12,8 @@ const state = {
   filtre: 'all',
   dataMap: new Map(),
 
-  roi: '—',
-  motif: '—',
+  roi: '\u2014',
+  motif: '\u2014',
   marche: [],
 
   roiByVillage: {},
@@ -38,7 +38,7 @@ function normalizeName(s){
   return String(s || '')
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/['’`´]/g, '')
+    .replace(/['ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢`Ãƒâ€šÃ‚Â´]/g, '')
     .trim();
 }
 function toISO(d){
@@ -144,7 +144,7 @@ function listContainsJ(map, village, j){
   return Array.isArray(arr) ? arr.includes(j) : false;
 }
 
-// ----------------------------- Résolution
+// ----------------------------- Resolution
 function resolveTraditionalAndTags(d, village){
   const iso = toISO(d);
   const vKey = String(village || 'ALL').toUpperCase();
@@ -161,12 +161,12 @@ function resolveTraditionalAndTags(d, village){
   if (!trad && jIdx){
     trad = state.j8[vKey]?.[String(jIdx)] || state.j8.ALL?.[String(jIdx)] || null;
   }
-  if (!trad) trad = "Trad · Général";
+  if (!trad) trad = "Trad \u00B7 G\u00E9n\u00E9ral";
 
   return { trad, isMarket, isForbidden };
 }
 
-// ----------------------------- Données (optionnel)
+// ----------------------------- DonnÃƒÆ’Ã‚Â©es (optionnel)
 function cvUpdateData(entries){
   if (!Array.isArray(entries)) return;
   for (const e of entries){
@@ -190,8 +190,8 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     forbidden_names: {},
     market_names: {},
     entries: [],
-    roi: '—',
-    extra_info: '—',
+    roi: '\u2014',
+    extra_info: '\u2014',
     market_info: [],
     roi_by_village: {},
     motif_by_village: {},
@@ -223,7 +223,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     }
     if (Object.keys(mMap).length > 0) canonical.traditional_months[vUpper] = mMap;
 
-    // Interdits : FR d’abord, sinon V/W/X
+    // Interdits : FR dÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢abord, sinon V/W/X
     const forb = [];
     for (let k=1; k<=3; k++){
       const val = r[`Jour interdit${k}`];
@@ -236,13 +236,13 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
     });
     if (forb.length > 0) canonical.forbidden_names[vUpper] = forb;
 
-    // Marché : FR d’abord, sinon Z/AA/AB
+    // Marche : FR d'abord, sinon Z/AA/AB
     const mark = [];
     for (let k=1; k<=3; k++){
       const val = pickFirst(r, [
-        `Jour du marché${k}`,
+        `Jour du march\u00E9${k}`,
         `Jour du marche${k}`,
-        `Jour du marchÃ©${k}`
+        `Jour du marchÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©${k}`
       ]);
       const txt = (val == null ? "" : String(val)).trim();
       if (txt) mark.push(txt);
@@ -257,7 +257,7 @@ function adaptRowsToCanonical_FR_withLetters(rows) {
       if (!globalMarcheSet) { canonical.market_info = mark.slice(); globalMarcheSet = true; }
     }
 
-    // Méta village
+    // MÃƒÆ’Ã‚Â©ta village
     const roi  = pickFirst(r, ["Roi du village:2", "Roi du village:", "Roi du village"]).toString().trim();
     const info = pickFirst(r, ["Informations:", "Informations"]).toString().trim();
     if (roi)  { canonical.roi_by_village[vUpper] = roi;  if (!globalRoiSet)  { canonical.roi = roi;   globalRoiSet  = true; } }
@@ -278,13 +278,13 @@ async function loadDataJSON(){
   try {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
-      console.error("Chargement des données échoué:", res.status, res.statusText, "URL:", url);
+      console.error("Chargement des donn\u00E9es \u00E9chou\u00E9:", res.status, res.statusText, "URL:", url);
       return null;
     }
     const raw = await res.json();
 
-    // Optionnel : charger un fichier canonique supplémentaire (si présent) et fusionner.
-    // Utile quand data.v3.json (rows) n'embarque pas les interdits/marchés mais qu'un autre export existe.
+    // Optionnel : charger un fichier canonique supplementaire (si present) et fusionner.
+    // Utile quand data.v3.json (rows) n'embarque pas les interdits/marches mais qu'un autre export existe.
     async function tryLoadSupplementCanonical() {
       const supUrl = encodeURI("./data.v3 (2).json?v=" + Date.now());
       try {
@@ -324,7 +324,7 @@ async function loadDataJSON(){
       mergeObj("traditional_months");
       mergeObj("traditional_days_anchor");
 
-      // Interdits / marchés / méta
+      // Interdits / marchÃƒÆ’Ã‚Â©s / mÃƒÆ’Ã‚Â©ta
       mergeArrObj("forbidden_names");
       mergeArrObj("market_names");
       mergeObj("roi_by_village");
@@ -332,8 +332,8 @@ async function loadDataJSON(){
       mergeArrObj("marche_by_village");
 
       // Champs globaux si absents
-      if ((out.roi == null || out.roi === "—") && sup.roi) out.roi = sup.roi;
-      if ((out.extra_info == null || out.extra_info === "—") && sup.extra_info) out.extra_info = sup.extra_info;
+      if ((out.roi == null || out.roi === "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â") && sup.roi) out.roi = sup.roi;
+      if ((out.extra_info == null || out.extra_info === "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â") && sup.extra_info) out.extra_info = sup.extra_info;
       if ((!Array.isArray(out.market_info) || out.market_info.length === 0) && Array.isArray(sup.market_info) && sup.market_info.length > 0) {
         out.market_info = sup.market_info.slice();
       }
@@ -350,7 +350,7 @@ async function loadDataJSON(){
         raw.traditional_days_anchor = raw.traditional_days_anchor || {};
         if (iso && j >= 1 && j <= 8) {
           raw.traditional_days_anchor.ALL = { date: iso, j };
-          console.log("[DATA] Ancre globale injectée (canonique):", raw.traditional_days_anchor.ALL);
+          console.log("[DATA] Ancre globale injectÃƒÆ’Ã‚Â©e (canonique):", raw.traditional_days_anchor.ALL);
         }
       }
       const sup = await tryLoadSupplementCanonical();
@@ -374,9 +374,9 @@ async function loadDataJSON(){
         const j = Number(aj);
         if (iso && j >= 1 && j <= 8) {
           canonical.traditional_days_anchor.ALL = { date: iso, j };
-          console.log("[DATA] Ancre globale injectée (rows):", canonical.traditional_days_anchor.ALL);
+          console.log("[DATA] Ancre globale injectÃƒÆ’Ã‚Â©e (rows):", canonical.traditional_days_anchor.ALL);
         } else {
-          console.warn("[DATA] Ancre globale détectée mais invalide :", ad, aj);
+          console.warn("[DATA] Ancre globale dÃƒÆ’Ã‚Â©tectÃƒÆ’Ã‚Â©e mais invalide :", ad, aj);
         }
       }
 
@@ -414,8 +414,8 @@ function hydrateStateFromCanonical(data, rowsRaw) {
 
   if (data.entries) cvUpdateData(data.entries);
 
-  state.roi    = data.roi        || '—';
-  state.motif  = data.extra_info || '—';
+  state.roi    = data.roi        || '\u2014';
+  state.motif  = data.extra_info || '\u2014';
   state.marche = (data.market_info || []);
 
   console.log("[DATA] j8 villages:", Object.keys(state.j8 || {}));
@@ -457,13 +457,13 @@ function renderOneMonth(root, start, village, place){
   head.className = "month-header";
   const tradMonth = state.tmonths[String(village || '').toUpperCase()]?.[String(m+1)]
                  || state.tmonths["ALL"]?.[String(m+1)]
-                 || "—";
-  head.textContent = monthLabel(y, m) + " — " + tradMonth;
+                 || "\u2014";
+  head.textContent = monthLabel(y, m) + " \u2014 " + tradMonth;
   wrap.appendChild(head);
 
   const titles = document.createElement("div");
   titles.className = "month-head-row";
-  ["Date","Jour grégorien","Jour traditionnel"].forEach(t => {
+  ["Date","Jour gr\u00E9gorien","Jour traditionnel"].forEach(t => {
     const d = document.createElement("div");
     d.className = "col-title";
     d.textContent = t;
@@ -517,30 +517,26 @@ function renderVillageMeta(){
   const elMotif     = document.getElementById("motif-village");
   const elInterdits = document.getElementById("interdits-village");
 
-  // Pour "Tous" (ALL), on n'affiche rien de spécifique : uniquement des tirets
   if (vKey === 'ALL') {
-    if (elRoi)       elRoi.textContent       = "—";
-    if (elMarche)    elMarche.textContent    = "—";
-    if (elMotif)     elMotif.textContent     = "—";
-    if (elInterdits) elInterdits.textContent = "—";
+    if (elRoi)       elRoi.textContent       = '\u2014';
+    if (elMarche)    elMarche.textContent    = '\u2014';
+    if (elMotif)     elMotif.textContent     = '\u2014';
+    if (elInterdits) elInterdits.textContent = '\u2014';
     return;
   }
 
-  const roi = (state.roiByVillage && state.roiByVillage[vKey]) || state.roi || "—";
-  const marcheArr = (state.marcheByVillage && state.marcheByVillage[vKey]) || state.marche || [];
-  const motif = (state.motifByVillage && state.motifByVillage[vKey]) || state.motif || "—";
+  const roi = (state.roiByVillage && state.roiByVillage[vKey]) || '';
+  const marcheArr = (state.marcheByVillage && state.marcheByVillage[vKey]) || [];
+  const motif = (state.motifByVillage && state.motifByVillage[vKey]) || '';
   const interditsArr = (state.forbiddenNames && state.forbiddenNames[vKey]) || [];
 
-  if (elRoi) elRoi.textContent = roi || "—";
-
-  if (elMarche) elMarche.textContent = (marcheArr || []).join(" • ") || "—";
-
-  if (elMotif) elMotif.textContent = motif || "—";
-
-  if (elInterdits) elInterdits.textContent = (interditsArr || []).join(" • ") || "—";
+  if (elRoi) elRoi.textContent = roi || '\u2014';
+  if (elMarche) elMarche.textContent = (marcheArr || []).join(' \u2022 ') || '\u2014';
+  if (elMotif) elMotif.textContent = motif || '\u2014';
+  if (elInterdits) elInterdits.textContent = (interditsArr || []).join(' \u2022 ') || '\u2014';
 }
 
-// ----------------------------- Navigation & paramètres
+// ----------------------------- Navigation & parametres
 function shouldHideByFilter(x){
   const f = state.filtre;
   if (f === "market")    return !x.isMarket;
@@ -575,7 +571,7 @@ function remplirListeVillagesDepuisData(data) {
   });
 
   const list = Array.from(uniques).sort();
-  if (list.length === 0) console.warn("[Village] Aucun village détecté.");
+  if (list.length === 0) console.warn("[Village] Aucun village d\u00E9tect\u00E9.");
 
   const frag = document.createDocumentFragment();
   list.forEach(vUpper => {
@@ -591,7 +587,7 @@ function remplirListeVillagesDepuisData(data) {
     sel.value = "ALL";
   }
 
-  console.info(`[Village] Villages détectés: ${list.length}`, list);
+  console.info(`[Village] Villages dÃƒÆ’Ã‚Â©tectÃƒÆ’Ã‚Â©s: ${list.length}`, list);
 }
 
 function wireNav(){
@@ -664,6 +660,7 @@ function syncParamFields(){
 // ----------------------------- Animations UI (scroll reveal, sans masquer le contenu)
 function setupScrollRevealAnimations(){
   const selectors = [
+    ".official-index",
     ".site-header",
     ".nav-row",
     ".params",
@@ -674,7 +671,7 @@ function setupScrollRevealAnimations(){
   const els = Array.from(document.querySelectorAll(selectors.join(",")));
   if (!els.length) return;
 
-  // Marqueurs CSS (ne cachent rien, servent juste à l'animation)
+  // Marqueurs CSS (ne cachent rien, servent juste ÃƒÆ’Ã‚Â  l'animation)
   els.forEach(el => el.classList.add("af-reveal"));
 
   if (!("IntersectionObserver" in window)) {
