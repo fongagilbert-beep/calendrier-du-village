@@ -105,12 +105,13 @@ body::before {
   margin-top: 1rem;
   margin-bottom: 1rem;
   padding: 1.35rem 1.4rem;
-  border: 1px solid rgba(11, 46, 89, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 22px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.28)),
-    rgba(255, 251, 243, 0.84);
-  box-shadow: var(--shadow-sm);
+  background: transparent;
+  box-shadow:
+    0 16px 34px rgba(255, 248, 232, 0.3),
+    0 0 0 8px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
 }
 
 .official-kicker {
@@ -426,20 +427,7 @@ body::before {
   padding: 1rem;
   border: 1px solid rgba(43, 154, 160, 0.12);
   border-radius: var(--radius-lg);
-  background-color: var(--fabric-yellow);
-  background-image:
-    radial-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 0 4px,
-      rgba(0, 0, 0, 0.05) 4px 8px
-    ),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.04));
-  background-size:
-    3px 3px,
-    10px 10px,
-    100% 100%;
-  background-blend-mode: multiply;
+  background: #ffffff;
   box-shadow: var(--shadow-md);
   isolation: isolate;
 }
@@ -703,7 +691,7 @@ body::before {
 }
 
 .bloc-infos-final::before {
-  content: "Identité du village";
+  content: "IdentitÃ© du village";
   position: absolute;
   top: -0.72rem;
   left: 1.3rem;
@@ -794,9 +782,7 @@ body::before {
   transform: translateY(0) scale(1);
 }
 
-#calendar-9cols .month.af-reveal:nth-child(1) { transition-delay: 0.04s; }
-#calendar-9cols .month.af-reveal:nth-child(2) { transition-delay: 0.1s; }
-#calendar-9cols .month.af-reveal:nth-child(3) { transition-delay: 0.16s; }
+
 
 @media (max-width: 899px) {
   .site-header,
