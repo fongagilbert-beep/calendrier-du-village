@@ -691,7 +691,7 @@ body::before {
 }
 
 .bloc-infos-final::before {
-  content: "IdentitÃ© du village";
+  content: "Identité du village";
   position: absolute;
   top: -0.72rem;
   left: 1.3rem;
