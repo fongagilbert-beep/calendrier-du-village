@@ -3,13 +3,13 @@
    © Gilbert FONGA — fongagilbert@gmail.com
    ══════════════════════════════════════════ */
 "use strict";
-
+ 
 const ANCHOR   = new Date(2026,1,28);
 const ANCHOR_J = 0;
 const MFR    = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-const SJOURS = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+const SJOURS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 const SFULL  = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-
+ 
 const VILLAGES = [
   {V:'BAFANG',J:[],M:[],INT:[],MKT:[],ROI:"Sa Majesté René KAMGA NGANDJUI",INFO:""},
   {V:'BAFOUSSAM',J:[],M:[],INT:[],MKT:[],ROI:"Sa majesté Njitack Ngompe Pelé",INFO:""},
@@ -38,16 +38,16 @@ const VILLAGES = [
   {V:'DSCHANG',J:[],M:[],INT:[],MKT:[],ROI:"Sa Majesté Guy Bertrand MOMO SOFFACK 1er",INFO:""},
   {V:'MBOUDA',J:[],M:[],INT:[],MKT:[],ROI:"",INFO:""}
 ];
-
+ 
 function jIdx(d){const diff=Math.round((d-ANCHOR)/86400000);return((ANCHOR_J+diff%8+800)%8);}
 function getV(n){return VILLAGES.find(v=>v.V===n)||null;}
 function matchJ(jt,l){if(!jt||!l.length)return false;const a=jt.toLowerCase().trim();return l.some(i=>{const b=i.toLowerCase().trim();return a===b||a.includes(b)||b.includes(a);});}
 function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
-
+ 
 let showTrad=true;
 const today=new Date();
 let curY=today.getFullYear(),curM=today.getMonth()+1;
-
+ 
 function init(){
   document.getElementById('ia').value=today.getFullYear();
   document.getElementById('im').value=today.getMonth()+1;
@@ -66,7 +66,7 @@ function init(){
   window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='p'){e.preventDefault();demanderImpression();}});
   onVillageChange();
 }
-
+ 
 function onVillageChange(){
   const v=getV(document.getElementById('iv').value);
   const s=document.getElementById('if2');
@@ -74,7 +74,7 @@ function onVillageChange(){
   if(v&&v.J.length)v.J.forEach(j=>{const o=document.createElement('option');o.value=j;o.textContent=j;s.appendChild(o);});
   render();
 }
-
+ 
 function render(){
   const annee=parseInt(document.getElementById('ia').value)||curY;
   const mS=parseInt(document.getElementById('im').value)||curM;
@@ -90,23 +90,23 @@ function render(){
   for(let mi=0;mi<3;mi++){let m=mS+mi,y=annee;while(m>12){m-=12;y++;}g.appendChild(buildBloc(y,m,vd,vN,fT,fS));}
   renderVP(vd);
 }
-
+ 
 function buildBloc(y,m,vd,vN,fT,fS){
   const bloc=document.createElement('div');bloc.className='bloc-mois';
   const mT=vd&&vd.M.length?vd.M[m-1]:'';
-  bloc.innerHTML=`<div class="bloc-mois-hdr">${mT?`<span class="mtrad">${mT}</span>`:''}<span class="mgreg">${MFR[m-1]} ${y}</span></div><div class="sem-hdr">${SJOURS.map((s,i)=>`<div class="sh${i===0?' di':''}">${s}</div>`).join('')}</div><div class="jours-grid"></div><div class="print-watermark">© Calendrier du Village — Gilbert FONGA — fongagilbert@gmail.com</div>`;
+  bloc.innerHTML=`<div class="bloc-mois-hdr">${mT?`<span class="mtrad">${mT}</span>`:''}<span class="mgreg">${MFR[m-1]} ${y}</span></div><div class="sem-hdr">${SJOURS.map((s,i)=>`<div class="sh${i===6?' di':''}">${s}</div>`).join('')}</div><div class="jours-grid"></div><div class="print-watermark">© Calendrier du Village — Gilbert FONGA — fongagilbert@gmail.com</div>`;
   const jg=bloc.querySelector('.jours-grid');
-  const off=new Date(y,m-1,1).getDay();
+  const rawFirst=new Date(y,m-1,1).getDay();const off=(rawFirst===0)?6:rawFirst-1;
   for(let i=0;i<off;i++){const e=document.createElement('div');e.className='dc empty';jg.appendChild(e);}
   for(let d=1;d<=new Date(y,m,0).getDate();d++){
-    const date=new Date(y,m-1,d),dow=date.getDay(),ji=jIdx(date);
+    const date=new Date(y,m-1,d),rawDow=date.getDay(),dow=(rawDow===0)?6:rawDow-1,ji=jIdx(date);
     const jt=vd&&vd.J.length?vd.J[ji]:'',mTr=vd&&vd.M.length?vd.M[m-1]:'';
     const isInt=!!(vd&&matchJ(jt,vd.INT)),isMkt=!!(vd&&matchJ(jt,vd.MKT));
     const isToday=date.getFullYear()===today.getFullYear()&&date.getMonth()===today.getMonth()&&date.getDate()===today.getDate();
     const masque=(fT!=='tous'&&jt!==fT)||(fS==='interdits'&&!isInt)||(fS==='marche'&&!isMkt);
     let cls='dc';
     if(!masque){if(isToday)cls+=' today';else if(isInt)cls+=' interdit';else if(isMkt)cls+=' marche';}else cls+=' masked';
-    if(dow===0)cls+=' di';
+    if(dow===6)cls+=' di';
     const cell=document.createElement('div');cell.className=cls;
     cell.innerHTML=`<span class="dn">${d}</span>${showTrad&&jt?`<span class="dt">${jt}</span>`:''}`;
     if(!masque){let st='Jour ordinaire';if(isInt)st='🔴 Jour interdit';else if(isMkt)st='🟢 Jour de marché';if(isToday)st+=" · Aujourd'hui";cell.onclick=()=>openM(d,m,y,jt,mTr,vN,st,dow);}
@@ -114,7 +114,7 @@ function buildBloc(y,m,vd,vN,fT,fS){
   }
   return bloc;
 }
-
+ 
 function renderVP(v){
   const p=document.getElementById('vp');
   if(!v){p.style.display='none';return;}
@@ -126,12 +126,12 @@ function renderVP(v){
   document.getElementById('vmk').innerHTML=v.MKT.length?v.MKT.map(j=>`<span class="itag itag-mkt">${j}</span>`).join(''):'<span style="color:#ccc;font-size:12px">—</span>';
   document.getElementById('vinf').textContent=v.INFO||'—';
 }
-
+ 
 function nav(months){let m=parseInt(document.getElementById('im').value)+months,y=parseInt(document.getElementById('ia').value);while(m>12){m-=12;y++;}while(m<1){m+=12;y--;}document.getElementById('im').value=m;document.getElementById('ia').value=y;render();}
 function navToday(){document.getElementById('ia').value=today.getFullYear();document.getElementById('im').value=today.getMonth()+1;render();}
 function openM(d,m,y,trad,mT,village,statut,dow){document.getElementById('mg').textContent=d;document.getElementById('mgf').textContent=`${SFULL[dow]} ${d} ${MFR[m-1]} ${y}`;document.getElementById('mt2').textContent=trad||'—';document.getElementById('mm2').textContent=mT||'—';document.getElementById('mv2').textContent=village;document.getElementById('ms2').textContent=statut;document.getElementById('modal').classList.add('on');}
 function closeM(){document.getElementById('modal').classList.remove('on');}
-
+ 
 function demanderImpression(){
   document.getElementById('print-nom').value=localStorage.getItem('cv_print_nom')||'';
   document.getElementById('print-email').value=localStorage.getItem('cv_print_email')||'';
@@ -160,9 +160,9 @@ function validerImpression(){
   fermerModalImpression();
   window._printAutorise=true;window.print();window._printAutorise=false;
 }
-
+ 
 function toggleTrad(){showTrad=!showTrad;document.getElementById('tbt').textContent=showTrad?'Masquer noms trad.':'Afficher noms trad.';render();}
 function doShare(){const v=document.getElementById('iv').value,y=document.getElementById('ia').value,m=document.getElementById('im').value;const url=`https://fongagilbert-beep.github.io/calendrier-du-village/?village=${v}&annee=${y}&mois=${m}`;if(navigator.share){navigator.share({title:'Calendrier du Village',url});}else{navigator.clipboard.writeText(url).then(()=>alert('Lien copié ✓')).catch(()=>prompt('Copiez ce lien :',url));}}
 function doCSV(){const v=getV(document.getElementById('iv').value),annee=parseInt(document.getElementById('ia').value),mS=parseInt(document.getElementById('im').value);let csv='Date,Numéro,Jour semaine,Nom trad.,Mois trad.,Interdit,Marché\n';for(let mi=0;mi<3;mi++){let m=mS+mi,y=annee;while(m>12){m-=12;y++;}for(let d=1;d<=new Date(y,m,0).getDate();d++){const date=new Date(y,m-1,d),ji=jIdx(date),jt=v&&v.J.length?v.J[ji]:'',mt=v&&v.M.length?v.M[m-1]:'';const isInt=v&&matchJ(jt,v.INT),isMkt=v&&matchJ(jt,v.MKT);csv+=`${d}/${m}/${y},${d},${SFULL[date.getDay()]},${jt},${mt},${isInt?'Oui':''},${isMkt?'Oui':''}\n`;}}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download=`calendrier_village_${annee}_${mS}.csv`;a.click();}
-
+ 
 document.addEventListener('DOMContentLoaded',init);
