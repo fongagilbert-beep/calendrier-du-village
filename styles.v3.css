@@ -80,10 +80,9 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .wm{position:absolute;inset:0;pointer-events:none;user-select:none;-webkit-user-select:none;z-index:5;
   -webkit-print-color-adjust:exact;print-color-adjust:exact;}
 .wm span{position:absolute;left:50%;white-space:nowrap;
-  font-family:Tahoma,Verdana,Geneva,sans-serif;
-  font-style:normal;font-weight:700;font-size:26px;letter-spacing:.03em;
-  color:rgba(38,150,200,.30);
-  text-shadow:0 0 1px rgba(255,255,255,.6);
+  font-family:"Arial Rounded MT Bold","Varela Round","Nunito","Trebuchet MS",Tahoma,sans-serif;
+  font-style:normal;font-weight:700;font-size:22px;letter-spacing:.04em;
+  color:rgba(110,160,190,.16);
   transform:translate(-50%,-50%) rotate(-22deg);}
 .wm span:nth-child(1){top:20%;}
 .wm span:nth-child(2){top:50%;}
