@@ -1,7 +1,7 @@
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   Calendrier du Village â€” styles.v3.css
-   Â© Gilbert FONGA â€” fongagilbert@gmail.com
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ==========================================
+   Calendrier du Village - styles.v3.css
+    Gilbert FONGA - fongagilbert@gmail.com
+   ========================================== */
 :root {
   --or:#C8860A; --or2:#F5D58A; --rouge:#8B1A1A; --vert:#1A5C2A; --vert2:#2E8B42;
   --noir:#1C1208; --sable:#F5EDD8; --sable2:#E8D9B8; --brun:#6B4226;
@@ -12,7 +12,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 
-/* â•â• HERO â•â• */
+/* == HERO == */
 .hero{background:var(--noir);background-image:var(--motif);}
 .hero-top{display:flex;align-items:center;gap:16px;padding:20px 24px 16px;}
 .hero-sun{flex-shrink:0;}
@@ -29,12 +29,12 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .hero-credit a:hover{text-decoration:underline;}
 .hero-band{height:9px;background:repeating-linear-gradient(90deg,var(--rouge) 0 12px,var(--or) 12px 18px,var(--vert) 18px 30px,var(--or) 30px 36px,var(--rouge) 36px 48px,var(--noir) 48px 54px);}
 
-/* â•â• CONTRÃ”LES â•â• */
+/* == CONTROLES == */
 .ctrl{background:#fff;border-bottom:1px solid var(--sable2);padding:16px 20px;}
 .month-title{text-align:center;font-weight:700;font-size:22px;color:var(--noir);margin-bottom:16px;letter-spacing:.01em;}
 .month-title span{color:var(--rouge);}
 
-/* â•â• BOUTONS NAVIGATION â•â• */
+/* == BOUTONS NAVIGATION == */
 .nav-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
 .bn{
   background:var(--bleu-ciel);
@@ -54,14 +54,14 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .bn-today{background:var(--bleu-fonce);border-color:var(--bleu-fonce);}
 .bn-today:hover{background:#0F3460;border-color:#0F3460;}
 
-/* â•â• PARAMÃˆTRES â•â• */
+/* == PARAMETRES == */
 .params{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
 .pl{display:flex;flex-direction:column;gap:4px;}
 .pl label{font-size:12px;font-weight:700;color:#888;letter-spacing:.05em;text-transform:uppercase;}
 .pl input,.pl select{font-family:'Akatab',sans-serif;font-size:14px;border:1.5px solid var(--sable2);border-radius:7px;padding:8px 10px;color:var(--noir);background:#fff;width:100%;}
 .pl input:focus,.pl select:focus{border-color:var(--or);outline:none;}
 
-/* â•â• LÃ‰GENDE â•â• */
+/* == LEGENDE == */
 .leg{display:flex;gap:18px;flex-wrap:wrap;padding:9px 20px;background:var(--sable);border-bottom:1px solid var(--sable2);}
 .li{display:flex;align-items:center;gap:7px;font-size:13px;color:#555;}
 .ld{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
@@ -70,45 +70,45 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .ld-or{background:var(--or);}
 .ld-dim{background:rgba(139,26,26,.4);}
 
-/* â•â• 3 MOIS CÃ”TE Ã€ CÃ”TE â•â• */
+/* == 3 MOIS COTE A COTE == */
 .trois-mois{padding:16px 14px;background:var(--sable);background-image:var(--motif);display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;}
 
-/* â•â• BLOC MOIS â•â• */
+/* == BLOC MOIS == */
 .bloc-mois{background:#fff;border-radius:10px;border:1px solid var(--sable2);overflow:hidden;position:relative;box-shadow:0 2px 8px rgba(28,18,8,.07);}
 
-/* â•â• FILIGRANE â€” discret, non cliquable, rÃ©pÃ©tÃ© sur chaque mois â•â• */
-.bloc-mois::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:5;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='230' height='120'><text x='115' y='60' text-anchor='middle' transform='rotate(-24 115 60)' font-family='Georgia,serif' font-size='13' font-weight='700' fill='%236B4226' fill-opacity='0.18'>Â© Gilbert FONGA</text></svg>");
-  background-repeat:repeat;
-  background-size:230px 120px;
-  -webkit-print-color-adjust:exact;
-  print-color-adjust:exact;
-}
+/* == FILIGRANE : 3 mentions par mois, bleu goutte d'eau, discret == */
+.wm{position:absolute;inset:0;pointer-events:none;user-select:none;-webkit-user-select:none;z-index:5;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.wm span{position:absolute;left:50%;white-space:nowrap;
+  font-family:Tahoma,Verdana,Geneva,sans-serif;
+  font-style:normal;font-weight:700;font-size:26px;letter-spacing:.03em;
+  color:rgba(38,150,200,.30);
+  text-shadow:0 0 1px rgba(255,255,255,.6);
+  transform:translate(-50%,-50%) rotate(-22deg);}
+.wm span:nth-child(1){top:20%;}
+.wm span:nth-child(2){top:50%;}
+.wm span:nth-child(3){top:80%;}
+
 .bloc-mois-hdr{background:var(--noir);background-image:var(--motif);padding:10px 12px;}
 .bloc-mois-hdr .mtrad{color:var(--or);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px;}
 .bloc-mois-hdr .mgreg{color:rgba(245,213,138,.65);font-size:13px;font-family:'Crimson Pro',serif;font-style:italic;}
 
-/* EntÃªte jours de la semaine */
+/* Entete jours de la semaine */
 .sem-hdr{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--sable2);}
 .sh{padding:5px 2px;text-align:center;font-size:11px;font-weight:700;color:#999;border-right:1px solid var(--sable2);letter-spacing:.02em;}
 .sh:last-child{border-right:none;}
 .sh.di{color:var(--rouge);}
 
-/* â•â• CELLULES DES JOURS â•â• */
+/* == CELLULES DES JOURS == */
 .jours-grid{display:grid;grid-template-columns:repeat(7,1fr);}
 .dc{border-right:1px solid rgba(200,134,10,.1);border-bottom:1px solid rgba(200,134,10,.1);min-height:58px;padding:4px 3px;cursor:pointer;transition:background .12s;position:relative;display:flex;flex-direction:column;align-items:center;}
 .dc:nth-child(7n){border-right:none;}
 .dc:hover{background:var(--sable);}
 
-/* Chiffre grÃ©gorien */
+/* Chiffre gregorien */
 .dn{font-size:15px;font-weight:700;color:var(--noir);line-height:1;display:block;text-align:center;}
 
-/* â•â• NOM TRADITIONNEL â€” bordeaux 12px â•â• */
+/* == NOM TRADITIONNEL - bordeaux 12px == */
 .dt{
   font-size:12px;
   font-weight:600;
@@ -121,20 +121,20 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
   max-width:100%;
 }
 
-/* â”€â”€ Ã‰tats des cellules â”€â”€ */
+/* -- Etats des cellules -- */
 .dc.today{background:var(--noir);}
 .dc.today .dn{color:var(--or);}
-.dc.today .dt{color:var(--or2);font-weight:700;}  /* dorÃ© sur fond noir */
+.dc.today .dt{color:var(--or2);font-weight:700;}  /* dore sur fond noir */
 .dc.today:hover{background:#2C1E0A;}
 
 .dc.interdit{background:rgba(139,26,26,.07);}
 .dc.interdit .dn{color:var(--rouge);}
-.dc.interdit .dt{color:#5A0A0A;}                  /* bordeaux plus foncÃ© */
+.dc.interdit .dt{color:#5A0A0A;}                  /* bordeaux plus fonce */
 .dc.interdit::after{content:'';position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--rouge);}
 
 .dc.marche{background:rgba(26,92,42,.06);}
 .dc.marche .dn{color:var(--vert2);}
-.dc.marche .dt{color:#145220;}                     /* vert foncÃ© cohÃ©rent */
+.dc.marche .dt{color:#145220;}                     /* vert fonce coherent */
 .dc.marche::after{content:'';position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--vert2);}
 
 .dc.empty{cursor:default;background:rgba(0,0,0,.012);}
@@ -142,7 +142,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .dc.masked{opacity:.14;pointer-events:none;}
 .dc.di .dn{color:rgba(139,26,26,.65);}
 
-/* â•â• PANNEAU VILLAGE â•â• */
+/* == PANNEAU VILLAGE == */
 .vp{margin:0 14px 16px;background:#fff;border-radius:10px;border:1px solid var(--sable2);overflow:hidden;}
 .vph{background:var(--rouge);padding:10px 16px;}
 .vph h3{color:#fff;font-size:16px;font-weight:700;}
@@ -158,13 +158,13 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .itag-jour{background:rgba(200,134,10,.12);color:var(--brun);}
 .info-txt{font-size:13px;color:var(--noir);line-height:1.45;}
 
-/* â•â• BARRE D'ACTIONS â•â• */
+/* == BARRE D'ACTIONS == */
 .ab{display:flex;gap:8px;padding:10px 20px;background:#fff;border-top:1px solid var(--sable2);flex-wrap:wrap;}
 .ba{display:flex;align-items:center;gap:6px;background:var(--sable);border:1.5px solid var(--sable2);color:var(--brun);padding:8px 14px;border-radius:7px;font-family:'Akatab',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
 .ba:hover{background:var(--or2);border-color:var(--or);}
 .ba i{font-size:16px;}
 
-/* â•â• MODAL â•â• */
+/* == MODAL == */
 .modal-wrap{display:none;position:fixed;inset:0;background:rgba(28,18,8,.6);z-index:999;align-items:center;justify-content:center;padding:20px;}
 .modal-wrap.on{display:flex;}
 .modal-card{background:#fff;border-radius:12px;width:100%;max-width:360px;overflow:hidden;border-top:4px solid var(--or);}
@@ -177,7 +177,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .mr .lbl{font-size:11px;font-weight:700;color:#bbb;letter-spacing:.07em;text-transform:uppercase;}
 .mr .val{font-size:15px;color:var(--noir);margin-top:3px;font-weight:500;}
 
-/* â•â• MODAL IMPRESSION â•â• */
+/* == MODAL IMPRESSION == */
 .modal-print-card{max-width:440px;}
 .print-info{font-size:13px;color:#555;line-height:1.55;margin-bottom:16px;padding:12px 14px;background:var(--sable);border-radius:8px;border-left:3px solid var(--or);}
 .print-form{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
@@ -195,7 +195,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .print-rgpd i{font-size:14px;flex-shrink:0;margin-top:1px;}
 .print-rgpd a{color:var(--or);text-decoration:none;}
 
-/* â•â• IMPRESSION â•â• */
+/* == IMPRESSION == */
 .print-watermark{display:none;}
 @media print{
   .ctrl,.ab,.modal-wrap,.leg,.vp{display:none!important;}
@@ -205,7 +205,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
   .print-watermark{display:block!important;text-align:center;font-size:10px;color:#aaa;padding:6px;border-top:1px solid #eee;margin-top:6px;}
 }
 
-/* â•â• RESPONSIVE â•â• */
+/* == RESPONSIVE == */
 @media(max-width:900px){.trois-mois{grid-template-columns:1fr 1fr;gap:12px;}}
 @media(max-width:600px){
   .trois-mois{grid-template-columns:1fr;gap:14px;}
