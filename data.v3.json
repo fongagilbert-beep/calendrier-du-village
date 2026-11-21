@@ -55,6 +55,32 @@
             "Informations": "Superficie de près de 56Km². Pour plus d'infos"
         },
         {
+            "VILLAGE": "BAHOUAN",
+            "J1": "Mamto",
+            "J2": "Temgwe",
+            "J3": "Liepfe",
+            "J4": "Shanku'u",
+            "J5": "Dzedze",
+            "J6": "Tamdze",
+            "J7": "Kuogwe",
+            "J8": "Gosue",
+            "M1": "Nkembe",
+            "M2": "Sogwing",
+            "M3": "Dzetse",
+            "M4": "Dze-biyen",
+            "M5": "Sune",
+            "M6": "Dzu'gudom",
+            "M7": "Fefe",
+            "M8": "Schwaguefa",
+            "M9": "Kembiyeng",
+            "M10": "Dzemko",
+            "M11": "Penam",
+            "M12": "Su'gudom",
+            "Jour interdit1": "Shanku'u",
+            "Jour interdit2": "Dzedze",
+            "Jour interdit3": "Tamdze"
+        },
+        {
             "VILLAGE": "BAKONDJI",
             "Roi du village": "Sa Majesté Austère Durand MOUMI 3"
         },
@@ -377,7 +403,29 @@
         },
         {
             "VILLAGE": "DSCHANG",
-            "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
+            "J1": "Djielah",
+            "J2": "Ngan",
+            "J3": "Mbouowa",
+            "J4": "Mbouolo",
+            "J5": "Meta",
+            "J6": "Mbouokeu",
+            "J7": "Mboutchou",
+            "J8": "Efa'a",
+            "M1": "Sa'akhou",
+            "M2": "Nkon ngon",
+            "M3": "Mpiete Mbeng",
+            "M4": "Athou echou",
+            "M5": "Ntué Akhu",
+            "M6": "Mo' san",
+            "M7": "San avene",
+            "M8": "Mben'ala",
+            "M9": "Ndoun ntsih",
+            "M10": "Ngun'oalo",
+            "M11": "Nwan apé",
+            "M12": "Ntoun ngon",
+            "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er",
+            "Jour du marché1": "Meta",
+            "Jour du marché2": "Ngan"
         },
         {
             "VILLAGE": "MBOUDA"

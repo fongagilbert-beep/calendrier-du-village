@@ -4,3 +4,7 @@ DATA/
 # Fichiers temporaires Excel et macOS
 ~$*
 .DS_Store
+
+# Classeur Excel : conserve dans le depot prive calendrier-excel
+*.xlsm
+*.xlsx
