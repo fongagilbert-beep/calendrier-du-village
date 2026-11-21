@@ -86,8 +86,7 @@
             "M12": "Tchoua'Kwelè",
             "Jour interdit1": "Ndin'kap",
             "Jour interdit2": "Nzedjio",
-            "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
-            "Informations": "À compléter"
+            "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis"
         },
         {
             "VILLAGE": "BAMEKA",
@@ -115,13 +114,7 @@
             "M10": "Toun'Ndioh",
             "M11": "Sougno'Ndong",
             "M12": "Mene'Ngweu",
-            "Jour interdit1": "cheu",
-            "Jour interdit2": "Tiè",
-            "Jour interdit3": "Tah",
-            "Roi du village": "Sa Majesté NGIENTCHO",
-            "Jour du marché1": "Ntah",
-            "Jour du marché2": "Mbouh",
-            "Jour du marché3": "Tountah"
+            "Roi du village": "Sa Majesté NGIENTCHO"
         },
         {
             "VILLAGE": "BAMENDJOU",
@@ -352,4 +345,4 @@
             "VILLAGE": "MBOUDA"
         }
     ]
-}  
+}                                                                                                                                                                                                                                                                                            
