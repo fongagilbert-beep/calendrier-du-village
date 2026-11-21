@@ -130,16 +130,16 @@
         },
         {
             "VILLAGE": "BANGAM",
-            "J1": "Yengwié",
-            "J2": "Yenteté",
-            "J3": "Yenkap",
-            "J4": "Yessi",
-            "J5": "Yenkossi",
-            "J6": "Yenkinzé",
-            "J7": "Yepie",
-            "J8": "Yenkopié",
+            "J1": "Yessi",
+            "J2": "Yenkossi",
+            "J3": "Yenkinzé",
+            "J4": "Yepie",
+            "J5": "Yenkopié",
+            "J6": "Yengwwié",
+            "J7": "Yententé",
+            "J8": "Yenkap",
             "Jour interdit1": "Yepie",
-            "Jour interdit2": "Yengwié",
+            "Jour interdit2": "Yenkopié",
             "Roi du village": "Sa Majesté POUFONG",
             "Jour du marché1": "Yengwié"
         },
@@ -343,6 +343,44 @@
         },
         {
             "VILLAGE": "MBOUDA"
+        },
+        {
+            "VILLAGE": "BAPA",
+            "J1": "Mamto",
+            "J2": "Temgwe",
+            "J3": "Liepfe",
+            "J4": "Shanku'u",
+            "J5": "Dzedze",
+            "J6": "Tamdze",
+            "J7": "Kuogwe",
+            "J8": "Gosue",
+            "M1": "Nkembe",
+            "M2": "Sogwing",
+            "M3": "Dzetse",
+            "M4": "Dze-biyen",
+            "M5": "Sune",
+            "M6": "Dzu'gunom",
+            "M7": "Fefe",
+            "M8": "Schwaguefa",
+            "M9": "Kembiyeng",
+            "M10": "Dzemko",
+            "M11": "Penam",
+            "M12": "Su'gudom",
+            "Jour interdit1": "Shanku'u",
+            "Jour interdit2": "Dzedze",
+            "Jour interdit3": "Tamdze"
+        },
+        {
+            "VILLAGE": "BANDENKOP",
+            "J1": "Lie'djou",
+            "J2": "Cheptèh",
+            "J3": "Kou'ogouèh",
+            "J4": "Nzessouh",
+            "J5": "Djeu'djeu",
+            "J6": "Lie'gang",
+            "J7": "Lie'kouok",
+            "J8": "Temgou",
+            "Jour du marché1": "Cheptèh"
         }
     ]
-}                                                                                                                                                                                                                                                                                            
+}
