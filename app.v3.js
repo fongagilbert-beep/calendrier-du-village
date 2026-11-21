@@ -63,7 +63,7 @@ function init(){
   if(uM>=1&&uM<=12)document.getElementById('im').value=uM;
   const sel=document.getElementById('iv');
   VILLAGES.forEach(v=>{const o=document.createElement('option');o.value=v.V;o.textContent=v.V+(v.J.length?' \u2713':' \u25cb');sel.appendChild(o);});
-  sel.value=(uV&&VILLAGES.find(v=>v.V===uV))?uV:'BAZOU';
+  sel.value=(uV&&VILLAGES.find(v=>v.V===uV))?uV:'BANGOU';
   window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='p'){e.preventDefault();demanderImpression();}});
   onVillageChange();
 }
