@@ -21,7 +21,8 @@
             "Jour interdit3": "Dzemteh",
             "Roi du village": "Sa majesté Njitack Ngompe Pelé",
             "Jour du marché1": "Lecfo'o",
-            "Jour du marché2": "Seinchou"
+            "Jour du marché2": "Seinchou",
+            "Informations": "Le nom « Bafoussam » est une déformation coloniale de l'expression locale Pe Fussep ou Pefuhssap. Selon la tradition, cela signifie « ceux qui ont découvert que le bénéfice se trouve dans la vente en détail ». Réputés pour leur sens du commerce, les habitants mesuraient leurs produits dans de petits paniers (sep ou sap) pour maximiser leurs gains (fuh), une pratique qui a fini par donner son nom à tout le peuple."
         },
         {
             "VILLAGE": "BAHAM",
@@ -52,7 +53,7 @@
             "Jour du marché1": "Dzedze",
             "Jour du marché2": "Gosue",
             "Jour du marché3": "Mamto",
-            "Informations": "Superficie de près de 56Km². Pour plus d'infos"
+            "Informations": "Le royaume a traversé des périodes difficiles, notamment durant les troubles politiques entre 1955 et 1960, où la chefferie a été maintes fois incendiée, perdant une partie de son cachet ancestral. Depuis 1986, le royaume est dirigé par Sa Majesté Pouokam II, qui œuvre à la modernisation des infrastructures tout en préservant l'identité culturelle forte du peuple Baham."
         },
         {
             "VILLAGE": "BAHOUAN",
@@ -112,7 +113,8 @@
             "M12": "Tchoua'Kwelè",
             "Jour interdit1": "Ndin'kap",
             "Jour interdit2": "Nzedjio",
-            "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis"
+            "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
+            "Informations": "Le prince Nyandjo s'installe à Tchila, où il devient un grand guerrier et aide le roi local à annexer les territoires voisins. Adopté et nommé « chef des guerriers », il use de ruse pour renverser le roi de Tchila et s'emparer du village. Il rebaptise alors Tchila en Balengou et fonde une dynastie qui se perpétue jusqu'à nos jours."
         },
         {
             "VILLAGE": "BAMEKA",
@@ -140,7 +142,8 @@
             "M10": "Toun'Ndioh",
             "M11": "Sougno'Ndong",
             "M12": "Mene'Ngweu",
-            "Roi du village": "Sa Majesté NGIENTCHO"
+            "Roi du village": "Sa Majesté NGIENTCHO",
+            "Informations": "Le site de Bamena, dont le nom signifie « domaine giboyeux », était à l'origine une zone forestière peu habitée. Selon la tradition orale, le village a été fondé par deux frères jumeaux, Ouandmegni et Nzouémi, originaires de Baloum. L'histoire locale est marquée par la légende du « Chef Voleur de Chèvres » : lors d'une famine, Blingoun Njonvueup a volé une chèvre pour nourrir la population et a ainsi accédé au pouvoir en tant que Chef Supérieur. Au début du XXe siècle, les habitants se sont opposés à la pénétration d'une colonne allemande dans le village en 1903."
         },
         {
             "VILLAGE": "BAMENDJOU",
@@ -189,7 +192,8 @@
             "Jour interdit3": "Ntamdze",
             "Roi du village": "Sa Majesté Diomo Kamga Honoré",
             "Jour du marché1": "Dzedze",
-            "Jour du marché2": "Dzemto"
+            "Jour du marché2": "Dzemto",
+            "Informations": "Le nom Bandjoun vient de l'expression locale Pe Djo ou Po a djo, qui signifie « les gens qui achètent ». Cela fait référence à la manière dont le fondateur a agrandi son royaume, en achetant des terres, du bétail et en affranchissant des serviteurs pour les intégrer à sa communauté."
         },
         {
             "VILLAGE": "BANDREFAM",
@@ -208,7 +212,8 @@
             "Jour interdit1": "Yepie",
             "Jour interdit2": "Yenkopié",
             "Roi du village": "Sa Majesté POUFONG",
-            "Jour du marché1": "Yengwié"
+            "Jour du marché1": "Yengwié",
+            "Informations": "L'histoire de Bangam est marquée par une migration fondatrice. Après avoir quitté Banka, Feunou et ses partisans se sont d'abord établis à Famgnam (dans la localité de Fotouni) avant de trouver un site plus favorable pour fonder leur propre communauté. Depuis sa création, treize souverains se sont succédé à la tête de la chefferie, témoignant de l'ancienneté et de la stabilité de cette dynastie."
         },
         {
             "VILLAGE": "BANGANGTE",
@@ -220,7 +225,8 @@
             "J6": "Nkôtu",
             "J7": "Nzinyam",
             "J8": "Ntabu",
-            "Roi du village": "Sa Majesté Nji Mohnlu Siedou Pokam"
+            "Roi du village": "Sa Majesté Nji Mohnlu Siedou Pokam",
+            "Informations": "Le peuple Bangangté est historiquement connu pour son refus de la domination. À la fin du XIXᵉ siècle et au début du XXᵉ siècle, l'arrivée des colons allemands s'est heurtée à une résistance farouche, notamment menée par le chef guerrier Fokam Toukam. Cette opposition a entraîné de lourdes représailles, incluant la déportation d'habitants pour les travaux forcés et l'emprisonnement de plusieurs chefs traditionnels. C'est également à cette époque que l'administration coloniale a, par une mauvaise prononciation de l'expression Pah ha nteu, donné naissance au nom actuel de la ville."
         },
         {
             "VILLAGE": "BANGOU",
@@ -264,7 +270,8 @@
             "M12": "Tchouo'nkwé",
             "Jour interdit1": "Nze Nze",
             "Jour interdit2": "Nto'o Sack",
-            "Roi du village": "Sa Majesté Yannick Julio DJAMPOU"
+            "Roi du village": "Sa Majesté Yannick Julio DJAMPOU",
+            "Informations": "Bangoua a été fondée au XIVe siècle par Lekemegne, également appelé Djopvup ou Ndjokwu, un chasseur originaire de la chefferie voisine de Bandrefam. Après s'être installé dans un vallon, il a progressivement unifié les petites tribus locales pour former une chefferie supérieure. La dynastie s'est ensuite développée sur plus de 20 générations, avec des figures historiques telles que Fo' Nono Tchoutouo, qui a régné pendant plus d'un siècle."
         },
         {
             "VILLAGE": "BANOUNGA",
@@ -328,7 +335,7 @@
             "Jour interdit1": "Nze'jouo",
             "Jour interdit2": "Nze'Ngheu",
             "Roi du village": "Sa Majesté André Flaubert NANA",
-            "Informations": "Sous-villages : Tchougwe, Bangwe, Tousse"
+            "Informations": "Fondée au XVIe siècle, Batchingou est l'une des treize monarchies coutumières du département du Ndé. Le groupement a joué un rôle majeur dans la protection des populations locales : à une époque où des villages voisins pratiquaient le commerce des hommes, Batchingou offrait refuge et liberté aux personnes arrachées par la force ou achetées. Cette histoire a donné au groupement son éloge honorifique, Tahkoua, qui signifie « protecteur des faibles » ou « père des esclaves »."
         },
         {
             "VILLAGE": "BATIE",
@@ -344,7 +351,8 @@
             "J6": "Lie'Tchak",
             "J7": "Kouo'Tchak",
             "J8": "Nto'Ssack",
-            "Roi du village": "Sa Majesté NAYANG TOUKAM Innocent"
+            "Roi du village": "Sa Majesté NAYANG TOUKAM Innocent",
+            "Informations": "Le royaume a été fondé au début du XVIIIe siècle par Nankap, un chasseur venu du plateau de l'Adamaoua. Après avoir servi les chefferies de Bangoua et de Bandrefam, il s'est installé sur une colline stratégique pour surveiller les frontières. Usant de sagesse et de stratégie, il a unifié les populations locales et accueilli les exclus d'autres territoires pour former le peuple Batoufam, dont le nom signifie « les gens venus du haut de la concession »."
         },
         {
             "VILLAGE": "BAYANGAM",
@@ -372,7 +380,8 @@
             "Jour interdit2": "Tamdze",
             "Roi du village": "Sa Majesté POUOKAM II",
             "Jour du marché1": "Shanku'u",
-            "Jour du marché2": "Gosue"
+            "Jour du marché2": "Gosue",
+            "Informations": "Fondée par Fohom Tchueng, venu de Baham avec huit notables, elle s'est développée à travers une dynastie de 13 souverains. Le nom local, Pa' Yogam, signifie « ceux qui ont vu les sauterelles », en référence à une invasion historique d'insectes qui a marqué les premiers habitants."
         },
         {
             "VILLAGE": "BAZOU",
@@ -399,7 +408,8 @@
             "Jour interdit1": "Kàp",
             "Jour interdit2": "Ndion'Gwe",
             "Jour interdit3": "Ncoe",
-            "Roi du village": "Sa Majesté Marcelin Happy Tchoua"
+            "Roi du village": "Sa Majesté Marcelin Happy Tchoua",
+            "Informations": "L'histoire de Bazou, une chefferie traditionnelle bamiléké située dans le département du Ndé, dans la région de l'Ouest du Cameroun, remonte au XVIᵉ siècle. Fondée par Fo Tchuibou, venu de Bangou, la localité tire son nom du mot Baze qui signifie « les marcheurs », en référence aux longues migrations entreprises par ses habitants pour fuir les guerres tribales et trouver un lieu de stabilité."
         },
         {
             "VILLAGE": "DSCHANG",
@@ -425,7 +435,8 @@
             "M12": "Ntoun ngon",
             "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er",
             "Jour du marché1": "Meta",
-            "Jour du marché2": "Ngan"
+            "Jour du marché2": "Ngan",
+            "Informations": "Dschang, ville historique et universitaire de l'Ouest du Cameroun, commence en 1895 avec l'arrivée d'une mission militaire allemande. Anciennement appelée Fo-lekeu (Foréké), la ville a été rebaptisée Dschang par les Allemands, un nom dérivé du mot local n-tsang signifiant « querelle », en référence à une guerre territoriale qui opposait alors deux chefferies voisines. Érigée en capitale administrative de la région sous la colonisation, elle a perdu ce statut au profit de Bafoussam après l'indépendance."
         },
         {
             "VILLAGE": "MBOUDA"
