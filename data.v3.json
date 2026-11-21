@@ -1,4 +1,4 @@
-﻿{
+{
     "AnchorDate (globale)": "28/02/2026",
     "AnchorJ (1..8)": 1,
     "rows": [
@@ -8,11 +8,50 @@
         },
         {
             "VILLAGE": "BAFOUSSAM",
-            "Roi du village": "Sa majesté Njitack Ngompe Pelé"
+            "J1": "Tamdze",
+            "J2": "Seinchou",
+            "J3": "Gossaha",
+            "J4": "Dzemteh",
+            "J5": "Dza'à",
+            "J6": "Lecfo'o",
+            "J7": "Shienku'u",
+            "J8": "Dzedze",
+            "Jour interdit1": "Shienku'u",
+            "Jour interdit2": "Tamdze",
+            "Jour interdit3": "Dzemteh",
+            "Roi du village": "Sa majesté Njitack Ngompe Pelé",
+            "Jour du marché1": "Lecfo'o",
+            "Jour du marché2": "Seinchou"
         },
         {
             "VILLAGE": "BAHAM",
+            "J1": "Tamdze",
+            "J2": "Kuogwe",
+            "J3": "Gosue",
+            "J4": "Mamto",
+            "J5": "Temgwe",
+            "J6": "Liepfe",
+            "J7": "Shanku'u",
+            "J8": "Dzedze",
+            "M1": "Nkembe",
+            "M2": "Sogwing",
+            "M3": "Dzetse",
+            "M4": "Dze-bizem",
+            "M5": "Sune",
+            "M6": "Dzu'gunom",
+            "M7": "Fefe",
+            "M8": "Schwaguefa",
+            "M9": "Kembiyeng",
+            "M10": "Dzemko",
+            "M11": "Penam",
+            "M12": "Su'gudom",
+            "Jour interdit1": "Shanku'u",
+            "Jour interdit2": "Dzedze",
+            "Jour interdit3": "Tamdze",
             "Roi du village": "Sa Majesté POUOKAM TEGUIA Max2",
+            "Jour du marché1": "Dzedze",
+            "Jour du marché2": "Gosue",
+            "Jour du marché3": "Mamto",
             "Informations": "Superficie de près de 56Km². Pour plus d'infos"
         },
         {
@@ -21,7 +60,7 @@
         },
         {
             "VILLAGE": "BALENG",
-            "Roi du village": "Sa Majesté Sa Majesté Guillaume Alain NEGOU TELA "
+            "Roi du village": "Sa Majesté Guillaume Alain NEGOU TELA"
         },
         {
             "VILLAGE": "BALENGOU",
@@ -48,7 +87,7 @@
             "Jour interdit1": "Ndin'kap",
             "Jour interdit2": "Nzedjio",
             "Roi du village": "Sa Majesté NGUEMEGNI HAPPI Guy Elvis",
-            "Informations": "A completer"
+            "Informations": "À compléter"
         },
         {
             "VILLAGE": "BAMEKA",
@@ -76,6 +115,9 @@
             "M10": "Toun'Ndioh",
             "M11": "Sougno'Ndong",
             "M12": "Mene'Ngweu",
+            "Jour interdit1": "cheu",
+            "Jour interdit2": "Tiè",
+            "Jour interdit3": "Tah",
             "Roi du village": "Sa Majesté NGIENTCHO",
             "Jour du marché1": "Ntah",
             "Jour du marché2": "Mbouh",
@@ -122,10 +164,11 @@
             "Jour interdit1": "Nguèn'Djou",
             "Jour interdit2": "Di'Ntouoh",
             "Jour interdit3": "Nze'Djouoh",
+            "Roi du village": "Sa Majesté FONGA",
             "Jour du marché1": "Di'Nkap",
             "Jour du marché2": "Di'Nkong",
             "Jour du marché3": "Nzeu'Leg",
-            "Informations": "Di'Nkap= Marché Bangou Carrefour ; Nzeu'Leg= Marché Bangou Chefferie"
+            "Informations": "Di'Nkap = Marché Bangou Carrefour ; Nzeu'Leg = Marché Bangou Chefferie"
         },
         {
             "VILLAGE": "BANGOUA",
@@ -137,7 +180,7 @@
         },
         {
             "VILLAGE": "BANOUNGA",
-            "Roi du village": "Sa  Majesté Louis NGAPMOU"
+            "Roi du village": "Sa Majesté Louis NGAPMOU"
         },
         {
             "VILLAGE": "BANSOA",
@@ -171,11 +214,11 @@
             "Jour interdit1": "Nze'jouo",
             "Jour interdit2": "Nze'Ngheu",
             "Roi du village": "Sa Majesté André Flaubert NANA",
-            "Informations": "ADAMOU ARDO:  Chef du village TCHOUGWE  ;  SOP Tampi Philippe:  Chef du village BANGWE  ;  Mbeu Toukep DAZOUE Thomas:  Chef du village TOUSSE"
+            "Informations": "Sous-villages : Tchougwe, Bangwe, Tousse"
         },
         {
             "VILLAGE": "BATIE",
-            "Roi du village": "Sa Ma jesté Théodore TCHOUANKAM DADA"
+            "Roi du village": "Sa Majesté Théodore TCHOUANKAM DADA"
         },
         {
             "VILLAGE": "BATOUFAM",
@@ -221,15 +264,11 @@
             "Roi du village": "Sa Majesté Marcelin Happy Tchoua"
         },
         {
-            "VILLAGE": "DSHANG",
+            "VILLAGE": "DSCHANG",
             "Roi du village": "Sa Majesté Guy Bertrand MOMO SOFFACK 1er"
         },
         {
             "VILLAGE": "MBOUDA"
-        },
-        {
-            "VILLAGE": "TEST",
-            "Roi du village": "TEST YOAN"
         }
     ]
 }
