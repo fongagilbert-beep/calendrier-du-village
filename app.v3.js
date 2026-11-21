@@ -4,13 +4,14 @@
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
 "use strict";
 
-const ANCHOR   = new Date(2026,1,28);
-const ANCHOR_J = 0;
+let ANCHOR   = new Date(2026,1,28);   // remplac\u00e9 par data.v3.json si disponible
+let ANCHOR_J = 0;
 const MFR    = ['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
 const SJOURS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 const SFULL  = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
 
-const VILLAGES = [
+// Donn\u00e9es de secours : utilis\u00e9es seulement si data.v3.json ne se charge pas
+let VILLAGES = [
   {V:'BAFANG',J:[],M:[],INT:[],MKT:[],ROI:"Sa Majest\u00e9 Ren\u00e9 KAMGA NGANDJUI",INFO:""},
   {V:'BAFOUSSAM',J:[],M:[],INT:[],MKT:[],ROI:"Sa majest\u00e9 Njitack Ngompe Pel\u00e9",INFO:""},
   {V:'BAHAM',J:[],M:[],INT:[],MKT:[],ROI:"Sa Majest\u00e9 POUOKAM TEGUIA Max2",INFO:"Superficie de pr\u00e8s de 56 km\u00b2"},
@@ -165,4 +166,32 @@ function toggleTrad(){showTrad=!showTrad;document.getElementById('tbt').textCont
 function doShare(){const v=document.getElementById('iv').value,y=document.getElementById('ia').value,m=document.getElementById('im').value;const url=`https://fongagilbert-beep.github.io/calendrier-du-village/?village=${v}&annee=${y}&mois=${m}`;if(navigator.share){navigator.share({title:'Calendrier du Village',url});}else{navigator.clipboard.writeText(url).then(()=>alert('Lien copi\u00e9 \u2713')).catch(()=>prompt('Copiez ce lien :',url));}}
 function doCSV(){const v=getV(document.getElementById('iv').value),annee=parseInt(document.getElementById('ia').value),mS=parseInt(document.getElementById('im').value);let csv='Date,Num\u00e9ro,Jour semaine,Nom trad.,Mois trad.,Interdit,March\u00e9\n';for(let mi=0;mi<3;mi++){let m=mS+mi,y=annee;while(m>12){m-=12;y++;}for(let d=1;d<=new Date(y,m,0).getDate();d++){const date=new Date(y,m-1,d),ji=jIdx(date),jt=v&&v.J.length?v.J[ji]:'',mt=v&&v.M.length?v.M[m-1]:'';const isInt=v&&matchJ(jt,v.INT),isMkt=v&&matchJ(jt,v.MKT);csv+=`${d}/${m}/${y},${d},${SFULL[date.getDay()]},${jt},${mt},${isInt?'Oui':''},${isMkt?'Oui':''}\n`;}}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download=`calendrier_village_${annee}_${mS}.csv`;a.click();}
 
-document.addEventListener('DOMContentLoaded',init);
+/* ── Chargement des données depuis data.v3.json (exporté depuis Excel) ── */
+function rowToVillage(r){
+  const txt=x=>(x==null?'':String(x)).trim();
+  const serie=(prefix,n)=>{const a=[];for(let i=1;i<=n;i++)a.push(txt(r[prefix+i]));return a.some(x=>x)?a:[];};
+  const liste=(prefix,n)=>{const a=[];for(let i=1;i<=n;i++){const x=txt(r[prefix+i]);if(x)a.push(x);}return a;};
+  return {V:txt(r.VILLAGE).toUpperCase(),J:serie('J',8),M:serie('M',12),
+          INT:liste('Jour interdit',3),MKT:liste('Jour du marché',3),
+          ROI:txt(r['Roi du village']),INFO:txt(r['Informations'])};
+}
+async function chargerDonnees(){
+  try{
+    const rep=await fetch('data.v3.json?t='+Date.now(),{cache:'no-store'});
+    if(!rep.ok) throw new Error('HTTP '+rep.status);
+    const d=await rep.json();
+    const liste=(d.rows||[]).map(rowToVillage).filter(v=>v.V);
+    if(liste.length) VILLAGES=liste;
+    const ad=txt2(d['AnchorDate (globale)']).split('/');
+    if(ad.length===3){
+      const j=+ad[0],m=+ad[1],a=+ad[2];
+      if(j>=1&&j<=31&&m>=1&&m<=12&&a>2000) ANCHOR=new Date(a,m-1,j);
+    }
+    const aj=parseInt(d['AnchorJ (1..8)'],10);
+    if(aj>=1&&aj<=8) ANCHOR_J=aj-1;
+  }catch(e){
+    console.warn('data.v3.json non chargé : données intégrées utilisées.',e);
+  }
+}
+function txt2(x){return (x==null?'':String(x)).trim();}
+document.addEventListener('DOMContentLoaded',()=>{chargerDonnees().finally(init);});

@@ -1,0 +1,6 @@
+# Copies d archive des exports Excel (inutile de les publier)
+DATA/
+
+# Fichiers temporaires Excel et macOS
+~$*
+.DS_Store
