@@ -163,7 +163,8 @@
             "J6": "Lie'gang",
             "J7": "Lie'kouok",
             "J8": "Temgou",
-            "Jour du marché1": "Cheptèh"
+            "Jour du marché1": "Cheptèh",
+            "Informations": "L'histoire moderne de Bandenkop est particulièrement marquée par la guerre d'indépendance du Cameroun (1955-1971). Le village a servi de quartier général à l'Armée de libération nationale du Kamerun (ALNK). C'est de Bandenkop qu'était originaire Martin Singap, un jeune chef militaire et martyr de la lutte nationaliste qui a pris la tête de l'ALNK à seulement 23 ans pour combattre l'armée française"
         },
         {
             "VILLAGE": "BANDJOUN",
@@ -275,7 +276,8 @@
         },
         {
             "VILLAGE": "BANOUNGA",
-            "Roi du village": "Sa Majesté Louis NGAPMOU"
+            "Roi du village": "Sa Majesté Louis NGAPMOU",
+            "Informations": "L'actuel arrondissement de Tonga constitue ce qui reste du royaume Batongtou, une entité autrefois reconnue pour sa puissance guerrière et son développement économique. Les colons avaient d'ailleurs fait construire à Bandounga un palais pour le roi Fotchada, identique à celui du sultan des Bamouns. Bandounga fut également une terre d'accueil pour les missionnaires palotins, qui y érigèrent la quatrième cathédrale de la région bamiléké."
         },
         {
             "VILLAGE": "BANSOA",
@@ -308,7 +310,8 @@
             "M12": "Su'gudom",
             "Jour interdit1": "Shanku'u",
             "Jour interdit2": "Dzedze",
-            "Jour interdit3": "Tamdze"
+            "Jour interdit3": "Tamdze",
+            "Informations": "Le village a été fondé dans les années 1600 par Fé Tchouanmegne, un chasseur originaire de Bamendou qui s'est installé sur ce territoire giboyeux. Selon la tradition orale, les premiers occupants surveillaient constamment l'horizon pour détecter les menaces, ce qui a donné son nom au royaume : « Ba » signifie peuple, et « Pa » dérive du verbe local « pagni », qui veut dire épier ou guetter."
         },
         {
             "VILLAGE": "BATCHINGOU",
