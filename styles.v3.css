@@ -65,7 +65,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .leg{display:flex;gap:18px;flex-wrap:wrap;padding:9px 20px;background:var(--sable);border-bottom:1px solid var(--sable2);}
 .li{display:flex;align-items:center;gap:7px;font-size:13px;color:#555;}
 .ld{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.ld-rouge{background:var(--rouge);}
+.ld-rouge{background:#E00000;}
 .ld-vert{background:var(--vert2);}
 .ld-or{background:var(--or);}
 .ld-dim{background:rgba(139,26,26,.4);}
@@ -89,8 +89,8 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .wm span:nth-child(3){top:80%;}
 
 .bloc-mois-hdr{background:var(--noir);background-image:var(--motif);padding:10px 12px;}
-.bloc-mois-hdr .mtrad{color:var(--or);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px;}
-.bloc-mois-hdr .mgreg{color:rgba(245,213,138,.65);font-size:13px;font-family:'Crimson Pro',serif;font-style:italic;}
+.bloc-mois-hdr .mtrad{color:#FFC94D;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px;}
+.bloc-mois-hdr .mgreg{color:#FFE08A;font-size:18px;font-weight:700;font-family:'Crimson Pro',serif;letter-spacing:.02em;}
 
 /* Entete jours de la semaine */
 .sem-hdr{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--sable2);}
@@ -126,10 +126,10 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .dc.today .dt{color:var(--or2);font-weight:700;}  /* dore sur fond noir */
 .dc.today:hover{background:#2C1E0A;}
 
-.dc.interdit{background:rgba(139,26,26,.07);}
-.dc.interdit .dn{color:var(--rouge);}
-.dc.interdit .dt{color:#5A0A0A;}                  /* bordeaux plus fonce */
-.dc.interdit::after{content:'';position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--rouge);}
+.dc.interdit{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.dc.interdit .dn{color:#E00000;}
+.dc.interdit .dt{color:#E00000;font-weight:800;}   /* jour interdit : ecriture rouge vif sur fond blanc */
+.dc.interdit::after{content:'';position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:#E00000;}
 
 .dc.marche{background:rgba(26,92,42,.06);}
 .dc.marche .dn{color:var(--vert2);}
@@ -140,6 +140,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .dc.empty:hover{background:rgba(0,0,0,.012);}
 .dc.masked{opacity:.14;pointer-events:none;}
 .dc.di .dn{color:rgba(139,26,26,.65);}
+.dc.interdit.di .dn{color:#E00000;}           /* dimanche interdit : reste rouge vif */
 
 /* == PANNEAU VILLAGE == */
 .vp{margin:0 14px 16px;background:#fff;border-radius:10px;border:1px solid var(--sable2);overflow:hidden;}
@@ -152,7 +153,7 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
 .ib:nth-last-child(-n+2){border-bottom:none;}
 .ilb{font-size:10px;font-weight:700;color:#bbb;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;}
 .itag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;margin:2px 2px 2px 0;}
-.itag-int{background:rgba(139,26,26,.1);color:var(--rouge);}
+.itag-int{background:rgba(224,0,0,.08);color:#E00000;font-weight:800;}
 .itag-mkt{background:rgba(26,92,42,.1);color:var(--vert);}
 .itag-jour{background:rgba(200,134,10,.12);color:var(--brun);}
 .info-txt{font-size:13px;color:var(--noir);line-height:1.45;}
@@ -215,3 +216,6 @@ body{font-family:'Akatab',sans-serif;color:var(--noir);background:var(--sable);}
   .month-title{font-size:18px;}
   .hero-titles h1{font-size:18px;}
 }
+
+/* == REMERCIEMENT == */
+.merci{margin:18px auto 22px;max-width:620px;padding:12px 18px;text-align:center;font-size:16px;font-weight:700;color:var(--or);background:#FFF8E1;border:2px solid var(--or);border-radius:12px;}
