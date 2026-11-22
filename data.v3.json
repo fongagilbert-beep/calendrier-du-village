@@ -4,7 +4,8 @@
     "rows": [
         {
             "VILLAGE": "BAFANG",
-            "Roi du village": "Sa Majesté René KAMGA NGANDJUI"
+            "Roi du village": "Sa Majesté René KAMGA NGANDJUI",
+            "Informations": "Le premier roi connu de Bafang fut Djatchoua, qui aurait régné de 1645 à 1685. Il est à l'origine d'une dynastie dont la succession a été assurée par plusieurs chefs traditionnels, dont Kamga Nganjui René, le douzième roi, qui occupe le trône depuis 1962"
         },
         {
             "VILLAGE": "BAFOUSSAM",
@@ -79,7 +80,8 @@
             "M12": "Su'gudom",
             "Jour interdit1": "Shanku'u",
             "Jour interdit2": "Dzedze",
-            "Jour interdit3": "Tamdze"
+            "Jour interdit3": "Tamdze",
+            "Informations": "Le nom Bahouan est formé de deux syllabes : « Ba » (ou « Pa »), qui signifie « les gens de », et « Weing », un mot dérivant de « Weingtche » qui veut dire « éviter ». Bahouan signifie ainsi « les gens qui évitent », en référence à ceux qui fuient les problèmes."
         },
         {
             "VILLAGE": "BAKONDJI",
@@ -87,7 +89,8 @@
         },
         {
             "VILLAGE": "BALENG",
-            "Roi du village": "Sa Majesté Guillaume Alain NEGOU TELA"
+            "Roi du village": "Sa Majesté Guillaume Alain NEGOU TELA",
+            "Informations": "Après s'être établis, les Baleng ont été attaqués par les Peuls qui cherchaient à les soumettre à l'islam. Pour se défendre, les guerriers Baleng ont creusé des tranchées camouflées et y ont placé des piques, repoussant ainsi l'assaut. En référence à cette victoire et à leur aptitude à viser leurs ennemis, les autres peuples les ont surnommés « Peleng Tam », ce qui signifie « peuple des francs-tireurs ». À l'arrivée des Occidentaux, le terme a évolué pour devenir Baleng."
         },
         {
             "VILLAGE": "BALENGOU",
@@ -118,7 +121,8 @@
         },
         {
             "VILLAGE": "BAMEKA",
-            "Roi du village": "Sa Majesté TAKUKAM Jean-Raymond"
+            "Roi du village": "Sa Majesté TAKUKAM Jean-Raymond",
+            "Informations": "Quatre frères chasseurs, partis de Fongo-Tongo, se sont installés sur le site actuel de Bameka. Des conflits réguliers les ont contraints à se séparer pour fonder quatre villages distincts : Bameka, Bansoa, Bamendjou et Bamougoum."
         },
         {
             "VILLAGE": "BAMENA",
@@ -147,11 +151,13 @@
         },
         {
             "VILLAGE": "BAMENDJOU",
-            "Roi du village": "Sa Majesté Jean-Rameau SOUKOUDJOU"
+            "Roi du village": "Sa Majesté Jean-Rameau SOUKOUDJOU",
+            "Informations": "Selon la tradition orale, la dynastie actuelle a été fondée par le prince Leubah, originaire de la chefferie voisine de Bansoa. Mécontent d'avoir été écarté du trône, il s'est exilé et a établi sa propre chefferie, renversant le leader autochtone Nzogatcha. Le nom de la localité proviendrait de l'expression « Mundjouo », signifiant « petit malheur » dans le dialecte de Baham. Un prince de Baham aurait utilisé ce terme pour se plaindre du harcèlement qu'il subissait en traversant le territoire de Leubah, avant que l'administration coloniale ne le transforme en Bamendjou."
         },
         {
             "VILLAGE": "BANA",
-            "Roi du village": "Sa Majesté Sikam Happi 5"
+            "Roi du village": "Sa Majesté Sikam Happi 5",
+            "Informations": "Selon la tradition, le royaume de Bana a été fondé en 1379 par le Fon Tchokogwe, un chasseur venu de Bamendou. En 1424, son descendant Halieu fonde officiellement le royaume de Bana et lance des conquêtes territoriales pour agrandir le territoire. Le nom de la commune provient du mot Pa Nee, qui signifie « ceux qui poursuivent » ou « qui bousculent pour s'installer », en référence au caractère belliqueux des fondateurs."
         },
         {
             "VILLAGE": "BANDENKOP",
@@ -198,7 +204,8 @@
         },
         {
             "VILLAGE": "BANDREFAM",
-            "Roi du village": "Sa Majesté GeorgesJIEJIP TCOMGANG"
+            "Roi du village": "Sa Majesté GeorgesJIEJIP TCOMGANG",
+            "Informations": "Selon la tradition, le village a été fondé par un chasseur venu de Fongo-Tongo et de Badoundja. Il est également connu pour avoir accueilli Nankap, le fondateur du royaume voisin de Batoufam, qui s'y était réfugié après avoir fui le roi de Bangwa."
         },
         {
             "VILLAGE": "BANGAM",
@@ -281,10 +288,12 @@
         },
         {
             "VILLAGE": "BANSOA",
-            "Roi du village": "Sa Majesté TCHINDA 2 DJONTU Jean-de-Dieu"
+            "Roi du village": "Sa Majesté TCHINDA 2 DJONTU Jean-de-Dieu",
+            "Informations": "Selon la tradition orale, Bansoa fait partie des quatre chefferies (avec Baméka, Bamendjou et Bamougoum) fondées par une fratrie de chasseurs bamilékés, appelés Djouonveu, qui ont migré vers le XVIIe siècle. Ces frères auraient prêté serment au pied du rocher mythique Gwo-gon de s'établir séparément dans la région sans jamais se nuire."
         },
         {
-            "VILLAGE": "BANWA"
+            "VILLAGE": "BANWA",
+            "Informations": "'origine du nom Banwa est liée à l'agriculture, provenant de l'association des mots « ba » (les gens de) et « Nwa » ou « Nwô » (l'huile), en référence à la culture du palmier à huile."
         },
         {
             "VILLAGE": "BAPA",
@@ -342,7 +351,8 @@
         },
         {
             "VILLAGE": "BATIE",
-            "Roi du village": "Sa Majesté Théodore TCHOUANKAM DADA"
+            "Roi du village": "Sa Majesté Théodore TCHOUANKAM DADA",
+            "Informations": "Son histoire dynastique débute avec trois grandes familles (Folom, Foki et Foyé) qui vivaient en complémentarité. L'harmonie est brisée par l'arrivée d'un chasseur nommé Tatomdjap, qui prend le pouvoir en s'imposant face aux rois locaux. La chefferie de Batié joue aujourd'hui un rôle central dans la préservation des coutumes et des rites traditionnels."
         },
         {
             "VILLAGE": "BATOUFAM",
@@ -442,7 +452,8 @@
             "Informations": "Dschang, ville historique et universitaire de l'Ouest du Cameroun, commence en 1895 avec l'arrivée d'une mission militaire allemande. Anciennement appelée Fo-lekeu (Foréké), la ville a été rebaptisée Dschang par les Allemands, un nom dérivé du mot local n-tsang signifiant « querelle », en référence à une guerre territoriale qui opposait alors deux chefferies voisines. Érigée en capitale administrative de la région sous la colonisation, elle a perdu ce statut au profit de Bafoussam après l'indépendance."
         },
         {
-            "VILLAGE": "MBOUDA"
+            "VILLAGE": "MBOUDA",
+            "Informations": "Le nom de la ville provient du mot local « Mbouda'a », qui signifie « entrée des Nda'a » ou « peuple de paix ». Selon la tradition orale, les premiers habitants sont arrivés au 14e siècle après avoir fui la plaine Tikar pour échapper aux attaques des guerriers Bamoun et à l'islamisation. Sous la conduite du chef Fô Mbougong, le peuple a traversé le fleuve Noun à l'aide d'un pont de lianes et s'est installé sur les terres fertiles de l'actuel pays Bamiléké. Après la mort du chef, des conflits de succession ont entraîné la division de la chefferie Nda'a en plusieurs territoires, donnant naissance aux chefferies actuelles de Bamenkombou, Bamesso, Babeté, Bafounda, Bamendjo et Bamendjida."
         }
     ]
 }
