@@ -233,7 +233,7 @@
             "J6": "Nkôtu",
             "J7": "Nzinyam",
             "J8": "Ntabu",
-            "Roi du village": "Sa Majesté Nji Mohnlu Siedou Pokam",
+            "Roi du village": "Sa Majesté Nji Mohnlu Seidou Pokam",
             "Informations": "Le peuple Bangangté est historiquement connu pour son refus de la domination. À la fin du XIXᵉ siècle et au début du XXᵉ siècle, l'arrivée des colons allemands s'est heurtée à une résistance farouche, notamment menée par le chef guerrier Fokam Toukam. Cette opposition a entraîné de lourdes représailles, incluant la déportation d'habitants pour les travaux forcés et l'emprisonnement de plusieurs chefs traditionnels. C'est également à cette époque que l'administration coloniale a, par une mauvaise prononciation de l'expression Pah ha nteu, donné naissance au nom actuel de la ville."
         },
         {
@@ -252,7 +252,7 @@
             "Jour du marché1": "Di'Nkap",
             "Jour du marché2": "Di'Nkong",
             "Jour du marché3": "Nzeu'Leg",
-            "Informations": "Située dans la région de l'Ouest, Bangou est une chefferie bamiléké dont l'histoire est marquée par des guerres et des conquêtes. Selon la légende, le village a été fondé par un chasseur nommé Kouagoung, venu de la plaine Tikar. Au cours des deux siècles suivants, la communauté a lutté pour affirmer sa souveraineté et réaliser son expansion territoriale, ce qui lui a valu le nom de Gnieup, signifiant « expansionniste »."
+            "Informations": "Bangou est une chefferie bamiléké dont l'histoire est marquée par des guerres et des conquêtes. Selon la légende, le village a été fondé par un chasseur nommé Kouagoung, venu de la plaine Tikar. Au cours des deux siècles suivants, la communauté a lutté pour affirmer sa souveraineté et réaliser son expansion territoriale, ce qui lui a valu le nom de Gnieup, signifiant « expansionniste »."
         },
         {
             "VILLAGE": "BANGOUA",
@@ -293,6 +293,7 @@
         },
         {
             "VILLAGE": "BANWA",
+            "Roi du village": "Sa Majesté Tchamaleu Luminaire Ndia Shugaïnto II",
             "Informations": "'origine du nom Banwa est liée à l'agriculture, provenant de l'association des mots « ba » (les gens de) et « Nwa » ou « Nwô » (l'huile), en référence à la culture du palmier à huile."
         },
         {
@@ -320,6 +321,7 @@
             "Jour interdit1": "Shanku'u",
             "Jour interdit2": "Dzedze",
             "Jour interdit3": "Tamdze",
+            "Roi du village": "Sa Majesté SIMEU David II",
             "Informations": "Le village a été fondé dans les années 1600 par Fé Tchouanmegne, un chasseur originaire de Bamendou qui s'est installé sur ce territoire giboyeux. Selon la tradition orale, les premiers occupants surveillaient constamment l'horizon pour détecter les menaces, ce qui a donné son nom au royaume : « Ba » signifie peuple, et « Pa » dérive du verbe local « pagni », qui veut dire épier ou guetter."
         },
         {
